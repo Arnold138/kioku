@@ -1,0 +1,172 @@
+import { useMemo } from 'react'
+import { motion } from 'framer-motion'
+import { useStore } from '../lib/store'
+import { ACHIEVEMENTS } from '../lib/achievements'
+import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, streaks, totalReviews, totalXp } from '../lib/state'
+import { dayKey, dayNumber } from '../lib/scheduler'
+import { estimateLevel, MILESTONES } from '../lib/level'
+import { Bar } from './ui'
+
+const DECK_LABELS: Array<[string, string]> = [['N5', 'N5 — essentiels'], ['N4', 'N4 — courants'], ['N3', 'N3 — fréquents']]
+
+export function Progress() {
+  const { state, items } = useStore()
+  const now = Date.now()
+  const today = dayNumber(now)
+  const prog = useMemo(() => computeProgress(state, items), [state, items])
+  const xp = totalXp(state)
+  const lv = levelFromXp(xp)
+  const title = levelTitle(lv.level)
+  const st = streaks(state, now)
+  const estR = estimateLevel(prog.wordsKnownR)
+  const estP = estimateLevel(prog.wordsKnownP)
+  const ret = retentionRate(state, 30, now)
+  const reviews = totalReviews(state)
+  const minutes = Object.keys(state.daily).reduce((a, d) => a + Math.round(dayTotal(state, d).sec / 60), 0)
+
+  // 14 derniers jours
+  const last14 = Array.from({ length: 14 }, (_, i) => {
+    const dn = today - 13 + i
+    return { dn, n: dayTotal(state, dayKey(dn)).n, label: ['D', 'L', 'M', 'M', 'J', 'V', 'S'][new Date(dn * 86400000 + 43200000).getUTCDay()] }
+  })
+  const maxN = Math.max(10, ...last14.map((d) => d.n))
+
+  // Heatmap : 16 semaines, colonnes = semaines (lundi en haut)
+  const weeks = 16
+  const dow = (new Date(today * 86400000 + 43200000).getUTCDay() + 6) % 7 // 0 = lundi
+  const start = today - dow - (weeks - 1) * 7
+  const cells = Array.from({ length: weeks * 7 }, (_, i) => {
+    const dn = start + i
+    const n = dn > today ? -1 : dayTotal(state, dayKey(dn)).n
+    const g = state.settings.goal
+    const level = n < 0 ? -1 : n === 0 ? 0 : n < g * 0.5 ? 1 : n < g ? 2 : n < g * 2 ? 3 : 4
+    return { dn, n, level }
+  })
+
+  const unlocked = ACHIEVEMENTS.filter((a) => state.ach[a.id])
+
+  return (
+    <div className="stack">
+      <div>
+        <h1 className="large-title">Progrès</h1>
+        <p className="subtitle">Ton parcours, ton rythme.</p>
+      </div>
+
+      <div className="hero">
+        <div className="row spread">
+          <div>
+            <div className="label">Niveau {lv.level}</div>
+            <div className="jp" style={{ fontSize: 30, fontWeight: 800 }}>{title.jp}</div>
+            <div style={{ opacity: 0.9 }}>{title.fr}</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div className="big tnum" style={{ fontSize: 40 }}>{xp}</div>
+            <div className="label">XP</div>
+          </div>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,.25)', height: 8, borderRadius: 4, marginTop: 16, overflow: 'hidden' }}>
+          <motion.div initial={{ width: 0 }} animate={{ width: `${lv.pct * 100}%` }} transition={{ type: 'spring', stiffness: 70, damping: 16 }} style={{ height: '100%', background: '#fff', borderRadius: 4 }} />
+        </div>
+        <div className="small" style={{ opacity: 0.85, marginTop: 6 }}>{lv.next - xp} XP avant le niveau {lv.level + 1}</div>
+      </div>
+
+      <div className="kpis">
+        <div className="kpi"><b>🔥 {st.current}</b><span>jours de suite (record {st.best})</span></div>
+        <div className="kpi"><b>{prog.wordsKnownR}</b><span>mots retenus</span></div>
+        <div className="kpi"><b>{reviews}</b><span>cartes révisées</span></div>
+        <div className="kpi"><b>{minutes}<small style={{ fontSize: 15 }}> min</small></b><span>de pratique au total</span></div>
+        <div className="kpi"><b>{ret === null ? '—' : Math.round(ret * 100) + '%'}</b><span>de réussite (30 j)</span></div>
+      </div>
+
+      <div className="card">
+        <div className="muted small" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em' }}>Niveau estimé en direct</div>
+        <div className="row" style={{ gap: 12, marginTop: 10, alignItems: 'stretch' }}>
+          <div className="grow" style={{ background: 'var(--surface-2)', borderRadius: 16, padding: 12 }}>
+            <div className="muted small">Ce que je reconnais</div>
+            <div style={{ fontWeight: 800, fontSize: 19 }}>{estR.milestone.label}</div>
+            <div className="muted small">{estR.milestone.cefr} · {prog.wordsKnownR} mots</div>
+          </div>
+          <div className="grow" style={{ background: 'var(--surface-2)', borderRadius: 16, padding: 12 }}>
+            <div className="muted small">Ce que je sais produire</div>
+            <div style={{ fontWeight: 800, fontSize: 19 }}>{estP.milestone.label}</div>
+            <div className="muted small">{estP.milestone.cefr} · {prog.wordsKnownP} mots</div>
+          </div>
+        </div>
+        <div style={{ margin: '14px 0 6px' }}><Bar pct={estR.pct} /></div>
+        <div className="row spread small muted">
+          <span>{estR.milestone.label}</span><span>{estR.next ? estR.next.label : '—'}</span>
+        </div>
+        <div className="row" style={{ gap: 4, marginTop: 12 }}>
+          {MILESTONES.slice(1).map((m) => (
+            <div key={m.id} style={{ flex: 1, height: 6, borderRadius: 3, background: prog.wordsKnownR >= m.at ? 'var(--accent)' : 'var(--surface-2)' }} title={m.label} />
+          ))}
+        </div>
+        <p className="muted small" style={{ margin: '12px 0 0' }}>
+          Estimation indicative basée sur les mots que tu retiens vraiment (intervalle ≥ 3 jours). Le JLPT teste aussi la grammaire, les kanji et l'écoute.
+        </p>
+      </div>
+
+      <div className="card">
+        <div style={{ fontWeight: 700, marginBottom: 12 }}>Couverture du vocabulaire</div>
+        <div className="stack" style={{ gap: 14 }}>
+          {DECK_LABELS.map(([id, label]) => {
+            const k = prog.known[id]
+            if (!k) return null
+            return (
+              <div key={id}>
+                <div className="row spread small" style={{ marginBottom: 6 }}>
+                  <b>{label}</b>
+                  <span className="muted tnum">{k.r}/{k.total} cartes reconnues · {k.p} produites</span>
+                </div>
+                <Bar pct={k.r / k.total} thin />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="card">
+        <div style={{ fontWeight: 700, marginBottom: 12 }}>14 derniers jours</div>
+        <div className="row" style={{ alignItems: 'flex-end', gap: 5, height: 110 }}>
+          {last14.map((d) => (
+            <div key={d.dn} className="grow" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: `${Math.max(d.n ? 6 : 3, (d.n / maxN) * 84)}px` }}
+                transition={{ type: 'spring', stiffness: 90, damping: 16 }}
+                style={{ width: '100%', borderRadius: 6, background: d.n >= state.settings.goal ? 'linear-gradient(180deg,var(--accent-2),var(--accent))' : d.n ? 'color-mix(in srgb, var(--accent) 40%, var(--surface-2))' : 'var(--surface-2)' }}
+                title={`${d.n} cartes`}
+              />
+              <span className="muted" style={{ fontSize: 10 }}>{d.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <div style={{ fontWeight: 700, marginBottom: 12 }}>Régularité · 16 semaines</div>
+        <div className="heat" style={{ gridTemplateColumns: `repeat(${weeks}, 1fr)` }}>
+          {cells.map((c) => (
+            <i key={c.dn} className={c.level > 0 ? 'l' + c.level : ''} style={c.level < 0 ? { visibility: 'hidden' } : undefined} title={`${dayKey(c.dn)} · ${c.n} cartes`} />
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="section-title" style={{ marginTop: 6 }}>Trophées · {unlocked.length}/{ACHIEVEMENTS.length}</div>
+        <div className="trophies">
+          {ACHIEVEMENTS.map((a) => {
+            const got = state.ach[a.id]
+            return (
+              <motion.div key={a.id} className={'trophy' + (got ? '' : ' locked')} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                <div className="e">{got ? a.emoji : '🔒'}</div>
+                <b>{a.name}</b>
+                <span>{a.desc}</span>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
