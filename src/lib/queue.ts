@@ -2,11 +2,18 @@ import type { Item } from './deck'
 import type { AppState } from './state'
 import { dayTotal } from './state'
 import { dayKey, dayNumber, isDue } from './scheduler'
+import { inTheme } from './themes'
 
 export type PosGroup = 'all' | 'verbs' | 'adjs' | 'nouns' | 'others'
+/** normal = révisions dues + nouvelles (planning habituel) · new = nouvelles seulement · practice = entraînement libre sans toucher au planning */
+export type Scope = 'normal' | 'new' | 'practice'
 export interface Filter {
   deck: string // 'all' ou id de deck
   pos: PosGroup
+  theme?: string // id de thème (mots uniquement)
+  scope?: Scope // défaut : normal
+  free?: boolean // séance libre : ignore la limite quotidienne de nouvelles cartes
+  limit?: number // nombre max de cartes (séance libre)
 }
 export const ALL: Filter = { deck: 'all', pos: 'all' }
 
@@ -27,6 +34,9 @@ export function posGroup(pos: string): PosGroup {
 
 export function passes(it: Item, f: Filter): boolean {
   if (f.deck !== 'all' && it.deck !== f.deck) return false
+  if (f.theme) {
+    if (it.kind !== 'word' || !inTheme(it.id, f.theme)) return false
+  }
   if (f.pos !== 'all') {
     // les phrases ne sont pas concernées par le filtre grammatical
     if (it.kind === 'sentence') return false
@@ -48,8 +58,11 @@ export interface QueueBuild {
 export function buildQueue(state: AppState, items: Item[], f: Filter, now: number, extraNew = 0): QueueBuild {
   const today = dayNumber(now)
   const dt = dayTotal(state, dayKey(today))
-  const newLeft = Math.max(0, state.settings.newPerDay + extraNew - dt.nw)
-  const prodLeft = state.settings.production ? Math.max(0, state.settings.prodPerDay + Math.floor(extraNew / 2) - dt.np) : 0
+  const scope = f.scope ?? 'normal'
+  const cap = f.limit != null ? f.limit + extraNew : 1_000_000
+  // séance libre : on choisit soi-même combien de nouvelles cartes ; sinon limites du jour
+  const newLeft = f.free ? cap : Math.max(0, state.settings.newPerDay + extraNew - dt.nw)
+  const prodLeft = !state.settings.production ? 0 : f.free ? cap : Math.max(0, state.settings.prodPerDay + Math.floor(extraNew / 2) - dt.np)
 
   const learning: Array<[number, string]> = []
   const review: Array<[number, string]> = []
@@ -61,6 +74,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     const r = state.cards[`${it.id}:r`]
     const p = state.cards[`${it.id}:p`]
     for (const [key, c] of [[`${it.id}:r`, r], [`${it.id}:p`, p]] as const) {
+      if (scope === 'new') break
       if (!c || c.s === 'new') continue
       if (!isDue(c, now, today)) continue
       if (c.s === 'review') review.push([c.d, key])
@@ -84,6 +98,46 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     newLeft,
     prodLeft
   }
+}
+
+function shuffle<T>(a: T[]): T[] {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+/** Entraînement libre : toutes les cartes déjà vues du filtre, dans le désordre. Les réponses ne modifient PAS le planning. */
+export function buildPractice(state: AppState, items: Item[], f: Filter, extraNew = 0): string[] {
+  const out: string[] = []
+  for (const it of items) {
+    if (!passes(it, f)) continue
+    const r = state.cards[`${it.id}:r`]
+    const p = state.cards[`${it.id}:p`]
+    const started = !!r && r.s !== 'new'
+    if (started) out.push(`${it.id}:r`)
+    if (it.kind !== 'sentence' && (started || (!!p && p.s !== 'new'))) out.push(`${it.id}:p`)
+  }
+  shuffle(out)
+  return f.limit != null ? out.slice(0, f.limit + extraNew) : out
+}
+
+/** Phrases d'échauffement : d'abord les phrases à revoir, sinon de nouvelles phrases (les plus fréquentes). */
+export function pickWarmup(state: AppState, items: Item[], n: number, now: number): string[] {
+  if (n <= 0) return []
+  const today = dayNumber(now)
+  const sentences = items.filter((i) => i.kind === 'sentence').sort((a, b) => a.order - b.order)
+  const due: Array<[number, string]> = []
+  const fresh: string[] = []
+  for (const it of sentences) {
+    const key = `${it.id}:r`
+    const c = state.cards[key]
+    if (!c || c.s === 'new') fresh.push(key)
+    else if (isDue(c, now, today) && (c.s === 'review' || c.d <= now + 20 * 60_000)) due.push([c.d, key])
+  }
+  due.sort((a, b) => a[0] - b[0])
+  return [...due.map((d) => d[1]), ...fresh].slice(0, n)
 }
 
 /** Mélange : révisions d'abord, nouvelles cartes glissées régulièrement. */

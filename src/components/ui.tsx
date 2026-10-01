@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import { useEffect, type ReactNode } from 'react'
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
@@ -106,6 +106,7 @@ export function Bar({ pct, thin }: { pct: number; thin?: boolean }) {
 }
 
 export function Sheet({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
+  const controls = useDragControls()
   useEffect(() => {
     if (!open) return
     const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -124,11 +125,15 @@ export function Sheet({ open, onClose, children }: { open: boolean; onClose: () 
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 38 }}
             drag="y"
+            dragControls={controls}
+            dragListener={false}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={(_, i) => i.offset.y > 120 && onClose()}
           >
-            <div className="grab" />
+            <div className="grab-zone" onPointerDown={(e) => controls.start(e)}>
+              <div className="grab" />
+            </div>
             {children}
           </motion.div>
         </>

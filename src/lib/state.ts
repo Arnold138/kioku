@@ -12,6 +12,10 @@ export interface Settings {
   autoPlay: boolean
   production: boolean
   theme: 'auto' | 'light' | 'dark'
+  /** Phrases à traduire en début de séance (0 = aucune). Ajouté en v1.1 — absent des anciennes sauvegardes. */
+  preSentences: 0 | 1 | 2
+  /** Saisie au clavier sur les cartes de production (FR → JP). Ajouté en v1.1. */
+  typing: boolean
   _t: number
 }
 
@@ -42,6 +46,8 @@ export const DEFAULT_SETTINGS: Settings = {
   autoPlay: false,
   production: true,
   theme: 'auto',
+  preSentences: 0,
+  typing: false,
   _t: 0
 }
 

@@ -6,6 +6,7 @@ import { RATING_LABELS, dayNumber, newCard, previewLabels, type Rating } from '.
 import { dayTotal, streaks, levelFromXp, totalXp } from '../lib/state'
 import { dayKey } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
+import { checkTyped, type TypedResult } from '../lib/typing'
 import { Icon } from './ui'
 
 const RATE_EMOJI: Record<Rating, string> = { 1: '😣', 2: '😕', 3: '🤔', 4: '🙂', 5: '😎' }
@@ -34,7 +35,7 @@ function Speak({ text }: { text: string }) {
   )
 }
 
-function Front({ it, dir, reading }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never' }) {
+function Front({ it, dir, reading, typing }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean }) {
   const [shown, setShown] = useState(false)
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
@@ -43,7 +44,7 @@ function Front({ it, dir, reading }: { it: Item; dir: 'r' | 'p'; reading: 'alway
         <span className="chip kind accent">Dis-le en japonais</span>
         <div className={'meaning' + (it.fr.length > 22 ? ' long' : '')}>{it.fr}</div>
         {it.kind === 'word' && <span className="chip">{POS_LABEL[it.pos] ?? it.pos}</span>}
-        <div className="hint">Pense à la réponse, puis retourne la carte</div>
+        <div className="hint">{typing ? 'Écris la réponse en rōmaji ou en kana' : 'Pense à la réponse, puis retourne la carte'}</div>
       </div>
     )
   }
@@ -63,12 +64,18 @@ function Front({ it, dir, reading }: { it: Item; dir: 'r' | 'p'; reading: 'alway
   )
 }
 
-function Back({ it, dir }: { it: Item; dir: 'r' | 'p' }) {
+function Back({ it, dir, typed }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null }) {
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
     return (
       <div className="face back">
         <Speak text={it.kana || it.jp} />
+        {typed && typed.script !== 'vide' && (
+          <div className={'typed-result ' + (typed.ok ? 'good' : 'bad')}>
+            {typed.ok ? '✓ Bonne réponse' : '✗ Pas tout à fait'}
+            {!typed.ok && <span>Tu as écrit : <b className="jp">{typed.input}</b></span>}
+          </div>
+        )}
         <div className={'word-jp jp ' + sizeClass(it.jp, it.kind === 'sentence')}>{it.jp}</div>
         <Reading it={it} long={long} />
         <div className="divider" />
@@ -93,15 +100,26 @@ function Back({ it, dir }: { it: Item; dir: 'r' | 'p' }) {
 }
 
 export function Study() {
-  const { session: s, byId, state, endSession, reveal, rate, markKnown, undo, startSession } = useStore()
+  const { session: s, byId, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings } = useStore()
   const now = Date.now()
   const today = dayNumber(now)
 
+  const [typed, setTyped] = useState<TypedResult | null>(null)
+  const [draft, setDraft] = useState('')
   const cardKey = s?.current ?? null
   const parsed = cardKey ? parseCardId(cardKey) : null
   const item = parsed ? byId.get(parsed.itemId) : undefined
   const card = cardKey ? state.cards[cardKey] ?? newCard(now) : null
   const labels = useMemo(() => (card ? previewLabels(card, now, today) : null), [cardKey, s?.revealed]) // eslint-disable-line
+
+  // la saisie repart de zéro à chaque carte
+  useEffect(() => {
+    setDraft('')
+    if (!useStore.getState().session?.revealed) setTyped(null)
+  }, [cardKey]) // eslint-disable-line
+  useEffect(() => {
+    if (!s?.revealed) setTyped(null)
+  }, [s?.revealed]) // eslint-disable-line
 
   // Lecture audio automatique
   useEffect(() => {
@@ -145,12 +163,32 @@ export function Study() {
           <div className="study-progress"><i style={{ width: '100%' }} /></div>
         </div>
         <div className="summary">
-          {s.answered === 0 ? (
+          {s.practice && s.answered > 0 ? (
+            <>
+              <motion.div className="emoji" initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>🏋️</motion.div>
+              <h2 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.02em' }}>Entraînement terminé</h2>
+              <p className="muted" style={{ margin: 0, maxWidth: 320 }}>Ton planning de révision n'a pas changé : cette séance était juste pour t'exercer.</p>
+              <div className="stat-grid">
+                <div className="stat"><b>{s.answered}</b><span>réponses</span></div>
+                <div className="stat"><b>{acc}%</b><span>retenues</span></div>
+                <div className="stat"><b>{mins}</b><span>min</span></div>
+              </div>
+              <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
+              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra)}>Recommencer</button>
+            </>
+          ) : s.answered === 0 ? (
             <>
               <motion.div className="emoji" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>✨</motion.div>
-              <h2 style={{ margin: 0, fontSize: 28 }}>Rien à réviser pour l'instant</h2>
-              <p className="muted" style={{ maxWidth: 320 }}>Tes révisions sont à jour. Tu peux apprendre quelques cartes de plus, ou revenir plus tard.</p>
-              <button className="btn" onClick={() => startSession(s.filter, s.extra + 10)}>Apprendre 10 cartes de plus</button>
+              <h2 style={{ margin: 0, fontSize: 28 }}>{s.practice || s.filter.free ? 'Aucune carte avec ces choix' : 'Rien à réviser pour l\'instant'}</h2>
+              <p className="muted" style={{ maxWidth: 320 }}>
+                {s.practice
+                  ? 'Tu n\'as pas encore vu de cartes dans cette catégorie. Essaie « Nouvelles cartes » pour les découvrir.'
+                  : s.filter.free
+                    ? 'Il n\'y a rien à revoir ni de nouvelle carte ici. Essaie « S\'entraîner » ou une autre catégorie.'
+                    : 'Tes révisions sont à jour. Tu peux apprendre quelques cartes de plus, ou revenir plus tard.'}
+              </p>
+              {!s.practice && !s.filter.free && <button className="btn" onClick={() => startSession(s.filter, s.extra + 10)}>Apprendre 10 cartes de plus</button>}
+              <button className="btn plain" onClick={endSession}>Fermer</button>
             </>
           ) : (
             <>
@@ -176,7 +214,8 @@ export function Study() {
   }
 
   const isNew = card!.s === 'new'
-  const stageLabel = isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
+  const stageLabel = s.practice ? 'Entraînement' : isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
+  const typingOn = state.settings.typing && parsed!.dir === 'p'
   const remaining = s.queue.length + s.learn.length
 
   return (
@@ -187,9 +226,15 @@ export function Study() {
         <button className="icon-btn" onClick={undo} disabled={!s.undo} aria-label="Annuler">{Icon.undo()}</button>
       </div>
       <div className="study-meta">
-        <span className={'chip ' + (isNew ? 'accent' : '')}>{stageLabel}</span>
+        {s.warm.includes(cardKey!) && <span className="chip accent">📝 Échauffement</span>}
+        <span className={'chip ' + (isNew || s.practice ? 'accent' : '')}>{stageLabel}</span>
         <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
-        {isNew && parsed!.dir === 'r' && !s.revealed && (
+        {parsed!.dir === 'p' && !s.revealed && (
+          <button className="known-btn" onClick={() => updateSettings({ typing: !state.settings.typing })}>
+            {state.settings.typing ? '✋ Je réponds dans ma tête' : '⌨️ Écrire la réponse'}
+          </button>
+        )}
+        {isNew && !s.practice && parsed!.dir === 'r' && !s.revealed && (
           <button className="known-btn" onClick={markKnown}>Je connais déjà</button>
         )}
       </div>
@@ -204,22 +249,47 @@ export function Study() {
             exit={{ x: -70, opacity: 0, transition: { duration: 0.18 } }}
             transition={{ rotateY: { type: 'spring', stiffness: 220, damping: 24 }, x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
           >
-            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} />
-            <Back it={item} dir={parsed!.dir} />
+            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} />
+            <Back it={item} dir={parsed!.dir} typed={typed} />
           </motion.div>
         </AnimatePresence>
       </div>
 
       <div className="study-bottom">
-        {!s.revealed ? (
+        {!s.revealed && typingOn ? (
+          <form
+            className="typing-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setTyped(checkTyped(item, draft))
+              reveal()
+            }}
+          >
+            <input
+              key={cardKey}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="konnichiwa / こんにちは"
+              autoFocus
+              autoCapitalize="off"
+              autoCorrect="off"
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="go"
+              aria-label="Ta réponse"
+            />
+            <button className="btn" type="submit">Vérifier</button>
+            <button className="known-btn" type="button" onClick={() => { setTyped(null); reveal() }}>Je ne sais pas — voir la réponse</button>
+          </form>
+        ) : !s.revealed ? (
           <button className="btn show-btn" onClick={reveal}>Afficher la réponse</button>
         ) : (
           <div className="rate-grid">
             {([1, 2, 3, 4, 5] as Rating[]).map((r) => (
-              <button key={r} className={`rate r${r}`} onClick={() => rate(r)}>
+              <button key={r} className={`rate r${r}` + (typed && typed.script !== 'vide' && ((typed.ok && r === 4) || (!typed.ok && r === 1)) ? ' suggest' : '')} onClick={() => rate(r)}>
                 <span className="emo">{RATE_EMOJI[r]}</span>
                 {RATING_LABELS[r]}
-                <small>{labels?.[r]}</small>
+                <small>{s.practice ? '\u00a0' : labels?.[r]}</small>
               </button>
             ))}
           </div>

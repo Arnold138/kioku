@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useStore } from '../lib/store'
+import { useStore, getBackup } from '../lib/store'
 import { Segmented, Stepper, Toggle } from './ui'
 import { getStoredConfig, hasEnvConfig, reconnect, saveConfig, signIn, signOut, signUp, syncNow } from '../lib/sync'
 
@@ -94,6 +94,17 @@ export function Settings() {
     a.click()
     setTimeout(() => URL.revokeObjectURL(a.href), 2000)
   }
+  const doBackup = () => {
+    const raw = getBackup()
+    if (!raw) return
+    const blob = new Blob([raw], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'kioku-copie-avant-mise-a-jour.json'
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000)
+  }
+  const hasBackup = !!getBackup()
   const doImport = async (f: File | undefined) => {
     if (!f) return
     const ok = importJson(await f.text())
@@ -114,6 +125,14 @@ export function Settings() {
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
           <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}
+          <Row title="Écrire les réponses" sub="Sur les cartes de production, tape le mot en rōmaji ou en kana au lieu de le penser"><Toggle on={s.typing} onChange={(v) => updateSettings({ typing: v })} /></Row>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Phrases à traduire avant la séance</div>
+              <div className="muted small">Une ou deux phrases à décortiquer quand tu appuies sur « Commencer »</div>
+            </div>
+            <Segmented value={String(s.preSentences)} onChange={(v) => updateSettings({ preSentences: Number(v) as 0 | 1 | 2 })} options={[['0', 'Aucune'], ['1', '1 phrase'], ['2', '2 phrases']]} />
+          </div>
         </div>
       </div>
 
@@ -144,6 +163,7 @@ export function Settings() {
         <div className="section-title">Données</div>
         <div className="list">
           <button className="list-row tap" onClick={doExport}><span className="grow" style={{ fontWeight: 600 }}>Exporter une sauvegarde (.json)</span></button>
+          {hasBackup && <button className="list-row tap" onClick={doBackup}><span className="grow"><div style={{ fontWeight: 600 }}>Télécharger la copie de sécurité</div><div className="muted small">Faite automatiquement avant la mise à jour 1.1</div></span></button>}
           <button className="list-row tap" onClick={() => fileRef.current?.click()}><span className="grow" style={{ fontWeight: 600 }}>Importer une sauvegarde</span></button>
           <button className="list-row tap" onClick={() => { if (confirm('Tout effacer sur cet appareil ? (Ta sauvegarde cloud reste, elle se resynchronisera.)')) resetAll() }}><span className="grow" style={{ fontWeight: 600, color: 'var(--red)' }}>Réinitialiser cet appareil</span></button>
         </div>

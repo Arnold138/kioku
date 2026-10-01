@@ -16,11 +16,14 @@ import {
 } from './state'
 import { type CardState, type Rating, answer, dayKey, dayNumber, newCard } from './scheduler'
 import { type CustomCard, type Item, buildCatalog, parseCardId } from './deck'
-import { ALL, type Filter, buildQueue, interleave } from './queue'
+import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } from './queue'
 import { ACHIEVEMENTS, buildStats, newlyUnlocked, type Achievement } from './achievements'
 
-const LS_KEY = 'kioku:v1'
+const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
+const LS_VER = 'kioku:appver'
+const LS_BACKUP = 'kioku:backup:avant-v1.1'
+export const APP_VERSION = '1.1'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -52,6 +55,15 @@ function deviceId(): string {
   return id
 }
 
+/** Filet de sécurité : à la première ouverture après une mise à jour, on garde une copie de la sauvegarde locale. */
+function snapshotBeforeUpdate() {
+  if (safeGet(LS_VER) === APP_VERSION) return
+  const raw = safeGet(LS_KEY)
+  if (raw && !safeGet(LS_BACKUP)) safeSet(LS_BACKUP, raw)
+  safeSet(LS_VER, APP_VERSION)
+}
+export const getBackup = (): string | null => safeGet(LS_BACKUP)
+
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
   if (!raw) return emptyState()
@@ -79,6 +91,8 @@ interface UndoInfo {
   wasNew: boolean
   forgot: boolean
   shownAt: number
+  practice?: boolean // entraînement : rien n'a été modifié dans le planning
+  requeued?: boolean // la carte a été remise en fin de file
 }
 
 export interface Session {
@@ -98,6 +112,10 @@ export interface Session {
   undo: UndoInfo | null
   finished: boolean
   newSeen: number
+  /** entraînement libre : les réponses ne changent ni le planning, ni l'XP */
+  practice: boolean
+  /** cartes « échauffement » (phrases à traduire en début de séance) */
+  warm: string[]
 }
 
 interface Store {
@@ -118,7 +136,7 @@ interface Store {
   addCustom: (c: { jp: string; kana: string; fr: string; note?: string }) => string
   editCustom: (id: string, c: { jp: string; kana: string; fr: string; note?: string }) => void
   deleteCustom: (id: string) => void
-  startSession: (f?: Filter, extra?: number) => void
+  startSession: (f?: Filter, extra?: number, opts?: { warm?: number }) => void
   reveal: () => void
   rate: (r: Rating) => void
   markKnown: () => void
@@ -213,6 +231,10 @@ export const useStore = create<Store>((set, get) => {
   const finishSession = () => {
     const { session, state, device } = get()
     if (!session) return
+    if (session.practice) {
+      set({ session: { ...session, finished: true } })
+      return
+    }
     const perfect = session.answered >= 10 && session.forgot === 0
     if (session.answered >= 5) {
       const before = levelFromXp(totalXp(state)).level
@@ -240,6 +262,7 @@ export const useStore = create<Store>((set, get) => {
     sync: { status: 'off' },
 
     init: () => {
+      snapshotBeforeUpdate()
       const st = loadState()
       const cat = buildCatalog(st.custom)
       set({ state: st, items: cat.items, byId: cat.byId, device: deviceId(), ready: true })
@@ -275,11 +298,27 @@ export const useStore = create<Store>((set, get) => {
       commit({ custom: { ...get().state.custom, [id]: { ...cur, del: true, t: Date.now() } } })
     },
 
-    startSession: (f = ALL, extra = 0) => {
+    startSession: (f = ALL, extra = 0, opts) => {
       const { state, items } = get()
       const now = Date.now()
-      const q = buildQueue(state, items, f, now, extra)
-      const queue = interleave(q)
+      const practice = (f.scope ?? 'normal') === 'practice'
+      let queue: string[]
+      let warm: string[] = []
+      if (practice) {
+        queue = buildPractice(state, items, f, extra)
+      } else {
+        const q = buildQueue(state, items, f, now, extra)
+        // phrases d'échauffement : en tête de séance, retirées du reste de la file pour ne pas les voir deux fois
+        if (opts?.warm && !f.free) {
+          warm = pickWarmup(state, items, opts.warm, now)
+          const w = new Set(warm)
+          q.learning = q.learning.filter((k) => !w.has(k))
+          q.review = q.review.filter((k) => !w.has(k))
+          q.fresh = q.fresh.filter((k) => !w.has(k))
+        }
+        queue = [...warm, ...interleave(q)]
+        if (f.free && f.limit != null) queue = queue.slice(0, f.limit + extra)
+      }
       const s: Session = {
         filter: f,
         extra,
@@ -296,7 +335,9 @@ export const useStore = create<Store>((set, get) => {
         shownAt: now,
         undo: null,
         finished: false,
-        newSeen: 0
+        newSeen: 0,
+        practice,
+        warm
       }
       set({ session: pickNext(s, now) })
     },
@@ -313,6 +354,24 @@ export const useStore = create<Store>((set, get) => {
       const dn = dayNumber(now)
       const day = dayKey(dn)
       const key = s.current
+
+      // Entraînement libre : on ne touche ni aux cartes, ni à l'XP, ni aux compteurs du jour.
+      if (s.practice) {
+        const again = r <= 2 // Oublié / Difficile : la carte revient en fin de séance
+        let ps: Session = {
+          ...s,
+          queue: again ? [...s.queue, key] : s.queue,
+          done: s.done + (again ? 0 : 1),
+          answered: s.answered + 1,
+          forgot: s.forgot + (r === 1 ? 1 : 0),
+          undo: { cardKey: key, prevCard: undefined, prevDay: undefined, xp: 0, wasNew: false, forgot: r === 1, shownAt: s.shownAt, practice: true, requeued: again }
+        }
+        ps = pickNext(ps, now)
+        set({ session: ps })
+        if (ps.finished) finishSession()
+        return
+      }
+
       const prevCard = state.cards[key]
       const card = prevCard ?? newCard(now)
       const wasNew = card.s === 'new'
@@ -379,7 +438,7 @@ export const useStore = create<Store>((set, get) => {
 
     markKnown: () => {
       const { session: s, state } = get()
-      if (!s || !s.current) return
+      if (!s || !s.current || s.practice) return
       const now = Date.now()
       const dn = dayNumber(now)
       const c = { ...newCard(now), s: 'review' as const, i: 14, d: dn + 14, r: 1 }
@@ -395,6 +454,29 @@ export const useStore = create<Store>((set, get) => {
       if (!s || !s.undo) return
       const u = s.undo
       const now = Date.now()
+      if (u.practice) {
+        // entraînement : on remet simplement la carte à l'écran
+        let queue = s.current ? [s.current, ...s.queue] : s.queue
+        if (u.requeued) {
+          const idx = queue.lastIndexOf(u.cardKey)
+          if (idx >= 0) queue = queue.filter((_, i) => i !== idx)
+        }
+        set({
+          session: {
+            ...s,
+            queue,
+            current: u.cardKey,
+            revealed: false,
+            finished: false,
+            answered: Math.max(0, s.answered - 1),
+            forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
+            done: Math.max(0, s.done - (u.requeued ? 0 : 1)),
+            undo: null,
+            shownAt: now
+          }
+        })
+        return
+      }
       const day = dayKey(dayNumber(now))
       const cards = { ...state.cards }
       if (u.prevCard) cards[u.cardKey] = u.prevCard

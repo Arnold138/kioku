@@ -4,6 +4,14 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.1
+
+- **Accueil** : ton niveau (XP + niveau de japonais estimé) est tout en haut.
+- **Réviser librement** : choisis le niveau (N5 / N4 / N3 / phrases / mes cartes), le type de mots (verbes, adjectifs, noms…), un **thème** (météo, nourriture, corps, famille, lieux…) et le nombre de cartes. Trois modes : *Réviser + découvrir*, *Découvrir du nouveau*, *S'entraîner* (cartes déjà vues, **sans toucher au planning ni à l'XP**).
+- **Phrases avant la séance** : 0, 1 ou 2 phrases à traduire quand tu appuies sur « Commencer » (réglable sur l'accueil et dans Réglages).
+- **Écrire les réponses** : sur les cartes de production, tape le mot en rōmaji (konnichiwa, konnichiha…) ou en kana/kanji ; l'app vérifie et te suggère « Oublié » ou « Bien ».
+- **Sécurité** : la sauvegarde garde exactement le même format (clé `kioku:v1`, données `v: 1`) ; seuls deux réglages optionnels ont été ajoutés. Une copie de sécurité locale est faite automatiquement à la première ouverture (Réglages → Données → *Télécharger la copie de sécurité*).
+
 ## Ce qu'elle contient
 
 - **1 995 mots** classés par fréquence : N5 complet (676), N4 complet (637) et les 682 mots N3 les plus fréquents.
@@ -92,7 +100,7 @@ src/lib/sync.ts        synchronisation Supabase
 src/lib/level.ts       estimation du niveau
 src/lib/achievements.ts trophées
 src/lib/romaji.ts      kana → rōmaji
-src/data/words.json    1 995 mots · sentences.json  158 phrases
+src/data/words.json    1 995 mots · sentences.json  158 phrases · themes.json  thèmes des mots
 src/components/        écrans (Accueil, Étude, Cartes, Progrès, Réglages)
 ```
 
