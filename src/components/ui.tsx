@@ -1,5 +1,6 @@
-import { motion, AnimatePresence, useDragControls } from 'framer-motion'
-import { useEffect, type ReactNode } from 'react'
+import { motion, AnimatePresence, animate, useMotionValue } from 'framer-motion'
+import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
 
@@ -105,40 +106,117 @@ export function Bar({ pct, thin }: { pct: number; thin?: boolean }) {
   )
 }
 
-export function Sheet({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
-  const controls = useDragControls()
+/**
+ * Hauteur réellement visible (iPhone : la barre Safari et le clavier changent la hauteur disponible).
+ * Exposée en variables CSS --vvh (hauteur) et --vvt (décalage haut) pour que les feuilles ne dépassent jamais de l'écran.
+ */
+export function useVisibleHeight(active: boolean) {
+  useEffect(() => {
+    if (!active) return
+    const vv = window.visualViewport
+    const root = document.documentElement
+    const apply = () => {
+      root.style.setProperty('--vvh', `${Math.round(vv?.height ?? window.innerHeight)}px`)
+      root.style.setProperty('--vvt', `${Math.round(vv?.offsetTop ?? 0)}px`)
+    }
+    apply()
+    vv?.addEventListener('resize', apply)
+    vv?.addEventListener('scroll', apply)
+    window.addEventListener('resize', apply)
+    window.addEventListener('orientationchange', apply)
+    return () => {
+      vv?.removeEventListener('resize', apply)
+      vv?.removeEventListener('scroll', apply)
+      window.removeEventListener('resize', apply)
+      window.removeEventListener('orientationchange', apply)
+    }
+  }, [active])
+}
+
+/** Verrouille le défilement de la page derrière une feuille / un examen (compteur : plusieurs couches possibles). */
+let locks = 0
+export function useScrollLock(active: boolean) {
+  useEffect(() => {
+    if (!active) return
+    locks++
+    document.documentElement.classList.add('sheet-open')
+    return () => {
+      locks = Math.max(0, locks - 1)
+      if (locks === 0) document.documentElement.classList.remove('sheet-open')
+    }
+  }, [active])
+}
+
+/**
+ * Feuille modale. Structure pensée pour iPhone :
+ *  - la feuille elle-même ne défile pas (seul le corps défile) ;
+ *  - l'en-tête (poignée + ✕) et le pied (bouton d'action) restent toujours visibles ;
+ *  - la page derrière est verrouillée tant que la feuille est ouverte.
+ */
+export function Sheet({ open, onClose, children, footer }: { open: boolean; onClose: () => void; children: ReactNode; footer?: ReactNode }) {
+  const y = useMotionValue(0)
+  const drag = useRef<{ y0: number; last: number; lastT: number; v: number } | null>(null)
+  useVisibleHeight(open)
+  useScrollLock(open)
   useEffect(() => {
     if (!open) return
     const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', h)
     return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
-  return (
+
+  // Glisser vers le bas pour fermer : uniquement depuis la poignée. La feuille n'a volontairement PAS de `drag` framer :
+  // il impose `touch-action` sur toute la feuille et peut bloquer le défilement tactile (iPhone).
+  const onDown = (e: PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
+    drag.current = { y0: e.clientY, last: e.clientY, lastT: performance.now(), v: 0 }
+  }
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d) return
+    const now = performance.now()
+    d.v = ((e.clientY - d.last) / Math.max(1, now - d.lastT)) * 1000
+    d.last = e.clientY
+    d.lastT = now
+    y.set(Math.max(0, e.clientY - d.y0))
+  }
+  const onUp = () => {
+    const d = drag.current
+    drag.current = null
+    if (!d) return
+    if (y.get() > 110 || d.v > 600) onClose()
+    else animate(y, 0, { type: 'spring', stiffness: 420, damping: 40 })
+  }
+  const off = typeof window === 'undefined' ? 800 : window.innerHeight
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
           <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
           <motion.div
             className="sheet"
-            initial={{ y: '100%' }}
+            role="dialog"
+            aria-modal="true"
+            style={{ y }}
+            initial={{ y: off }}
             animate={{ y: 0 }}
-            exit={{ y: '100%' }}
+            exit={{ y: off }}
             transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-            drag="y"
-            dragControls={controls}
-            dragListener={false}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0, bottom: 0.6 }}
-            onDragEnd={(_, i) => i.offset.y > 120 && onClose()}
           >
-            <div className="grab-zone" onPointerDown={(e) => controls.start(e)}>
-              <div className="grab" />
+            <div className="sheet-head">
+              <div className="grab-zone" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+                <div className="grab" />
+              </div>
+              <button className="sheet-x" onClick={onClose} aria-label="Fermer">✕</button>
             </div>
-            {children}
+            <div className={'sheet-body' + (footer ? '' : ' no-foot')}>{children}</div>
+            {footer && <div className="sheet-foot">{footer}</div>}
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
 

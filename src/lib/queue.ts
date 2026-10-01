@@ -1,4 +1,4 @@
-import type { Item } from './deck'
+import { isOptIn, type Item } from './deck'
 import type { AppState } from './state'
 import { dayTotal } from './state'
 import { dayKey, dayNumber, isDue } from './scheduler'
@@ -81,7 +81,8 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
       else if (c.d <= now + 20 * 60_000) learning.push([c.d, key])
     }
     if (!r || r.s === 'new') {
-      if (fresh.length < newLeft) fresh.push(`${it.id}:r`)
+      // les decks « à la demande » (phrases des vidéos) n'alimentent pas les nouvelles cartes du jour
+      if (fresh.length < newLeft && !(f.deck === 'all' && isOptIn(it.deck))) fresh.push(`${it.id}:r`)
     } else if (it.kind !== 'sentence' && state.settings.production && (!p || p.s === 'new')) {
       // la production se débloque quand la reconnaissance est solide (≥ 3 jours)
       if (r.s === 'review' && r.i >= 3 && freshProd.length < prodLeft) freshProd.push(`${it.id}:p`)
@@ -133,7 +134,9 @@ export function pickWarmup(state: AppState, items: Item[], n: number, now: numbe
   for (const it of sentences) {
     const key = `${it.id}:r`
     const c = state.cards[key]
-    if (!c || c.s === 'new') fresh.push(key)
+    if (!c || c.s === 'new') {
+      if (!isOptIn(it.deck)) fresh.push(key)
+    }
     else if (isDue(c, now, today) && (c.s === 'review' || c.d <= now + 20 * 60_000)) due.push([c.d, key])
   }
   due.sort((a, b) => a[0] - b[0])

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../lib/store'
-import { DECKS } from '../lib/deck'
+import { DECKS, deckInfo } from '../lib/deck'
 import { POS_GROUPS, buildPractice, buildQueue, type Filter, type PosGroup, type Scope } from '../lib/queue'
 import { THEMES } from '../lib/themes'
 import { Sheet } from './ui'
@@ -12,8 +12,9 @@ interface Prefs {
   theme: string
   scope: Scope
   limit: number // 0 = tout
+  write: boolean // écrire la traduction avant de retourner la carte
 }
-const DEFAULTS: Prefs = { deck: 'all', pos: 'all', theme: '', scope: 'normal', limit: 20 }
+const DEFAULTS: Prefs = { deck: 'all', pos: 'all', theme: '', scope: 'normal', limit: 20, write: false }
 
 function loadPrefs(): Prefs {
   try {
@@ -41,7 +42,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
     }
   }, [p])
 
-  const wordsOnly = p.deck !== 'phrases' && p.deck !== 'perso'
+  const wordsOnly = !deckInfo(p.deck)?.sentences
   const base: Filter = useMemo(
     () => ({ deck: p.deck, pos: wordsOnly ? p.pos : 'all', theme: wordsOnly && p.theme ? p.theme : undefined, free: true }),
     [p.deck, p.pos, p.theme, wordsOnly]
@@ -71,11 +72,19 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
 
   const go = () => {
     onClose()
-    startSession({ ...base, scope: p.scope, limit: p.limit || undefined })
+    startSession({ ...base, scope: p.scope, limit: p.limit || undefined }, 0, { typeTr: p.write })
   }
 
   return (
-    <Sheet open={open} onClose={onClose}>
+    <Sheet
+      open={open}
+      onClose={onClose}
+      footer={
+        <button className="btn block" disabled={total === 0} style={total === 0 ? { opacity: 0.45 } : undefined} onClick={go}>
+          {total === 0 ? 'Aucune carte avec ces choix' : `Commencer · ${total} carte${total > 1 ? 's' : ''}`}
+        </button>
+      }
+    >
       <div className="stack" style={{ gap: 18 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Réviser librement</h2>
@@ -130,6 +139,19 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
 
         <div>
+          <div className="free-sec">Façon de répondre</div>
+          <div className="seg">
+            <button className={p.write ? '' : 'on'} onClick={() => set({ write: false })}>Carte classique</button>
+            <button className={p.write ? 'on' : ''} onClick={() => set({ write: true })}>✍️ Écrire la traduction</button>
+          </div>
+          <p className="muted small" style={{ margin: '8px 2px 0' }}>
+            {p.write
+              ? 'Tu écris le sens en français, puis la carte se retourne : tu compares avec la traduction et tu te notes comme d\'habitude.'
+              : 'Tu réfléchis dans ta tête, tu retournes la carte, puis tu te notes.'}
+          </p>
+        </div>
+
+        <div>
           <div className="free-sec">Nombre de cartes</div>
           <div className="chips wrap">
             {LIMITS.map(([v, l]) => (
@@ -137,10 +159,6 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
             ))}
           </div>
         </div>
-
-        <button className="btn block" disabled={total === 0} style={total === 0 ? { opacity: 0.45 } : undefined} onClick={go}>
-          {total === 0 ? 'Aucune carte avec ces choix' : `Commencer · ${total} carte${total > 1 ? 's' : ''}`}
-        </button>
       </div>
     </Sheet>
   )

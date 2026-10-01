@@ -12,6 +12,11 @@ export interface AchStats {
   mature: number
   perfectSessions: number
   hour: number
+  /** examens terminés (tous modes) */
+  exams: number
+  /** niveaux dont l'examen complet est réussi (≥ 70 %) */
+  examsPassed: string[]
+  examPerfect: boolean
 }
 
 export interface Achievement {
@@ -48,6 +53,13 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'perfect', name: 'Sans faute', desc: 'Session de 10+ cartes sans oubli', emoji: '🎯', test: (s) => s.perfectSessions >= 1 },
   { id: 'custom1', name: 'Curieux d\'immersion', desc: 'Ajouter une carte perso', emoji: '📺', test: (s) => s.custom >= 1 },
   { id: 'custom20', name: 'Chasseur de mots', desc: '20 cartes perso', emoji: '🏹', test: (s) => s.custom >= 20 },
+  { id: 'ex1', name: 'Premier examen', desc: 'Terminer un test', emoji: '📝', test: (s) => s.exams >= 1 },
+  { id: 'exN5', name: 'N5 validé', desc: 'Examen N5 complet à 70 % ou plus', emoji: '🌸', test: (s) => s.examsPassed.includes('N5') },
+  { id: 'exN4', name: 'N4 validé', desc: 'Examen N4 complet à 70 % ou plus', emoji: '🍃', test: (s) => s.examsPassed.includes('N4') },
+  { id: 'exN3', name: 'N3 validé', desc: 'Examen N3 complet à 70 % ou plus', emoji: '🎋', test: (s) => s.examsPassed.includes('N3') },
+  { id: 'exN2', name: 'N2 validé', desc: 'Examen N2 complet à 70 % ou plus', emoji: '⛩️', test: (s) => s.examsPassed.includes('N2') },
+  { id: 'exN1', name: 'N1 validé', desc: 'Examen N1 complet à 70 % ou plus', emoji: '🏯', test: (s) => s.examsPassed.includes('N1') },
+  { id: 'exPerfect', name: 'Copie parfaite', desc: '100 % à un examen', emoji: '💯', test: (s) => s.examPerfect },
   { id: 'early', name: 'Lève-tôt', desc: 'Réviser avant 8 h', emoji: '🌅', test: (s) => s.hour >= 5 && s.hour < 8 },
   { id: 'night', name: 'Oiseau de nuit', desc: 'Réviser après 22 h', emoji: '🦉', test: (s) => s.hour >= 22 || s.hour < 4 }
 ]
@@ -57,7 +69,18 @@ export function newlyUnlocked(state: AppState, stats: AchStats): Achievement[] {
 }
 
 export function buildStats(
-  s: { reviews: number; level: number; xp: number; streak: number; bestStreak: number; perfectSessions: number; hour: number },
+  s: {
+    reviews: number
+    level: number
+    xp: number
+    streak: number
+    bestStreak: number
+    perfectSessions: number
+    hour: number
+    exams?: number
+    examsPassed?: string[]
+    examPerfect?: boolean
+  },
   p: Progress
 ): AchStats {
   return {
@@ -71,6 +94,9 @@ export function buildStats(
     custom: p.customCount,
     mature: p.matureCount,
     perfectSessions: s.perfectSessions,
-    hour: s.hour
+    hour: s.hour,
+    exams: s.exams ?? 0,
+    examsPassed: s.examsPassed ?? [],
+    examPerfect: !!s.examPerfect
   }
 }

@@ -54,3 +54,73 @@ export function checkTyped(it: Item, raw: string): TypedResult {
   }
   return { ok: romajiForms.has(canon(input)), input, script: 'romaji' }
 }
+
+// ───────── Traduction écrite (japonais → français) ─────────
+// Aucune « vraie » correction automatique n'est possible pour une phrase libre : on compare les mots importants
+// de ta traduction avec ceux de la traduction de référence, et c'est toi qui juges ensuite avec les 5 boutons.
+
+const STOP = new Set(
+  ('le la les l un une des de du d a à au aux en et ou je j tu il elle on nous vous ils elles me m te t se s ce c cet cette ces ' +
+    'mon ma mes ton ta tes son sa ses notre votre leur leurs est es suis sommes etes sont etre ai as avons avez ont avoir ' +
+    'que qu qui y ne n dans par pour sur avec chez tres bien aussi mais donc alors si comme quoi').split(' ')
+)
+
+const plain = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/œ/g, 'oe')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+
+const stem = (w: string) => (w.length > 4 ? w.replace(/(ement|ees|ent|es|er|ez|ons|ait|ais|e|s|x|t)$/, '') : w.replace(/[sx]$/, ''))
+
+/** mots « importants » d'un texte français, sous forme racinisée */
+export function keyWords(text: string): Array<{ raw: string; stem: string }> {
+  const out: Array<{ raw: string; stem: string }> = []
+  const rawWords = text.replace(/\([^)]*\)/g, ' ').split(/[^A-Za-zÀ-ÿœŒ0-9]+/).filter(Boolean)
+  for (const raw of rawWords) {
+    const p = plain(raw).trim()
+    if (!p || STOP.has(p)) continue
+    out.push({ raw, stem: stem(p) })
+  }
+  return out
+}
+
+export type TrVerdict = 'ok' | 'close' | 'no' | 'vide'
+export interface TranslationResult {
+  verdict: TrVerdict
+  input: string
+  /** 0 → 1 : part des mots importants de la référence retrouvés */
+  score: number
+  /** mots importants de la référence qui manquent dans ta réponse */
+  missing: string[]
+}
+
+const sameStem = (a: string, b: string) => a === b || (a.length >= 4 && b.length >= 4 && (a.startsWith(b) || b.startsWith(a)))
+
+/** Compare ta traduction à la référence. Pour un mot seul, n'importe quel sens listé (séparés par , ; /) suffit. */
+export function checkTranslation(it: Item, raw: string): TranslationResult {
+  const input = raw.trim()
+  if (!input) return { verdict: 'vide', input, score: 0, missing: [] }
+  const mine = keyWords(input).map((k) => k.stem)
+  const hit = (s: string) => mine.some((m) => sameStem(m, s))
+
+  if (it.kind === 'word') {
+    const senses = it.fr.split(/[,;/]/).map((x) => keyWords(x)).filter((k) => k.length)
+    let best = 0
+    for (const sense of senses) {
+      const ratio = sense.filter((k) => hit(k.stem)).length / sense.length
+      best = Math.max(best, ratio)
+    }
+    return { verdict: best >= 1 ? 'ok' : best > 0 ? 'close' : 'no', input, score: best, missing: [] }
+  }
+
+  const ref = keyWords(it.fr)
+  if (!ref.length) return { verdict: 'close', input, score: 0, missing: [] }
+  const found = ref.filter((k) => hit(k.stem))
+  const missing = ref.filter((k) => !hit(k.stem)).map((k) => k.raw)
+  const score = found.length / ref.length
+  return { verdict: score >= 0.7 ? 'ok' : score >= 0.4 ? 'close' : 'no', input, score, missing }
+}

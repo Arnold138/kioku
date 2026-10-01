@@ -4,23 +4,34 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.2
+
+- **Réviser librement, réparé sur iPhone** : la feuille ne dépasse plus de l'écran (la hauteur s'adapte à la barre Safari), le corps défile jusqu'en bas, le bouton **Commencer** reste toujours visible et la croix **✕** permet de fermer à tout moment.
+- **Phrases des deux vidéos** (272 phrases, avec kanji + hiragana + rōmaji) : deux decks « Vidéo · Shopping » et « Vidéo · Loisirs », à choisir dans *Réviser librement*. Ils **n'entrent pas** dans tes nouvelles cartes du jour : tu les révises quand tu veux, avec le planning habituel.
+- **Écrire la traduction** (Réviser librement → *Façon de répondre*) : tu écris le sens en français, la carte se retourne, tu compares et tu te notes comme d'habitude. Les cartes classiques ne changent pas.
+- **Accueil épuré** : l'objectif du jour est une fine barre tout en haut ; *Réviser librement*, *Examens* et *Mes decks* sont trois lignes avec une flèche (les decks s'ouvrent dans une feuille). Les « phrases avant la séance » se règlent maintenant dans Réglages.
+- **Examens façon JLPT** (N5 → N1) : choix multiples, **textes à trous**, **mots à écrire** (kana, kanji ou rōmaji), phrases à remettre **dans l'ordre (★)**, lecture. *Test rapide* (≈ 12 questions) ou *Examen complet* (≈ 30 questions, 70 % pour valider). Aide à la lecture réglable (kana + rōmaji / kana / aucune), correction détaillée, « Refaire mes erreurs », XP bonus et 7 nouveaux trophées (34 au total). Tous les niveaux sont ouverts, un niveau est simplement *conseillé* d'après tes mots retenus.
+- **Sécurité** : même format de sauvegarde (clé `kioku:v1`, données `v: 1`). Les résultats d'examen sont rangés dans le champ déjà existant des trophées, donc une ancienne version de l'app ne les efface pas lors de la synchro. Une deuxième copie de sécurité locale est faite à la première ouverture de la 1.2.
+
+> Les examens sont des questions **originales** inspirées du format officiel (pas de copie des sujets JLPT) ; il n'y a pas d'épreuve d'écoute, et le seuil de 70 % est celui de l'app, pas le barème officiel.
+
 ## Nouveautés de la version 1.1
 
 - **Accueil** : ton niveau (XP + niveau de japonais estimé) est tout en haut.
 - **Réviser librement** : choisis le niveau (N5 / N4 / N3 / phrases / mes cartes), le type de mots (verbes, adjectifs, noms…), un **thème** (météo, nourriture, corps, famille, lieux…) et le nombre de cartes. Trois modes : *Réviser + découvrir*, *Découvrir du nouveau*, *S'entraîner* (cartes déjà vues, **sans toucher au planning ni à l'XP**).
-- **Phrases avant la séance** : 0, 1 ou 2 phrases à traduire quand tu appuies sur « Commencer » (réglable sur l'accueil et dans Réglages).
+- **Phrases avant la séance** : 0, 1 ou 2 phrases à traduire quand tu appuies sur « Commencer » (réglable dans Réglages).
 - **Écrire les réponses** : sur les cartes de production, tape le mot en rōmaji (konnichiwa, konnichiha…) ou en kana/kanji ; l'app vérifie et te suggère « Oublié » ou « Bien ».
 - **Sécurité** : la sauvegarde garde exactement le même format (clé `kioku:v1`, données `v: 1`) ; seuls deux réglages optionnels ont été ajoutés. Une copie de sécurité locale est faite automatiquement à la première ouverture (Réglages → Données → *Télécharger la copie de sécurité*).
 
 ## Ce qu'elle contient
 
 - **1 995 mots** classés par fréquence : N5 complet (676), N4 complet (637) et les 682 mots N3 les plus fréquents.
-- **158 phrases** à traduire dans la tête (salutations, quotidien, voyage, travail, oral/YouTube…).
+- **158 phrases** à traduire dans la tête (salutations, quotidien, voyage, travail, oral/YouTube…) + **272 phrases de vidéos** (decks optionnels).
 - Chaque carte affiche **kanji + hiragana + rōmaji** ; prononciation audio (voix japonaise du téléphone).
 - **5 boutons de réponse** : Oublié · Difficile · Hésitant · Bien · Facile, avec l'intervalle affiché sur chaque bouton.
 - **Deux sens** par mot : reconnaissance (JP → FR) puis production (FR → JP, débloquée quand tu reconnais le mot).
 - Bouton « **Je connais déjà** » sur les nouvelles cartes, et **Ajout rapide** pour noter un mot vu en vidéo.
-- Objectif quotidien, série de jours, XP, niveaux, 27 trophées, niveau estimé (N5 → N3 / A1 → B1), heatmap.
+- Objectif quotidien, série de jours, XP, niveaux, 34 trophées, niveau estimé (N5 → N3 / A1 → B1), heatmap.
 - Mode clair / sombre automatique, export/import de sauvegarde JSON.
 
 ### Comment fonctionne la révision (inspiré d'Anki)

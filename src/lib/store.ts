@@ -18,12 +18,14 @@ import { type CardState, type Rating, answer, dayKey, dayNumber, newCard } from 
 import { type CustomCard, type Item, buildCatalog, parseCardId } from './deck'
 import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } from './queue'
 import { ACHIEVEMENTS, buildStats, newlyUnlocked, type Achievement } from './achievements'
+import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
 const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
-export const APP_VERSION = '1.1'
+const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
+export const APP_VERSION = '1.2'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -60,9 +62,11 @@ function snapshotBeforeUpdate() {
   if (safeGet(LS_VER) === APP_VERSION) return
   const raw = safeGet(LS_KEY)
   if (raw && !safeGet(LS_BACKUP)) safeSet(LS_BACKUP, raw)
+  // v1.2 : une 2e copie, prise au premier lancement de la 1.2 (la première reste intacte)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP2)) safeSet(LS_BACKUP2, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -116,6 +120,8 @@ export interface Session {
   practice: boolean
   /** cartes « échauffement » (phrases à traduire en début de séance) */
   warm: string[]
+  /** réponses écrites : on tape la traduction française avant de retourner la carte */
+  typeTr: boolean
 }
 
 interface Store {
@@ -136,12 +142,13 @@ interface Store {
   addCustom: (c: { jp: string; kana: string; fr: string; note?: string }) => string
   editCustom: (id: string, c: { jp: string; kana: string; fr: string; note?: string }) => void
   deleteCustom: (id: string) => void
-  startSession: (f?: Filter, extra?: number, opts?: { warm?: number }) => void
+  startSession: (f?: Filter, extra?: number, opts?: { warm?: number; typeTr?: boolean }) => void
   reveal: () => void
   rate: (r: Rating) => void
   markKnown: () => void
   undo: () => void
   endSession: () => void
+  recordExam: (r: { lvl: ExamLevel; mode: ExamMode; ok: number; total: number }) => number
   exportJson: () => string
   importJson: (json: string) => boolean
   resetAll: () => void
@@ -192,7 +199,8 @@ export const useStore = create<Store>((set, get) => {
         streak: st.current,
         bestStreak: st.best,
         perfectSessions: perfect ? 1 : 0,
-        hour: new Date(now).getHours()
+        hour: new Date(now).getHours(),
+        ...examStats(state.ach)
       },
       prog
     )
@@ -337,7 +345,8 @@ export const useStore = create<Store>((set, get) => {
         finished: false,
         newSeen: 0,
         practice,
-        warm
+        warm,
+        typeTr: !!opts?.typeTr
       }
       set({ session: pickNext(s, now) })
     },
@@ -512,6 +521,22 @@ export const useStore = create<Store>((set, get) => {
     },
 
     endSession: () => set({ session: null }),
+
+    /** Enregistre un examen terminé (clé « x:… » dans `ach`) + XP bonus + trophées. Renvoie l'XP gagné. */
+    recordExam: (r) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const pct = r.total ? r.ok / r.total : 0
+      const xp = Math.round(15 + 35 * pct)
+      const before = levelFromXp(totalXp(state)).level
+      const ach = { ...state.ach, [examKey({ ...r, t: now })]: now }
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp }) })
+      const after = levelFromXp(totalXp(get().state)).level
+      if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+      if (pct >= 0.7) set((x) => ({ confettiTick: x.confettiTick + 1 }))
+      checkAchievements()
+      return xp
+    },
 
     exportJson: () => JSON.stringify(get().state),
 

@@ -1,0 +1,1634 @@
+[
+{
+"id": "v1-0",
+"jp": "皆さん、こんにちは！Kenです！",
+"kana": "みなさん こんにちは ケン です",
+"fr": "Bonjour à tous ! Moi, c'est Ken !"
+},
+{
+"id": "v1-1",
+"jp": "今日は今から買い物に行きます。",
+"kana": "きょう は いま から かいもの に いきます",
+"fr": "Aujourd'hui, je vais faire du shopping dès maintenant."
+},
+{
+"id": "v1-2",
+"jp": "街に行って、街を歩きながら日本語で話します。",
+"kana": "まち に いって まち を あるきながら にほん ご で はなします",
+"fr": "Je vais en ville et je parle en japonais en me promenant dans les rues."
+},
+{
+"id": "v1-3",
+"jp": "今日は皆さんと一緒に買い物に行きます。",
+"kana": "きょう は みなさん と いっしょ に かいもの に いきます",
+"fr": "Aujourd'hui, je vais faire du shopping avec vous tous."
+},
+{
+"id": "v1-4",
+"jp": "ここから街まで電車で1時間ぐらいかかります。",
+"kana": "ここ から まち まで でんしゃ で いちじかん ぐらい かかります",
+"fr": "D'ici jusqu'à la ville, il faut environ une heure en train."
+},
+{
+"id": "v1-5",
+"jp": "今日は台北の街に行きます。",
+"kana": "きょう は たいぺい の まち に いきます",
+"fr": "Aujourd'hui, je vais dans le centre de Taipei."
+},
+{
+"id": "v1-6",
+"jp": "今、僕は台湾に住んでいるので、最近は台湾の動画が多いですね。",
+"kana": "いま ぼく は たいわん に すんで いる ので さいきん は たいわん の どうが が おおい です ね",
+"fr": "Comme j'habite à Taïwan en ce moment, il y a beaucoup de vidéos sur Taïwan ces derniers temps."
+},
+{
+"id": "v1-7",
+"jp": "台湾もきれいな場所がたくさんあります。",
+"kana": "たいわん も きれいな ばしょ が たくさん あります",
+"fr": "Taïwan aussi a beaucoup de beaux endroits."
+},
+{
+"id": "v1-8",
+"jp": "今年2025年、僕は日本に帰るつもりです。",
+"kana": "ことし にせんにじゅうごねん ぼく は にほん に かえる つもり です",
+"fr": "Cette année, en 2025, j'ai l'intention de rentrer au Japon."
+},
+{
+"id": "v1-9",
+"jp": "旅行で日本に帰ったら、日本の動画もたくさん撮ります。",
+"kana": "りょこう で にほん に かえったら にほん の どうが も たくさん とります",
+"fr": "Si je rentre au Japon en voyage, je filmerai aussi beaucoup de vidéos sur le Japon."
+},
+{
+"id": "v1-10",
+"jp": "日本の動画も楽しみにしていてくださいね！",
+"kana": "にほん の どうが も たのしみ に して いて ください ね",
+"fr": "Attendez-vous aussi avec impatience aux vidéos sur le Japon !"
+},
+{
+"id": "v1-11",
+"jp": "じゃあ、まずは電車に乗ります。",
+"kana": "じゃあ まず は でんしゃ に のります",
+"fr": "Bon, d'abord, je prends le train."
+},
+{
+"id": "v1-12",
+"jp": "ここから歩いて10分ぐらいですね。電車の駅があります。",
+"kana": "ここ から あるいて じゅっぷん ぐらい です ね でんしゃ の えき が あります",
+"fr": "C'est à environ 10 minutes à pied d'ici. Il y a une gare."
+},
+{
+"id": "v1-13",
+"jp": "まずは電車の駅に行きましょう！",
+"kana": "まず は でんしゃ の えき に いきましょう",
+"fr": "Allons d'abord à la gare !"
+},
+{
+"id": "v1-14",
+"jp": "今から電車に乗ります。",
+"kana": "いま から でんしゃ に のります",
+"fr": "Je monte dans le train maintenant."
+},
+{
+"id": "v1-15",
+"jp": "今、駅を出たところです。",
+"kana": "いま えき を でた ところ です",
+"fr": "Je viens de sortir de la gare."
+},
+{
+"id": "v1-16",
+"jp": "やっぱり電車で1時間ぐらいかかりました。",
+"kana": "やっぱり でんしゃ で いちじかん ぐらい かかりました",
+"fr": "Comme prévu, ça a pris environ une heure en train."
+},
+{
+"id": "v1-17",
+"jp": "ここは台北の中心です。",
+"kana": "ここ は たいぺい の ちゅうしん です",
+"fr": "Ici, c'est le centre de Taipei."
+},
+{
+"id": "v1-18",
+"jp": "たくさん人がいます。",
+"kana": "たくさん ひと が います",
+"fr": "Il y a beaucoup de monde."
+},
+{
+"id": "v1-19",
+"jp": "この辺にたくさんお店があります。",
+"kana": "この へん に たくさん おみせ が あります",
+"fr": "Il y a beaucoup de magasins dans ce quartier."
+},
+{
+"id": "v1-20",
+"jp": "この辺のお店は結構高級なお店が多いです。",
+"kana": "この へん の おみせ は けっこう こうきゅうな おみせ が おおい です",
+"fr": "Les magasins du coin sont souvent assez haut de gamme."
+},
+{
+"id": "v1-22",
+"jp": "ブランドの鞄とかアクセサリーとか、そういうお店がたくさんあります。",
+"kana": "ブランド の かばん とか アクセサリー とか そういう おみせ が たくさん あります",
+"fr": "Il y a plein de boutiques de ce genre : sacs de marque, accessoires, etc."
+},
+{
+"id": "v1-23",
+"jp": "あんまり僕に関係ないお店ですね。",
+"kana": "あんまり ぼく に かんけい ない おみせ です ね",
+"fr": "Ce sont des magasins qui ne me concernent pas vraiment."
+},
+{
+"id": "v1-24",
+"jp": "見えますか？こんな感じです。",
+"kana": "みえます か こんな かんじ です",
+"fr": "Vous voyez ? C'est comme ça."
+},
+{
+"id": "v1-25",
+"jp": "僕はこの辺に来たことがあります。",
+"kana": "ぼく は この へん に きた こと が あります",
+"fr": "Je suis déjà venu dans ce quartier."
+},
+{
+"id": "v1-26",
+"jp": "たぶん、2回ぐらい来たことがあります。",
+"kana": "たぶん にかい ぐらい きた こと が あります",
+"fr": "Je crois que je suis venu environ deux fois."
+},
+{
+"id": "v1-28",
+"jp": "買い物のためじゃなくて、有名な建物を見に来ました。",
+"kana": "かいもの の ため じゃ なくて ゆうめいな たてもの を み に きました",
+"fr": "Je ne suis pas venu pour faire du shopping, mais pour voir un bâtiment célèbre."
+},
+{
+"id": "v1-29",
+"jp": "あとでその建物も見えるので、一緒に見に行きましょう！",
+"kana": "あと で その たてもの も みえる ので いっしょ に み に いきましょう",
+"fr": "On verra aussi ce bâtiment plus tard, allons le voir ensemble !"
+},
+{
+"id": "v1-30",
+"jp": "ここは台北の中でも新しい場所です。",
+"kana": "ここ は たいぺい の なか でも あたらしい ばしょ です",
+"fr": "C'est un des endroits les plus récents de Taipei."
+},
+{
+"id": "v1-31",
+"jp": "建物も新しいし、道もきれいです。",
+"kana": "たてもの も あたらしい し みち も きれい です",
+"fr": "Les bâtiments sont neufs et les rues sont propres."
+},
+{
+"id": "v1-32",
+"jp": "歩いている人も結構おしゃれな人が多いです。",
+"kana": "あるいて いる ひと も けっこう おしゃれな ひと が おおい です",
+"fr": "Parmi les gens qui se promènent, beaucoup sont assez élégants."
+},
+{
+"id": "v1-33",
+"jp": "この前クリスマスは終わりました。",
+"kana": "この まえ クリスマス は おわりました",
+"fr": "Noël vient de se terminer."
+},
+{
+"id": "v1-35",
+"jp": "クリスマスは終わったんですけど、まだイルミネーションがあります。",
+"kana": "クリスマス は おわったん です けど まだ イルミネーション が あります",
+"fr": "Noël est fini, mais il y a encore des illuminations."
+},
+{
+"id": "v1-36",
+"jp": "きれいですよね！すごくきれいです！",
+"kana": "きれい です よ ね すごく きれい です",
+"fr": "C'est beau, n'est-ce pas ! C'est vraiment magnifique !"
+},
+{
+"id": "v1-37",
+"jp": "皆さんは買い物が好きですか？",
+"kana": "みなさん は かいもの が すき です か",
+"fr": "Vous aimez faire du shopping ?"
+},
+{
+"id": "v1-38",
+"jp": "今日僕は買い物に来ました。",
+"kana": "きょう ぼく は かいもの に きました",
+"fr": "Aujourd'hui, je suis venu faire du shopping."
+},
+{
+"id": "v1-40",
+"jp": "今日僕が買うものはパソコンです。",
+"kana": "きょう ぼく が かう もの は パソコン です",
+"fr": "Ce que j'achète aujourd'hui, c'est un ordinateur."
+},
+{
+"id": "v1-42",
+"jp": "小さいミニPCっていうデスクトップパソコンがあります。",
+"kana": "ちいさい ミニ ピーシー って いう デスクトップ パソコン が あります",
+"fr": "J'ai un petit mini-PC, une sorte d'ordinateur de bureau."
+},
+{
+"id": "v1-44",
+"jp": "デスクトップパソコンみたいな小さいミニPCが壊れました。",
+"kana": "デスクトップ パソコン みたいな ちいさい ミニ ピーシー が こわれました",
+"fr": "Mon petit mini-PC, qui fait office d'ordinateur de bureau, est tombé en panne."
+},
+{
+"id": "v1-45",
+"jp": "壊れちゃったので、最近新しいパソコンを探していました。",
+"kana": "こわれちゃった ので さいきん あたらしい パソコン を さがして いました",
+"fr": "Comme il est tombé en panne, j'ai cherché un nouvel ordinateur ces derniers temps."
+},
+{
+"id": "v1-46",
+"jp": "今日はその新しいパソコンを買いに行きます。",
+"kana": "きょう は その あたらしい パソコン を かい に いきます",
+"fr": "Aujourd'hui, je vais acheter ce nouvel ordinateur."
+},
+{
+"id": "v1-47",
+"jp": "実はもう買いました。",
+"kana": "じつ は もう かいました",
+"fr": "En fait, je l'ai déjà acheté."
+},
+{
+"id": "v1-48",
+"jp": "オンラインで探して、クレジットカードで支払いしました。",
+"kana": "オンライン で さがして クレジット カード で しはらい しました",
+"fr": "Je l'ai cherché en ligne et je l'ai payé par carte bancaire."
+},
+{
+"id": "v1-49",
+"jp": "でも僕がそのパソコンを買った時、まだ予約だけでした。",
+"kana": "でも ぼく が その パソコン を かった とき まだ よやく だけ でした",
+"fr": "Mais quand je l'ai acheté, ce n'était encore qu'une réservation."
+},
+{
+"id": "v1-50",
+"jp": "お店に在庫がなかったです。",
+"kana": "おみせ に ざいこ が なかった です",
+"fr": "Le magasin n'avait pas de stock."
+},
+{
+"id": "v1-51",
+"jp": "なので今日は今からそのパソコンを受け取りに行きます。",
+"kana": "なので きょう は いま から その パソコン を うけとり に いきます",
+"fr": "Alors aujourd'hui, je vais aller récupérer cet ordinateur."
+},
+{
+"id": "v1-52",
+"jp": "ちょっと待ってくださいね。方向が分かりません。",
+"kana": "ちょっと まって ください ね ほうこう が わかりません",
+"fr": "Attendez un instant. Je ne sais plus dans quelle direction aller."
+},
+{
+"id": "v1-53",
+"jp": "僕はあんまりこの辺に詳しくないので、",
+"kana": "ぼく は あんまり この へん に くわしく ない ので",
+"fr": "Je ne connais pas très bien ce quartier, alors..."
+},
+{
+"id": "v1-54",
+"jp": "ちょっと止まって、グーグルマップを見ます。",
+"kana": "ちょっと とまって グーグル マップ を みます",
+"fr": "Je m'arrête un instant et je regarde Google Maps."
+},
+{
+"id": "v1-55",
+"jp": "今グーグルマップを見ました。",
+"kana": "いま グーグル マップ を みました",
+"fr": "Je viens de regarder Google Maps."
+},
+{
+"id": "v1-57",
+"jp": "僕が今から行くお店は、ここをまっすぐ行くそうです。",
+"kana": "ぼく が いま から いく おみせ は ここ を まっすぐ いく そう です",
+"fr": "Il paraît que le magasin où je vais est tout droit par ici."
+},
+{
+"id": "v1-58",
+"jp": "まっすぐ行ったら、あるそうです。",
+"kana": "まっすぐ いったら ある そう です",
+"fr": "Il paraît qu'en allant tout droit, on le trouve."
+},
+{
+"id": "v1-60",
+"jp": "皆さんは仕事の時にパソコンを使いますか？",
+"kana": "みなさん は しごと の とき に パソコン を つかいます か",
+"fr": "Vous utilisez un ordinateur pour travailler ?"
+},
+{
+"id": "v1-63",
+"jp": "パソコンで映画を見たりYouTubeを見たりしますか？",
+"kana": "パソコン で えいが を みたり ユーチューブ を みたり します か",
+"fr": "Vous regardez des films ou YouTube sur ordinateur, par exemple ?"
+},
+{
+"id": "v1-64",
+"jp": "僕は毎日パソコンを使います。",
+"kana": "ぼく は まいにち パソコン を つかいます",
+"fr": "J'utilise l'ordinateur tous les jours."
+},
+{
+"id": "v1-65",
+"jp": "仕事で毎日パソコンを使います。",
+"kana": "しごと で まいにち パソコン を つかいます",
+"fr": "Je m'en sers tous les jours pour le travail."
+},
+{
+"id": "v1-66",
+"jp": "なので、パソコンが壊れたら、ちょっと大変です。",
+"kana": "なので パソコン が こわれたら ちょっと たいへん です",
+"fr": "Alors si l'ordinateur tombe en panne, c'est assez embêtant."
+},
+{
+"id": "v1-68",
+"jp": "最近、皆さんは何を買いましたか？",
+"kana": "さいきん みなさん は なに を かいました か",
+"fr": "Qu'avez-vous acheté récemment ?"
+},
+{
+"id": "v1-69",
+"jp": "僕のちょっと壊れたパソコン、1年前ぐらいに買いました。",
+"kana": "ぼく の ちょっと こわれた パソコン いちねん まえ ぐらい に かいました",
+"fr": "Mon ordinateur qui est tombé en panne, je l'ai acheté il y a environ un an."
+},
+{
+"id": "v1-70",
+"jp": "1年前に買ったばかりですよ！",
+"kana": "いちねん まえ に かった ばかり です よ",
+"fr": "Je l'avais acheté il y a tout juste un an !"
+},
+{
+"id": "v1-71",
+"jp": "でもそのパソコンはすごく安かったから、しょうがないですね。",
+"kana": "でも その パソコン は すごく やすかった から しょうがない です ね",
+"fr": "Mais comme il était très bon marché, on n'y peut rien."
+},
+{
+"id": "v1-72",
+"jp": "壊れてもしょうがないです。",
+"kana": "こわれて も しょうがない です",
+"fr": "Ce n'est pas étonnant qu'il soit tombé en panne."
+},
+{
+"id": "v1-73",
+"jp": "皆さんパソコンある人はどんなパソコンを使ってますか？",
+"kana": "みなさん パソコン ある ひと は どんな パソコン を つかってます か",
+"fr": "Pour ceux qui ont un ordinateur, vous utilisez quel genre d'ordinateur ?"
+},
+{
+"id": "v1-74",
+"jp": "僕が買ったパソコンは何だと思いますか？",
+"kana": "ぼく が かった パソコン は なん だ と おもいます か",
+"fr": "Selon vous, quel ordinateur ai-je acheté ?"
+},
+{
+"id": "v1-75",
+"jp": "めっちゃ有名なパソコンです。",
+"kana": "めっちゃ ゆうめいな パソコン です",
+"fr": "C'est un ordinateur super célèbre."
+},
+{
+"id": "v1-76",
+"jp": "パソコンにりんごのマークがあります。",
+"kana": "パソコン に りんご の マーク が あります",
+"fr": "Il y a une pomme dessinée sur l'ordinateur."
+},
+{
+"id": "v1-77",
+"jp": "そう、AppleのMac miniっていうパソコンを買いました。",
+"kana": "そう アップル の マックミニ って いう パソコン を かいました",
+"fr": "Eh oui, j'ai acheté un Mac mini d'Apple."
+},
+{
+"id": "v1-78",
+"jp": "なので、今からApple Storeに行きます。",
+"kana": "なので いま から アップル ストア に いきます",
+"fr": "Alors je vais à l'Apple Store maintenant."
+},
+{
+"id": "v1-79",
+"jp": "実は僕、今までWindowsのパソコンしか使わなかったです。",
+"kana": "じつ は ぼく いま まで ウィンドウズ の パソコン しか つかわなかった です",
+"fr": "En fait, jusqu'ici je n'avais utilisé que des ordinateurs Windows."
+},
+{
+"id": "v1-80",
+"jp": "今持っているパソコンもWindowsのパソコンですね。",
+"kana": "いま もって いる パソコン も ウィンドウズ の パソコン です ね",
+"fr": "L'ordinateur que j'ai en ce moment est aussi un ordinateur Windows."
+},
+{
+"id": "v1-81",
+"jp": "昔々、僕が高校生だった時、",
+"kana": "むかしむかし ぼく が こうこうせい だった とき",
+"fr": "Il y a très longtemps, quand j'étais lycéen,"
+},
+{
+"id": "v1-82",
+"jp": "iPhone4Sっていうスマホを使っていました。",
+"kana": "アイフォーンフォーエス って いう スマホ を つかって いました",
+"fr": "j'utilisais un smartphone qui s'appelait iPhone 4S."
+},
+{
+"id": "v1-83",
+"jp": "皆さん覚えてますか？iPhone4S。13年前ぐらいかな。",
+"kana": "みなさん おぼえてます か アイフォーンフォーエス じゅうさんねん まえ ぐらい かな",
+"fr": "Vous vous en souvenez ? L'iPhone 4S. C'était il y a environ 13 ans, je crois."
+},
+{
+"id": "v1-84",
+"jp": "僕はその時、高校生だったので、",
+"kana": "ぼく は その とき こうこうせい だった ので",
+"fr": "À ce moment-là j'étais lycéen, alors..."
+},
+{
+"id": "v1-85",
+"jp": "スマホで電話とメールと、友達とSNSをするぐらいでした。",
+"kana": "スマホ で でんわ と メール と ともだち と エスエヌエス を する ぐらい でした",
+"fr": "Avec mon smartphone, je ne faisais guère que téléphoner, envoyer des mails et utiliser les réseaux sociaux avec mes amis."
+},
+{
+"id": "v1-86",
+"jp": "それができればOKでした。",
+"kana": "それ が できれば オーケー でした",
+"fr": "Tant que je pouvais faire ça, ça me suffisait."
+},
+{
+"id": "v1-88",
+"jp": "僕はiPhoneが好きだったかどうか、全然覚えていません。",
+"kana": "ぼく は アイフォーン が すき だった か どう か ぜんぜん おぼえて いません",
+"fr": "Je ne me rappelle pas du tout si j'aimais l'iPhone ou pas."
+},
+{
+"id": "v1-89",
+"jp": "iPhoneを3年4年ぐらい使いました。",
+"kana": "アイフォーン を さんねん よんねん ぐらい つかいました",
+"fr": "J'ai utilisé l'iPhone pendant trois ou quatre ans."
+},
+{
+"id": "v1-91",
+"jp": "iPhone4Sが壊れた後、Androidのスマホを買いました。",
+"kana": "アイフォーンフォーエス が こわれた あと アンドロイド の スマホ を かいました",
+"fr": "Après la panne de l'iPhone 4S, j'ai acheté un smartphone Android."
+},
+{
+"id": "v1-92",
+"jp": "それからずっとスマホはAndroidを使ってます。",
+"kana": "それ から ずっと スマホ は アンドロイド を つかってます",
+"fr": "Depuis, j'utilise toujours Android pour mon smartphone."
+},
+{
+"id": "v1-93",
+"jp": "皆さんはAppleのMacbookとかiPhoneとか使ってますか？",
+"kana": "みなさん は アップル の マックブック とか アイフォーン とか つかってます か",
+"fr": "Utilisez-vous des MacBook ou des iPhone d'Apple ?"
+},
+{
+"id": "v1-94",
+"jp": "あ、ここもイルミネーションがあります。",
+"kana": "あ ここ も イルミネーション が あります",
+"fr": "Ah, ici aussi il y a des illuminations."
+},
+{
+"id": "v1-95",
+"jp": "木に電気がついています。",
+"kana": "き に でんき が ついて います",
+"fr": "Les arbres sont éclairés."
+},
+{
+"id": "v1-96",
+"jp": "あ、ちょっとあっちに行きましょう！",
+"kana": "あ ちょっと あっち に いきましょう",
+"fr": "Ah, allons un peu par là-bas !"
+},
+{
+"id": "v1-97",
+"jp": "すいません！",
+"kana": "すいません",
+"fr": "Excusez-moi !"
+},
+{
+"id": "v1-98",
+"jp": "買い物に来たんですけど、",
+"kana": "かいもの に きたん です けど",
+"fr": "Je suis venu faire du shopping, mais..."
+},
+{
+"id": "v1-99",
+"jp": "この辺はすごくおしゃれなので...",
+"kana": "この へん は すごく おしゃれな ので",
+"fr": "Ce quartier est vraiment chic, alors..."
+},
+{
+"id": "v1-100",
+"jp": "このお店おしゃれですよね。",
+"kana": "この おみせ おしゃれ です よ ね",
+"fr": "Ce magasin est chic, n'est-ce pas ?"
+},
+{
+"id": "v1-101",
+"jp": "今、僕は動画を撮りながら、お店とかも見ています。",
+"kana": "いま ぼく は どうが を とりながら おみせ とか も みて います",
+"fr": "En ce moment, je regarde aussi les magasins tout en filmant."
+},
+{
+"id": "v1-102",
+"jp": "ここは本当に街ですね。大きい街です。",
+"kana": "ここ は ほんとう に まち です ね おおきい まち です",
+"fr": "Ici, c'est vraiment la ville. Une grande ville."
+},
+{
+"id": "v1-103",
+"jp": "建物がめちゃめちゃ高い！",
+"kana": "たてもの が めちゃめちゃ たかい",
+"fr": "Les bâtiments sont super hauts !"
+},
+{
+"id": "v1-104",
+"jp": "僕は田舎出身なので、こういうところは慣れてないです。",
+"kana": "ぼく は いなか しゅっしんな ので こういう ところ は なれてない です",
+"fr": "Je viens de la campagne, donc je ne suis pas habitué à ce genre d'endroits."
+},
+{
+"id": "v1-105",
+"jp": "皆さんはどうですか？こういう大きい街が好きですか？",
+"kana": "みなさん は どう です か こういう おおきい まち が すき です か",
+"fr": "Et vous ? Vous aimez les grandes villes comme celle-ci ?"
+},
+{
+"id": "v1-106",
+"jp": "僕はあんまり買い物のために都会に行くっていうことはないんですけど、",
+"kana": "ぼく は あんまり かいもの の ため に とかい に いく って いう こと は ないん です けど",
+"fr": "Je ne vais pas vraiment en ville pour faire du shopping, mais..."
+},
+{
+"id": "v1-109",
+"jp": "必要なものがある時は、できるだけオンラインで買うようにしています。",
+"kana": "ひつような もの が ある とき は できる だけ オンライン で かう よう に して います",
+"fr": "Quand j'ai besoin de quelque chose, j'essaie d'acheter en ligne autant que possible."
+},
+{
+"id": "v1-111",
+"jp": "オンラインで買ったら、宅急便の人が自分の家まで届けてくれるじゃないですか。",
+"kana": "オンライン で かったら たくきゅうびん の ひと が じぶん の いえ まで とどけて くれる じゃ ない です か",
+"fr": "Quand on achète en ligne, un livreur l'apporte jusqu'à la maison, non ?"
+},
+{
+"id": "v1-112",
+"jp": "あのサービスすごいですよね！",
+"kana": "あの サービス すごい です よ ね",
+"fr": "Ce service est génial, n'est-ce pas !"
+},
+{
+"id": "v1-113",
+"jp": "めっちゃ便利です。",
+"kana": "めっちゃ べんり です",
+"fr": "C'est super pratique."
+},
+{
+"id": "v1-114",
+"jp": "また道が分からなくなっちゃいました。",
+"kana": "また みち が わからなく なっちゃいました",
+"fr": "Je me suis encore perdu."
+},
+{
+"id": "v1-115",
+"jp": "ちょっとグーグルマップを見ます。",
+"kana": "ちょっと グーグル マップ を みます",
+"fr": "Je regarde un peu Google Maps."
+},
+{
+"id": "v1-116",
+"jp": "もうすぐ着きます！",
+"kana": "もうすぐ つきます",
+"fr": "J'arrive bientôt !"
+},
+{
+"id": "v1-117",
+"jp": "あそこに台湾のめっちゃ有名な建物があります。",
+"kana": "あそこ に たいわん の めっちゃ ゆうめいな たてもの が あります",
+"fr": "Là-bas, il y a un bâtiment super célèbre de Taïwan."
+},
+{
+"id": "v1-118",
+"jp": "ちょっと一緒に見ましょう！",
+"kana": "ちょっと いっしょ に みましょう",
+"fr": "Allons le voir un peu ensemble !"
+},
+{
+"id": "v1-119",
+"jp": "見えますか？あの建物！",
+"kana": "みえます か あの たてもの",
+"fr": "Vous le voyez ? Ce bâtiment !"
+},
+{
+"id": "v1-120",
+"jp": "うわ！めっちゃ高い！名前は台北101って言います。",
+"kana": "うわ めっちゃ たかい なまえ は たいぺい いちぜろいち って いいます",
+"fr": "Waouh ! Il est super haut ! Il s'appelle Taipei 101."
+},
+{
+"id": "v1-122",
+"jp": "あの建物は台湾で一番高い建物です。",
+"kana": "あの たてもの は たいわん で いちばん たかい たてもの です",
+"fr": "Ce bâtiment est le plus haut de Taïwan."
+},
+{
+"id": "v1-123",
+"jp": "高さは508メートルです。",
+"kana": "たかさ は ごひゃくはちメートル です",
+"fr": "Il mesure 508 mètres de haut."
+},
+{
+"id": "v1-124",
+"jp": "すごい！めっちゃ迫力があります！",
+"kana": "すごい めっちゃ はくりょく が あります",
+"fr": "Incroyable ! Il est vraiment impressionnant !"
+},
+{
+"id": "v1-125",
+"jp": "皆さんの国の一番高い建物は、何メートルぐらいですか？",
+"kana": "みなさん の くに の いちばん たかい たてもの は なんメートル ぐらい です か",
+"fr": "Le plus haut bâtiment de votre pays fait environ combien de mètres ?"
+},
+{
+"id": "v1-127",
+"jp": "僕は昔、この辺に来たことがあります。",
+"kana": "ぼく は むかし この へん に きた こと が あります",
+"fr": "Je suis déjà venu dans ce quartier il y a longtemps."
+},
+{
+"id": "v1-128",
+"jp": "なので、この建物を昔見たことがあります。",
+"kana": "なので この たてもの を むかし みた こと が あります",
+"fr": "Alors j'ai déjà vu ce bâtiment dans le passé."
+},
+{
+"id": "v1-129",
+"jp": "何回見てもすごいですね！",
+"kana": "なんかい みて も すごい です ね",
+"fr": "Même en le voyant plusieurs fois, c'est impressionnant !"
+},
+{
+"id": "v1-131",
+"jp": "お店とかレストランとか展望台とかがあるらしいです。",
+"kana": "おみせ とか レストラン とか てんぼうだい とか が あるらしい です",
+"fr": "Il paraît qu'il y a des magasins, des restaurants, un observatoire, etc."
+},
+{
+"id": "v1-133",
+"jp": "僕はあの建物に入ったことはないです。",
+"kana": "ぼく は あの たてもの に はいった こと は ない です",
+"fr": "Je ne suis jamais entré dans ce bâtiment."
+},
+{
+"id": "v1-136",
+"jp": "でも、いつか入ってみたいです。",
+"kana": "でも いつ か はいって みたい です",
+"fr": "Mais j'aimerais bien y entrer un jour."
+},
+{
+"id": "v1-138",
+"jp": "今日は台北101に行くんじゃなくて、Apple Storeに行きます。",
+"kana": "きょう は たいぺい いちぜろいち に いくん じゃ なくて アップル ストア に いきます",
+"fr": "Aujourd'hui, je ne vais pas à Taipei 101 : je vais à l'Apple Store."
+},
+{
+"id": "v1-139",
+"jp": "Apple Storeは台北101の隣にあるそうです。",
+"kana": "アップル ストア は たいぺい いちぜろいち の となり に ある そう です",
+"fr": "Il paraît que l'Apple Store est à côté de Taipei 101."
+},
+{
+"id": "v1-140",
+"jp": "僕の妻から聞きました。",
+"kana": "ぼく の つま から ききました",
+"fr": "Je l'ai entendu de ma femme."
+},
+{
+"id": "v1-141",
+"jp": "あっちかな。たぶん、あっちですね。",
+"kana": "あっち かな たぶん あっち です ね",
+"fr": "C'est par là ? Sans doute par là."
+},
+{
+"id": "v1-142",
+"jp": "はい、ありました！今からパソコンを受け取ってきます。",
+"kana": "はい ありました いま から パソコン を うけとって きます",
+"fr": "Ça y est, je l'ai trouvé ! Je vais chercher l'ordinateur."
+},
+{
+"id": "v1-143",
+"jp": "はい、今パソコンを受け取りました！",
+"kana": "はい いま パソコン を うけとりました",
+"fr": "Voilà, je viens de récupérer l'ordinateur !"
+},
+{
+"id": "v1-144",
+"jp": "わあ！楽しみ！",
+"kana": "わあ たのしみ",
+"fr": "Waouh ! J'ai hâte !"
+},
+{
+"id": "v1-145",
+"jp": "これを家に帰って開けるのがめっちゃ楽しみです！",
+"kana": "これ を いえ に かえって あける の が めっちゃ たのしみ です",
+"fr": "J'ai trop hâte de l'ouvrir en rentrant à la maison !"
+},
+{
+"id": "v1-147",
+"jp": "ついでにiPhoneとかMacbookとか他の商品を見ました。",
+"kana": "ついで に アイフォーン とか マックブック とか ほか の しょうひん を みました",
+"fr": "Au passage, j'ai aussi regardé d'autres produits, comme l'iPhone et le MacBook."
+},
+{
+"id": "v1-148",
+"jp": "そしたら、夜になっちゃいました。",
+"kana": "そしたら よる に なっちゃいました",
+"fr": "Et du coup, la nuit est tombée."
+},
+{
+"id": "v1-149",
+"jp": "今、夜6時ぐらいかな。",
+"kana": "いま よる ろくじ ぐらい かな",
+"fr": "Il doit être environ 6 heures du soir."
+},
+{
+"id": "v1-150",
+"jp": "もうすぐ夜7時です。",
+"kana": "もうすぐ よる ななじ です",
+"fr": "Il sera bientôt 7 heures du soir."
+},
+{
+"id": "v1-151",
+"jp": "今から家に帰って、このパソコンを開けようと思います！",
+"kana": "いま から いえ に かえって この パソコン を あけよう と おもいます",
+"fr": "Je vais rentrer à la maison maintenant et je compte ouvrir cet ordinateur !"
+},
+{
+"id": "v1-152",
+"jp": "ただいま！",
+"kana": "ただいま",
+"fr": "Je suis rentré !"
+},
+{
+"id": "v1-153",
+"jp": "今から皆さんと一緒にこれを開けていきたいと思います！",
+"kana": "いま から みなさん と いっしょ に これ を あけて いきたい と おもいます",
+"fr": "Maintenant, je voudrais l'ouvrir avec vous tous !"
+},
+{
+"id": "v1-154",
+"jp": "ここは僕の仕事の机です。",
+"kana": "ここ は ぼく の しごと の つくえ です",
+"fr": "Ici, c'est mon bureau de travail."
+},
+{
+"id": "v1-156",
+"jp": "YouTubeの動画を編集したりしています。",
+"kana": "ユーチューブ の どうが を へんしゅう したり して います",
+"fr": "Je monte aussi mes vidéos YouTube, par exemple."
+},
+{
+"id": "v1-157",
+"jp": "あ、この机すごいですよ！",
+"kana": "あ この つくえ すごい です よ",
+"fr": "Ah, ce bureau est génial !"
+},
+{
+"id": "v1-158",
+"jp": "ボタンを押すと、自動で上がります。",
+"kana": "ボタン を おす と じどう で あがります",
+"fr": "Quand on appuie sur le bouton, il monte automatiquement."
+},
+{
+"id": "v1-159",
+"jp": "すごいでしょ！",
+"kana": "すごい でしょ",
+"fr": "Génial, non !"
+},
+{
+"id": "v1-160",
+"jp": "これは僕が去年買ったものの中で、一番満足しています。",
+"kana": "これ は ぼく が きょねん かった もの の なか で いちばん まんぞく して います",
+"fr": "De tout ce que j'ai acheté l'an dernier, c'est ce qui me satisfait le plus."
+},
+{
+"id": "v1-163",
+"jp": "2025年はまだ始まったばかりですけどね。",
+"kana": "にせんにじゅうごねん は まだ はじまった ばかり です けど ね",
+"fr": "2025 vient tout juste de commencer, mais bon."
+},
+{
+"id": "v1-164",
+"jp": "じゃあ、今からこの箱を開けたいと思います！",
+"kana": "じゃあ いま から この はこ を あけたい と おもいます",
+"fr": "Bon, maintenant je vais ouvrir cette boîte !"
+},
+{
+"id": "v1-165",
+"jp": "どうやって開けるんですかね？",
+"kana": "どう やって あけるん です か ね",
+"fr": "Comment est-ce qu'on l'ouvre ?"
+},
+{
+"id": "v1-167",
+"jp": "ここを引っ張って開けます。",
+"kana": "ここ を ひっぱって あけます",
+"fr": "On tire ici pour l'ouvrir."
+},
+{
+"id": "v1-169",
+"jp": "すごい、めっちゃきれいです！",
+"kana": "すごい めっちゃ きれい です",
+"fr": "Génial, c'est super beau !"
+},
+{
+"id": "v1-170",
+"jp": "いい感じ！",
+"kana": "いい かんじ",
+"fr": "Ça fait de l'effet !"
+},
+{
+"id": "v1-171",
+"jp": "Appleのデザインはシンプルでいいですね！可愛いです！",
+"kana": "アップル の デザイン は シンプル で いい です ね かわいい です",
+"fr": "Le design d'Apple est simple et c'est très bien ! C'est mignon !"
+},
+{
+"id": "v1-172",
+"jp": "すごく小さくて可愛いです！",
+"kana": "すごく ちいさくて かわいい です",
+"fr": "C'est tout petit et mignon !"
+},
+{
+"id": "v1-173",
+"jp": "あとは中に電源コードが入ってますね。",
+"kana": "あと は なか に でんげん コード が はいってます ね",
+"fr": "Il y a aussi un cordon d'alimentation à l'intérieur."
+},
+{
+"id": "v1-175",
+"jp": "何これ？これは何ですか？",
+"kana": "なに これ これ は なん です か",
+"fr": "C'est quoi, ça ? Qu'est-ce que c'est ?"
+},
+{
+"id": "v1-176",
+"jp": "これは説明書ですね。",
+"kana": "これ は せつめいしょ です ね",
+"fr": "Ça, c'est le mode d'emploi."
+},
+{
+"id": "v1-179",
+"jp": "今年は、このパソコンを使って、たくさんYouTubeの動画を作りたいと思います！",
+"kana": "ことし は この パソコン を つかって たくさん ユーチューブ の どうが を つくりたい と おもいます",
+"fr": "Cette année, je voudrais utiliser cet ordinateur pour faire plein de vidéos YouTube !"
+},
+{
+"id": "v1-180",
+"jp": "皆さん、今年も僕のYouTubeの動画を楽しみにしていてください！",
+"kana": "みなさん ことし も ぼく の ユーチューブ の どうが を たのしみ に して いて ください",
+"fr": "Cette année encore, attendez mes vidéos YouTube avec impatience !"
+},
+{
+"id": "v1-181",
+"jp": "皆さんは最近何か買い物をしましたか？",
+"kana": "みなさん は さいきん なに か かいもの を しました か",
+"fr": "Avez-vous fait des achats récemment ?"
+},
+{
+"id": "v1-182",
+"jp": "皆さんが最近買って良かったものを、ぜひコメント欄で教えてください！",
+"kana": "みなさん が さいきん かって よかった もの を ぜひ コメント らん で おしえて ください",
+"fr": "Dites-moi en commentaire ce que vous avez acheté récemment et que vous avez aimé !"
+},
+{
+"id": "v1-183",
+"jp": "じゃあ、また次の動画で会いましょう！",
+"kana": "じゃあ また つぎ の どうが で あいましょう",
+"fr": "Alors, on se retrouve dans la prochaine vidéo !"
+},
+{
+"id": "v1-184",
+"jp": "またね！",
+"kana": "また ね",
+"fr": "À bientôt !"
+},
+{
+"id": "v2-0",
+"jp": "今日は綾野さんに来てもらいました。ありがとうございます。",
+"kana": "きょう は あやのさん に きて もらいました ありがとう ございます",
+"fr": "Aujourd'hui, j'ai invité Ayano. Merci d'être venue."
+},
+{
+"id": "v2-1",
+"jp": "こんにちは。お久しぶりです。",
+"kana": "こんにちは おひさしぶり です",
+"fr": "Bonjour. Ça fait longtemps."
+},
+{
+"id": "v2-4",
+"jp": "元気でしたか？",
+"kana": "げんき でした か",
+"fr": "Vous alliez bien ?"
+},
+{
+"id": "v2-5",
+"jp": "めちゃめちゃ元気でした。",
+"kana": "めちゃめちゃ げんき でした",
+"fr": "J'étais en pleine forme."
+},
+{
+"id": "v2-6",
+"jp": "最近はどうでしたか？最近何をしていましたか？",
+"kana": "さいきん は どう でした か さいきん なに を して いました か",
+"fr": "Comment ça s'est passé ces derniers temps ? Qu'avez-vous fait récemment ?"
+},
+{
+"id": "v2-8",
+"jp": "最近は、ひな祭りという行事がありました。",
+"kana": "さいきん は ひなまつり と いう ぎょうじ が ありました",
+"fr": "Récemment, il y a eu une fête qu'on appelle Hinamatsuri."
+},
+{
+"id": "v2-9",
+"jp": "そのひな祭りパーティーに参加してきました。",
+"kana": "その ひなまつり パーティー に さんか して きました",
+"fr": "J'ai participé à une fête de Hinamatsuri."
+},
+{
+"id": "v2-13",
+"jp": "スペインに住んでいる日本人の家族が招待してくれたんですよ。",
+"kana": "スペイン に すんで いる にほんじん の かぞく が しょうたい して くれたん です よ",
+"fr": "Une famille japonaise qui vit en Espagne m'a invité(e)."
+},
+{
+"id": "v2-15",
+"jp": "日本でもあまりしませんよね。",
+"kana": "にほん でも あまり しません よ ね",
+"fr": "Même au Japon, on ne le fait pas beaucoup, n'est-ce pas ?"
+},
+{
+"id": "v2-19",
+"jp": "私も呼ばれていなかったら、多分やっていなかったと思います。",
+"kana": "わたし も よばれて いなかったら たぶん やって いなかった と おもいます",
+"fr": "Si je n'avais pas été invité(e), je ne l'aurais probablement pas fait."
+},
+{
+"id": "v2-33",
+"jp": "いやいや、それが全然毎年はできていないですね。",
+"kana": "いやいや それ が ぜんぜん まいねん は できて いない です ね",
+"fr": "Non, non, je n'arrive pas du tout à le faire chaque année."
+},
+{
+"id": "v2-36",
+"jp": "準備が大変だし。",
+"kana": "じゅんび が たいへん だ し",
+"fr": "Et puis la préparation est compliquée."
+},
+{
+"id": "v2-37",
+"jp": "ひな祭りは人形を飾りますよね。",
+"kana": "ひなまつり は にんぎょう を かざります よ ね",
+"fr": "À Hinamatsuri, on décore avec des poupées, n'est-ce pas ?"
+},
+{
+"id": "v2-54",
+"jp": "すごく立派できれいな人形で、日本から持ってきたんですかって、みんなびっくりしていました。",
+"kana": "すごく りっぱ で きれいな にんぎょう で にほん から もって きたん です か って みんな びっくり して いました",
+"fr": "C'étaient de très belles poupées somptueuses, et tout le monde était surpris : « Vous les avez apportées du Japon ? »"
+},
+{
+"id": "v2-60",
+"jp": "スペインでする日本の行事って、ちょっといいですね。",
+"kana": "スペイン で する にほん の ぎょうじ って ちょっと いい です ね",
+"fr": "Faire une fête japonaise en Espagne, c'est plutôt bien."
+},
+{
+"id": "v2-86",
+"jp": "本当に普通の白いご飯が美味しいですよね。",
+"kana": "ほんとう に ふつう の しろい ごはん が おいしい です よ ね",
+"fr": "Le simple riz blanc ordinaire est vraiment délicieux, n'est-ce pas ?"
+},
+{
+"id": "v2-89",
+"jp": "外国で日本の普通の食べ物を食べると、美味しく感じますよね。",
+"kana": "がいこく で にほん の ふつう の たべもの を たべる と おいしく かんじます よ ね",
+"fr": "À l'étranger, quand on mange de la nourriture japonaise ordinaire, on la trouve délicieuse, n'est-ce pas ?"
+},
+{
+"id": "v2-126",
+"jp": "それは才能ですよ。",
+"kana": "それ は さいのう です よ",
+"fr": "C'est un talent."
+},
+{
+"id": "v2-145",
+"jp": "今日はゆっくりしたいから寝たいなあと思っているけど、寝られないんですよ。",
+"kana": "きょう は ゆっくり したい から ねたい なあ と おもって いる けど ねられないん です よ",
+"fr": "Aujourd'hui je voudrais prendre mon temps et dormir, mais je n'y arrive pas."
+},
+{
+"id": "v2-149",
+"jp": "日曜日に寝ています。その時に一気に寝ています。",
+"kana": "にちようび に ねて います その とき に いっき に ねて います",
+"fr": "Je dors le dimanche. Je rattrape tout d'un coup à ce moment-là."
+},
+{
+"id": "v2-150",
+"jp": "じゃあ、平日はあまり寝られないんですか？",
+"kana": "じゃあ へいじつ は あまり ねられないん です か",
+"fr": "Alors en semaine, vous ne pouvez pas beaucoup dormir ?"
+},
+{
+"id": "v2-177",
+"jp": "子供たちも、今日はママが寝る日だって、空気を読んで起こさないんですよ。",
+"kana": "こどもたち も きょう は ママ が ねる ひ だ って くうき を よんで おこさないん です よ",
+"fr": "Les enfants aussi, ils se disent « aujourd'hui, c'est le jour où maman dort », ils sentent la situation et ne me réveillent pas."
+},
+{
+"id": "v2-187",
+"jp": "起きた時の気分って、どんな感じですか？いつも。",
+"kana": "おきた とき の きぶん って どんな かんじ です か いつ も",
+"fr": "Comment vous sentez-vous en vous réveillant ? D'habitude."
+},
+{
+"id": "v2-193",
+"jp": "やることが多い時にあるパターンなんですけど、あ、寝過ぎた、って。",
+"kana": "やる こと が おおい とき に ある パターン なん です けど あ ねすぎた って",
+"fr": "Ça arrive quand j'ai beaucoup de choses à faire : je me dis « oh, j'ai trop dormi »."
+},
+{
+"id": "v2-217",
+"jp": "後悔の気持ちもあるんですね。",
+"kana": "こうかい の きもち も あるん です ね",
+"fr": "Il y a aussi un sentiment de regret, n'est-ce pas ?"
+},
+{
+"id": "v2-219",
+"jp": "もうちょっと遊んであげられたかなとか、やっぱりその気持ちもどこかにはあるので。",
+"kana": "もうちょっと あそんで あげられた か な とか やっぱり その きもち も どこ か に は ある ので",
+"fr": "Je me dis que j'aurais pu jouer un peu plus avec eux : ce sentiment est toujours quelque part."
+},
+{
+"id": "v2-225",
+"jp": "自由な時間に何をしますか？",
+"kana": "じゆうな じかん に なに を します か",
+"fr": "Que faites-vous pendant votre temps libre ?"
+},
+{
+"id": "v2-244",
+"jp": "それいいですね。静かな時間。",
+"kana": "それ いい です ね しずかな じかん",
+"fr": "C'est bien, ça. Un moment tranquille."
+},
+{
+"id": "v2-245",
+"jp": "寝室にベッドがありますか？",
+"kana": "しんしつ に ベッド が あります か",
+"fr": "Y a-t-il un lit dans la chambre ?"
+},
+{
+"id": "v2-250",
+"jp": "寝室にはテレビはないですね。リビングにあります。",
+"kana": "しんしつ に は テレビ は ない です ね リビング に あります",
+"fr": "Il n'y a pas de télé dans la chambre. Il y en a une dans le salon."
+},
+{
+"id": "v2-253",
+"jp": "じゃあ、リビングでテレビを見て寝るんですね。",
+"kana": "じゃあ リビング で テレビ を みて ねるん です ね",
+"fr": "Alors vous vous endormez en regardant la télé dans le salon."
+},
+{
+"id": "v2-255",
+"jp": "すごくめんどくさい性格だなと思うんですけど、",
+"kana": "すごく めんどくさい せいかく だ な と おもうん です けど",
+"fr": "Je trouve que j'ai un caractère vraiment compliqué, mais..."
+},
+{
+"id": "v2-256",
+"jp": "お友達とご飯に行こうって、時々なりますよね。",
+"kana": "おともだち と ごはん に いこう って ときどき なります よ ね",
+"fr": "Il arrive parfois qu'on décide d'aller manger avec des amis, n'est-ce pas ?"
+},
+{
+"id": "v2-271",
+"jp": "でも誘われなかったら、ああ、悲しいなっていう自分がいる。",
+"kana": "でも さそわれなかったら ああ かなしい な って いう じぶん が いる",
+"fr": "Mais si je ne suis pas invité(e), il y a une partie de moi qui se dit « ah, c'est triste »."
+},
+{
+"id": "v2-277",
+"jp": "出かけるのが好きです。",
+"kana": "でかける の が すき です",
+"fr": "J'aime sortir."
+},
+{
+"id": "v2-284",
+"jp": "最近行ったのはどこですか？",
+"kana": "さいきん いった の は どこ です か",
+"fr": "Où êtes-vous allé(e) récemment ?"
+},
+{
+"id": "v2-286",
+"jp": "居酒屋にお酒を飲みに行ったりするのが好きですね。",
+"kana": "いざかや に おさけ を のみ に いったり する の が すき です ね",
+"fr": "J'aime aller boire un verre dans un izakaya, ce genre de choses."
+},
+{
+"id": "v2-288",
+"jp": "日本の居酒屋って最高ですよね。",
+"kana": "にほん の いざかや って さいこう です よ ね",
+"fr": "Les izakaya japonais, c'est génial, n'est-ce pas ?"
+},
+{
+"id": "v2-301",
+"jp": "飲んで踊るって感じですよね。",
+"kana": "のんで おどる って かんじ です よ ね",
+"fr": "On boit et on danse, c'est l'ambiance."
+},
+{
+"id": "v2-312",
+"jp": "飲みながら喋るっていうスタイルですよね。",
+"kana": "のみながら しゃべる って いう スタイル です よ ね",
+"fr": "C'est un style où l'on discute en buvant, n'est-ce pas ?"
+},
+{
+"id": "v2-322",
+"jp": "クラブには行かないですよね。",
+"kana": "クラブ に は いかない です よ ね",
+"fr": "On ne va pas en boîte, n'est-ce pas ?"
+},
+{
+"id": "v2-327",
+"jp": "私は出かけるのが好きですね。",
+"kana": "わたし は でかける の が すき です ね",
+"fr": "Moi, j'aime sortir."
+},
+{
+"id": "v2-336",
+"jp": "ずっと仕事をしたら疲れちゃうから。",
+"kana": "ずっと しごと を したら つかれちゃう から",
+"fr": "Parce que si on travaille tout le temps, on se fatigue."
+},
+{
+"id": "v2-382",
+"jp": "うどんを作って食べますね。",
+"kana": "うどん を つくって たべます ね",
+"fr": "Je prépare des udon et je les mange."
+},
+{
+"id": "v2-384",
+"jp": "温まるし、生姜は喉にいいですよね。",
+"kana": "あたたまる し しょうが は のど に いい です よ ね",
+"fr": "Ça réchauffe, et le gingembre est bon pour la gorge, n'est-ce pas ?"
+},
+{
+"id": "v2-406",
+"jp": "日本だったら何を食べますか？",
+"kana": "にほん だったら なに を たべます か",
+"fr": "Si vous étiez au Japon, que mangeriez-vous ?"
+},
+{
+"id": "v2-414",
+"jp": "日本って便利だなと感じましたね。",
+"kana": "にほん って べんり だ な と かんじました ね",
+"fr": "J'ai senti que le Japon est vraiment pratique."
+},
+{
+"id": "v2-417",
+"jp": "何を食べているんですかね？やっぱりスープですかね。",
+"kana": "なに を たべて いるん です か ね やっぱり スープ です か ね",
+"fr": "Que mange-t-on ? Plutôt de la soupe, sans doute."
+},
+{
+"id": "v2-421",
+"jp": "風邪の時に、チキンスープを作ってくれます。",
+"kana": "かぜ の とき に チキン スープ を つくって くれます",
+"fr": "Quand j'ai un rhume, on me prépare une soupe de poulet."
+},
+{
+"id": "v2-429",
+"jp": "塩を入れるだけ。",
+"kana": "しお を いれる だけ",
+"fr": "On met juste du sel."
+},
+{
+"id": "v2-446",
+"jp": "飲むとめっちゃ美味しいですね。",
+"kana": "のむ と めっちゃ おいしい です ね",
+"fr": "Quand on la boit, elle est super bonne."
+},
+{
+"id": "v2-452",
+"jp": "綾野さんはアクティブな趣味ってありますか？",
+"kana": "あやのさん は アクティブな しゅみ って あります か",
+"fr": "Avez-vous un loisir actif, Ayano ?"
+},
+{
+"id": "v2-461",
+"jp": "旅行に行くのは好きです。だから、しょっちゅうはできないんですけど。",
+"kana": "りょこう に いく の は すき です だ から しょっちゅう は できないん です けど",
+"fr": "J'aime voyager. Je ne peux pas le faire souvent, cela dit."
+},
+{
+"id": "v2-463",
+"jp": "違う国とか違う町に行って、新しいものを見るのはすごく好きです。",
+"kana": "ちがう くに とか ちがう まち に いって あたらしい もの を みる の は すごく すき です",
+"fr": "J'adore aller dans d'autres pays ou d'autres villes et voir des choses nouvelles."
+},
+{
+"id": "v2-466",
+"jp": "新しい町に行ったりするのは好きですか？",
+"kana": "あたらしい まち に いったり する の は すき です か",
+"fr": "Aimez-vous aller dans de nouvelles villes ?"
+},
+{
+"id": "v2-471",
+"jp": "もう結構いろいろなところに行きましたか？スペインで。",
+"kana": "もう けっこう いろいろな ところ に いきました か スペイン で",
+"fr": "Êtes-vous déjà allé(e) dans pas mal d'endroits, en Espagne ?"
+},
+{
+"id": "v2-486",
+"jp": "今、はまっているものがないなあと思っていて。",
+"kana": "いま はまって いる もの が ない なあ と おもって いて",
+"fr": "Je me dis qu'en ce moment, je n'ai rien qui me passionne."
+},
+{
+"id": "v2-499",
+"jp": "スノボってかっこいいですよね。",
+"kana": "スノボ って かっこいい です よ ね",
+"fr": "Le snowboard, c'est cool, n'est-ce pas ?"
+},
+{
+"id": "v2-501",
+"jp": "私はやったことないんですよ。ウィンタースポーツ。",
+"kana": "わたし は やった こと ないん です よ ウィンター スポーツ",
+"fr": "Je n'en ai jamais fait. Les sports d'hiver."
+},
+{
+"id": "v2-516",
+"jp": "やるともっともっとはまるんですよ。",
+"kana": "やる と もっと もっと はまるん です よ",
+"fr": "Quand on en fait, on devient de plus en plus accro."
+},
+{
+"id": "v2-523",
+"jp": "趣味っていいなと思って。",
+"kana": "しゅみ って いい な と おもって",
+"fr": "Je me suis dit que c'est bien d'avoir un loisir."
+},
+{
+"id": "v2-527",
+"jp": "シーズンは大体いつまでなんですか？いつまで滑れるんですか？",
+"kana": "シーズン は だいたい いつ まで なん です か いつ まで すべれるん です か",
+"fr": "La saison dure à peu près jusqu'à quand ? Jusqu'à quand peut-on skier ?"
+},
+{
+"id": "v2-529",
+"jp": "3月いっぱいは滑れますね。",
+"kana": "さんがつ いっぱい は すべれます ね",
+"fr": "On peut skier jusqu'à la fin mars."
+},
+{
+"id": "v2-541",
+"jp": "たくさんの山で滑れるけど、雪があまり良くないから。",
+"kana": "たくさん の やま で すべれる けど ゆき が あまり よく ない から",
+"fr": "On peut skier dans plein de montagnes, mais la neige n'est pas très bonne."
+},
+{
+"id": "v2-544",
+"jp": "今年はもう行けないかもしれませんね。",
+"kana": "ことし は もう いけない か も しれません ね",
+"fr": "Je ne pourrai peut-être plus y aller cette année."
+},
+{
+"id": "v2-570",
+"jp": "スキーをして温泉に入るみたいなイメージがあるんですけど。",
+"kana": "スキー を して おんせん に はいる みたいな イメージ が あるん です けど",
+"fr": "J'ai l'image qu'on skie et qu'on se baigne dans des sources chaudes."
+},
+{
+"id": "v2-577",
+"jp": "でもめっちゃ疲れるんで。",
+"kana": "でも めっちゃ つかれるん で",
+"fr": "Mais ça fatigue énormément."
+},
+{
+"id": "v2-582",
+"jp": "スキーの後はたくさん寝れます。",
+"kana": "スキー の あと は たくさん ねれます",
+"fr": "Après le ski, on dort beaucoup."
+},
+{
+"id": "v2-586",
+"jp": "いい趣味なんですよ。",
+"kana": "いい しゅみ なん です よ",
+"fr": "C'est un bon loisir."
+},
+{
+"id": "v2-601",
+"jp": "結構今、真剣に探しているんですよ。どんな趣味がいいかなと思って。",
+"kana": "けっこう いま しんけん に さがして いるん です よ どんな しゅみ が いい か な と おもって",
+"fr": "Je cherche sérieusement en ce moment. Je me demande quel loisir serait bien."
+},
+{
+"id": "v2-604",
+"jp": "何かないかなと思って。",
+"kana": "なに か ない か な と おもって",
+"fr": "Je me demande s'il n'y aurait pas quelque chose."
+},
+{
+"id": "v2-606",
+"jp": "興味のある趣味とかありますか？始めてみたい趣味。",
+"kana": "きょうみ の ある しゅみ とか あります か はじめて みたい しゅみ",
+"fr": "Avez-vous un loisir qui vous intéresse ? Un loisir que vous aimeriez essayer ?"
+},
+{
+"id": "v2-628",
+"jp": "できるだけ英語に頼らずに、スペイン語で喋ってみるとか。",
+"kana": "できる だけ えいご に たよらず に スペイン ご で しゃべって みる とか",
+"fr": "Par exemple, essayer de parler en espagnol sans trop compter sur l'anglais."
+},
+{
+"id": "v2-635",
+"jp": "前に比べると、聞き取りの力がすごく伸びたと思っています。",
+"kana": "まえ に くらべる と ききとり の ちから が すごく のびた と おもって います",
+"fr": "Par rapport à avant, je pense que ma compréhension orale a beaucoup progressé."
+},
+{
+"id": "v2-637",
+"jp": "たくさん聞いているから、インプットの量が多いから。",
+"kana": "たくさん きいて いる から インプット の りょう が おおい から",
+"fr": "Parce que vous écoutez beaucoup, la quantité d'input est grande."
+},
+{
+"id": "v2-639",
+"jp": "あとは喋るだけなんですけど。",
+"kana": "あと は しゃべる だけ なん です けど",
+"fr": "Il ne reste plus qu'à parler, mais..."
+},
+{
+"id": "v2-651",
+"jp": "一番楽しいですよね。会話で練習するのは。",
+"kana": "いちばん たのしい です よ ね かいわ で れんしゅう する の は",
+"fr": "C'est le plus amusant : s'entraîner en conversation."
+},
+{
+"id": "v2-662",
+"jp": "早くできるようになりたいなって。",
+"kana": "はやく できる よう に なりたい な って",
+"fr": "Je voudrais pouvoir le faire vite."
+},
+{
+"id": "v2-664",
+"jp": "コミュニケーションができるようになりたいなと思っています。",
+"kana": "コミュニケーション が できる よう に なりたい な と おもって います",
+"fr": "J'aimerais pouvoir communiquer."
+},
+{
+"id": "v2-665",
+"jp": "時々、全然関係ない言語を勉強したいなと思う時があるんですよ。",
+"kana": "ときどき ぜんぜん かんけい ない げんご を べんきょう したい な と おもう とき が あるん です よ",
+"fr": "Parfois, il m'arrive de vouloir étudier une langue sans aucun rapport."
+},
+{
+"id": "v2-667",
+"jp": "興味がある言語ってありますか？",
+"kana": "きょうみ が ある げんご って あります か",
+"fr": "Y a-t-il une langue qui vous intéresse ?"
+},
+{
+"id": "v2-684",
+"jp": "フランス語を話していたらかっこいいなと思うから。",
+"kana": "フランス ご を はなして いたら かっこいい な と おもう から",
+"fr": "Parce que je trouve ça cool de parler français."
+},
+{
+"id": "v2-686",
+"jp": "フランスに住む予定は全然ないけど、フランス語を勉強してみたいなと時々思います。",
+"kana": "フランス に すむ よてい は ぜんぜん ない けど フランス ご を べんきょう して みたい な と ときどき おもいます",
+"fr": "Je n'ai aucun projet d'habiter en France, mais je me dis parfois que j'aimerais étudier le français."
+},
+{
+"id": "v2-687",
+"jp": "私も、もしスペイン語じゃなければ、韓国語を勉強したいですね。",
+"kana": "わたし も もし スペイン ご じゃ なければ かんこく ご を べんきょう したい です ね",
+"fr": "Moi aussi, si ce n'était pas l'espagnol, j'aimerais étudier le coréen."
+},
+{
+"id": "v2-689",
+"jp": "どうしてですか？",
+"kana": "どう して です か",
+"fr": "Pourquoi ?"
+},
+{
+"id": "v2-696",
+"jp": "趣味かもしれないですね。韓国のドラマを見るとか。",
+"kana": "しゅみ か も しれない です ね かんこく の ドラマ を みる とか",
+"fr": "C'est peut-être un loisir. Regarder des dramas coréens, par exemple."
+},
+{
+"id": "v2-697",
+"jp": "今は韓国語は分かりますか？",
+"kana": "いま は かんこく ご は わかります か",
+"fr": "Comprenez-vous le coréen maintenant ?"
+},
+{
+"id": "v2-708",
+"jp": "すごい。じゃあ、ドラマで覚えているんですね。",
+"kana": "すごい じゃあ ドラマ で おぼえて いるん です ね",
+"fr": "Incroyable. Donc vous apprenez avec les dramas."
+},
+{
+"id": "v2-711",
+"jp": "やっぱりインプットって大事だなと思います。",
+"kana": "やっぱり インプット って だいじ だ な と おもいます",
+"fr": "Je trouve que l'input est vraiment important."
+},
+{
+"id": "v2-716",
+"jp": "覚えるのが早いかもしれませんね。",
+"kana": "おぼえる の が はやい か も しれません ね",
+"fr": "Vous apprendrez peut-être vite."
+},
+{
+"id": "v2-731",
+"jp": "携帯で少女漫画を見るのが好きです。",
+"kana": "けいたい で しょうじょ まんが を みる の が すき です",
+"fr": "J'aime lire des shôjo manga sur mon téléphone."
+},
+{
+"id": "v2-735",
+"jp": "もうこの年ですけど、今でも少女漫画が大好きで。",
+"kana": "もう この とし です けど いま でも しょうじょ まんが が だいすき で",
+"fr": "Même à mon âge, j'adore toujours les shôjo manga."
+},
+{
+"id": "v2-740",
+"jp": "何が面白いんですか？少女漫画の。",
+"kana": "なに が おもしろいん です か しょうじょ まんが の",
+"fr": "Qu'est-ce qui est intéressant ? Dans les shôjo manga."
+},
+{
+"id": "v2-743",
+"jp": "恋愛をしているのを見て、楽しいと思います。私がするわけじゃないんですけど。",
+"kana": "れんあい を して いる の を みて たのしい と おもいます わたし が する わけ じゃ ないん です けど",
+"fr": "Je prends plaisir à regarder des histoires d'amour. Ce n'est pas moi qui les vis, bien sûr."
+},
+{
+"id": "v2-766",
+"jp": "それはちょっとありえないでしょうみたいな。",
+"kana": "それ は ちょっと ありえない でしょう みたいな",
+"fr": "Des trucs du genre « ça, ce n'est quand même pas possible »."
+},
+{
+"id": "v2-777",
+"jp": "その現実から離れているのがいいんですよ。",
+"kana": "その げんじつ から はなれて いる の が いいん です よ",
+"fr": "Ce qui est bien, c'est que c'est loin de la réalité."
+},
+{
+"id": "v2-781",
+"jp": "そっか。そうやって楽しむんだ。",
+"kana": "そっか そう やって たのしむん だ",
+"fr": "Ah, d'accord. C'est comme ça qu'on en profite."
+},
+{
+"id": "v2-785",
+"jp": "なるほど。じゃあ、現実的に見ちゃダメですね。",
+"kana": "なるほど じゃあ げんじつてき に みちゃ ダメ です ね",
+"fr": "Je vois. Alors il ne faut pas regarder ça de façon réaliste."
+},
+{
+"id": "v2-788",
+"jp": "漫画とかはあんまり読まないですか？",
+"kana": "まんが とか は あんまり よまない です か",
+"fr": "Vous ne lisez pas beaucoup de mangas ?"
+},
+{
+"id": "v2-801",
+"jp": "みんなどこでそんな面白いアニメとか少女漫画とかを見つけているのかなと思うんですけど。",
+"kana": "みんな どこ で そんな おもしろい アニメ とか しょうじょ まんが とか を みつけて いる の か な と おもうん です けど",
+"fr": "Je me demande où tout le monde trouve des animes ou des shôjo manga aussi intéressants."
+},
+{
+"id": "v2-804",
+"jp": "どうやって見つけてますか？",
+"kana": "どう やって みつけてます か",
+"fr": "Comment les trouvez-vous ?"
+},
+{
+"id": "v2-810",
+"jp": "本当にたくさんの種類のアプリがあるんですね。",
+"kana": "ほんとう に たくさん の しゅるい の アプリ が あるん です ね",
+"fr": "Il y a vraiment beaucoup de types d'applis."
+},
+{
+"id": "v2-819",
+"jp": "ストーリーラインが書かれているんですよ。",
+"kana": "ストーリー ライン が かかれて いるん です よ",
+"fr": "Le résumé de l'histoire y est écrit."
+},
+{
+"id": "v2-826",
+"jp": "絵の感じも、好き嫌いがあると思うんですよ。",
+"kana": "え の かんじ も すききらい が ある と おもうん です よ",
+"fr": "Je pense que le style de dessin aussi, on aime ou on n'aime pas."
+},
+{
+"id": "v2-829",
+"jp": "面白そうだなと思って開いてみて、読み始めるっていうのが多いです、私は。",
+"kana": "おもしろ そう だ な と おもって ひらいて みて よみ はじめる って いう の が おおい です わたし は",
+"fr": "Moi, la plupart du temps, je me dis « ça a l'air intéressant », j'ouvre et je commence à lire."
+},
+{
+"id": "v2-840",
+"jp": "はまるか、はまらないかみたいな。",
+"kana": "はまる か はまらない か みたいな",
+"fr": "Ça accroche ou ça n'accroche pas, en gros."
+},
+{
+"id": "v2-857",
+"jp": "映画を見て面白くて、漫画の原作を読もうということもあります。",
+"kana": "えいが を みて おもしろくて まんが の げんさく を よもう と いう こと も あります",
+"fr": "Il m'arrive aussi de voir un film, de le trouver intéressant et de lire le manga d'origine."
+},
+{
+"id": "v2-864",
+"jp": "いろいろな楽しみ方がありますね。",
+"kana": "いろいろな たのしみ かた が あります ね",
+"fr": "Il y a plein de façons d'en profiter."
+},
+{
+"id": "v2-866",
+"jp": "少女漫画が気になるな。読んでみたいな。",
+"kana": "しょうじょ まんが が き に なる な よんで みたい な",
+"fr": "Les shôjo manga m'intriguent. J'aimerais en lire."
+},
+{
+"id": "v2-869",
+"jp": "どんなのか分からないから、後でおすすめの少女漫画を教えてください。",
+"kana": "どんな の か わからない から あと で おすすめ の しょうじょ まんが を おしえて ください",
+"fr": "Je ne sais pas ce que c'est, alors dites-moi plus tard quels shôjo manga vous recommandez."
+},
+{
+"id": "v2-892",
+"jp": "聞いたことがあるんですけど、まだ見たことがないです。",
+"kana": "きいた こと が あるん です けど まだ みた こと が ない です",
+"fr": "J'en ai entendu parler, mais je ne l'ai pas encore vu."
+},
+{
+"id": "v2-898",
+"jp": "じゃあ、見てみようかな。",
+"kana": "じゃあ みて みよう かな",
+"fr": "Alors, je vais peut-être le regarder."
+},
+{
+"id": "v2-904",
+"jp": "ミステリーとか好きだったら、もしかしたら好きかもしれないですね。",
+"kana": "ミステリー とか すき だったら もしかしたら すき か も しれない です ね",
+"fr": "Si vous aimez les mystères, vous aimerez peut-être."
+},
+{
+"id": "v2-910",
+"jp": "現実から離れていますから。",
+"kana": "げんじつ から はなれて います から",
+"fr": "Parce que c'est loin de la réalité."
+},
+{
+"id": "v2-912",
+"jp": "今日はちょっと趣味について話してみました。",
+"kana": "きょう は ちょっと しゅみ に ついて はなして みました",
+"fr": "Aujourd'hui, nous avons un peu parlé de loisirs."
+},
+{
+"id": "v2-914",
+"jp": "久しぶりに話して、また話すことができてよかったです。",
+"kana": "ひさしぶり に はなして また はなす こと が できて よかった です",
+"fr": "Ça fait longtemps qu'on n'avait pas parlé, je suis content(e) qu'on ait pu reparler."
+},
+{
+"id": "v2-915",
+"jp": "こちらこそありがとうございました。",
+"kana": "こちらこそ ありがとう ございました",
+"fr": "C'est moi qui vous remercie."
+},
+{
+"id": "v2-924",
+"jp": "では、今日はありがとうございました。",
+"kana": "では きょう は ありがとう ございました",
+"fr": "Alors, merci pour aujourd'hui."
+},
+{
+"id": "v2-928",
+"jp": "次の動画で会いましょう。じゃあ、またね。",
+"kana": "つぎ の どうが で あいましょう じゃあ また ね",
+"fr": "Rendez-vous dans la prochaine vidéo. Alors, à bientôt."
+}
+]

@@ -1,5 +1,6 @@
 import wordsJson from '../data/words.json'
 import sentencesJson from '../data/sentences.json'
+import videoJson from '../data/video.json'
 import { toRomaji } from './romaji'
 
 export type Level = 'N5' | 'N4' | 'N3' | 'Perso'
@@ -37,16 +38,33 @@ export const POS_LABEL: Record<string, string> = {
   phrase: 'phrase', perso: 'perso'
 }
 
-export const DECKS = [
+export interface DeckInfo {
+  id: string
+  name: string
+  sub: string
+  emoji: string
+  hue: number
+  /** deck de phrases (pas de filtre « type de mots » ni de thème) */
+  sentences?: boolean
+  /** n'entre jamais dans les nouvelles cartes du jour : on ne l'étudie que si on le choisit (Réviser librement) */
+  optIn?: boolean
+}
+
+export const DECKS: DeckInfo[] = [
   { id: 'N5', name: 'Essentiels N5', sub: 'Les mots de base', emoji: '🌱', hue: 145 },
   { id: 'N4', name: 'Courants N4', sub: 'Vie quotidienne', emoji: '🌿', hue: 175 },
   { id: 'N3', name: 'Fréquents N3', sub: 'Vers l\'intermédiaire', emoji: '🌳', hue: 215 },
-  { id: 'phrases', name: 'Phrases', sub: 'À traduire dans la tête', emoji: '💬', hue: 280 },
-  { id: 'perso', name: 'Mes cartes', sub: 'Vidéos, animés, notes', emoji: '⭐', hue: 35 }
-] as const
+  { id: 'phrases', name: 'Phrases', sub: 'À traduire dans la tête', emoji: '💬', hue: 280, sentences: true },
+  { id: 'vid1', name: 'Vidéo · Shopping', sub: 'Ken, balade à Taipei', emoji: '🛍️', hue: 340, sentences: true, optIn: true },
+  { id: 'vid2', name: 'Vidéo · Loisirs', sub: 'Conversation avec Ayano', emoji: '🎧', hue: 195, sentences: true, optIn: true },
+  { id: 'perso', name: 'Mes cartes', sub: 'Vidéos, animés, notes', emoji: '⭐', hue: 35, sentences: true }
+]
+export const deckInfo = (id: string): DeckInfo | undefined => DECKS.find((d) => d.id === id)
+export const isOptIn = (deckId: string): boolean => !!deckInfo(deckId)?.optIn
 
 interface RawWord { id: number; jp: string; kana: string; fr: string; pos: string; lvl: string; o: number; alt?: string[] }
 interface RawSentence { id: number; jp: string; kana: string; fr: string; lvl: string; theme: string }
+interface RawVideo { id: string; jp: string; kana: string; fr: string }
 
 // Les phrases sont réparties parmi les mots (N5 avec N5, N4 avec N4) pour varier les séances.
 const SENT_RANGE: Record<string, [number, number]> = { N5: [0, 677], N4: [677, 638] }
@@ -87,6 +105,26 @@ const BASE_ITEMS: Item[] = [
     note: s.theme
   }))
 ]
+
+// Phrases tirées des deux vidéos : dans l'ordre de la vidéo.
+const VIDEO_ITEMS: Item[] = (videoJson as RawVideo[]).map<Item>((v) => {
+  const first = v.id.startsWith('v1')
+  const n = Number(v.id.split('-')[1])
+  return {
+    id: v.id,
+    kind: 'sentence',
+    jp: v.jp,
+    kana: v.kana,
+    romaji: toRomaji(v.kana),
+    fr: v.fr,
+    pos: 'phrase',
+    lvl: first ? 'N4' : 'N3',
+    deck: first ? 'vid1' : 'vid2',
+    order: 400000 + (first ? 0 : 1000) + n,
+    note: first ? 'Vidéo Shopping' : 'Vidéo Loisirs'
+  }
+})
+BASE_ITEMS.push(...VIDEO_ITEMS)
 
 const baseById = new Map(BASE_ITEMS.map((i) => [i.id, i]))
 

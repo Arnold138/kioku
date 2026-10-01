@@ -6,7 +6,7 @@ import { RATING_LABELS, dayNumber, newCard, previewLabels, type Rating } from '.
 import { dayTotal, streaks, levelFromXp, totalXp } from '../lib/state'
 import { dayKey } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
-import { checkTyped, type TypedResult } from '../lib/typing'
+import { checkTranslation, checkTyped, type TranslationResult, type TypedResult } from '../lib/typing'
 import { Icon } from './ui'
 
 const RATE_EMOJI: Record<Rating, string> = { 1: '😣', 2: '😕', 3: '🤔', 4: '🙂', 5: '😎' }
@@ -64,7 +64,7 @@ function Front({ it, dir, reading, typing }: { it: Item; dir: 'r' | 'p'; reading
   )
 }
 
-function Back({ it, dir, typed }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null }) {
+function Back({ it, dir, typed, tr }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null }) {
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
     return (
@@ -89,6 +89,13 @@ function Back({ it, dir, typed }: { it: Item; dir: 'r' | 'p'; typed: TypedResult
       <div className="jp" style={{ fontSize: long ? 20 : 30, fontWeight: 700 }}>{it.jp}</div>
       <Reading it={it} long={long} />
       <div className="divider" />
+      {tr && tr.verdict !== 'vide' && (
+        <div className={'typed-result tr ' + tr.verdict}>
+          <b>{tr.verdict === 'ok' ? '✓ Très proche' : tr.verdict === 'close' ? '≈ En partie' : '✗ Assez loin'}</b>
+          <span>Ta traduction : <i>{tr.input}</i></span>
+          {tr.missing.length > 0 && tr.verdict !== 'ok' && <span>Mots à retrouver : {tr.missing.join(' · ')}</span>}
+        </div>
+      )}
       <div className={'meaning' + (it.fr.length > 24 ? ' long' : '')}>{it.fr}</div>
       <div className="row" style={{ justifyContent: 'center', flexWrap: 'wrap', gap: 6 }}>
         {it.kind === 'word' && <span className="chip">{POS_LABEL[it.pos] ?? it.pos}</span>}
@@ -105,6 +112,7 @@ export function Study() {
   const today = dayNumber(now)
 
   const [typed, setTyped] = useState<TypedResult | null>(null)
+  const [tr, setTr] = useState<TranslationResult | null>(null)
   const [draft, setDraft] = useState('')
   const cardKey = s?.current ?? null
   const parsed = cardKey ? parseCardId(cardKey) : null
@@ -115,10 +123,16 @@ export function Study() {
   // la saisie repart de zéro à chaque carte
   useEffect(() => {
     setDraft('')
-    if (!useStore.getState().session?.revealed) setTyped(null)
+    if (!useStore.getState().session?.revealed) {
+      setTyped(null)
+      setTr(null)
+    }
   }, [cardKey]) // eslint-disable-line
   useEffect(() => {
-    if (!s?.revealed) setTyped(null)
+    if (!s?.revealed) {
+      setTyped(null)
+      setTr(null)
+    }
   }, [s?.revealed]) // eslint-disable-line
 
   // Lecture audio automatique
@@ -131,7 +145,8 @@ export function Study() {
   // Raccourcis clavier (PC) : espace = retourner, 1-5 = noter, Z = annuler
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement)?.tagName === 'INPUT') return
+      const tag = (e.target as HTMLElement)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return
       const st = useStore.getState().session
       if (!st || st.finished) return
       if (e.key === ' ' || e.key === 'Enter') {
@@ -174,7 +189,7 @@ export function Study() {
                 <div className="stat"><b>{mins}</b><span>min</span></div>
               </div>
               <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
-              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra)}>Recommencer</button>
+              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra, { typeTr: s.typeTr })}>Recommencer</button>
             </>
           ) : s.answered === 0 ? (
             <>
@@ -205,7 +220,7 @@ export function Study() {
               <p className="muted small" style={{ margin: '6px 0 0' }}>Niveau {lv.level} · {mins} min</p>
               {s.newSeen > 0 && <p className="muted small" style={{ margin: 0 }}>{s.newSeen} nouvelle{s.newSeen > 1 ? 's' : ''} carte{s.newSeen > 1 ? 's' : ''} découverte{s.newSeen > 1 ? 's' : ''}</p>}
               <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
-              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra + 10)}>Encore 10 cartes</button>
+              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra + 10, { typeTr: s.typeTr })}>Encore 10 cartes</button>
             </>
           )}
         </div>
@@ -216,7 +231,11 @@ export function Study() {
   const isNew = card!.s === 'new'
   const stageLabel = s.practice ? 'Entraînement' : isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
   const typingOn = state.settings.typing && parsed!.dir === 'p'
+  const trOn = s.typeTr && parsed!.dir === 'r'
   const remaining = s.queue.length + s.learn.length
+  // note suggérée par la vérification d'une réponse écrite
+  const suggested: Rating | null =
+    typed && typed.script !== 'vide' ? (typed.ok ? 4 : 1) : tr && tr.verdict !== 'vide' ? (tr.verdict === 'ok' ? 4 : tr.verdict === 'close' ? 3 : 1) : null
 
   return (
     <motion.div className="study" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ type: 'spring', stiffness: 320, damping: 32 }}>
@@ -250,13 +269,43 @@ export function Study() {
             transition={{ rotateY: { type: 'spring', stiffness: 220, damping: 24 }, x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
           >
             <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} />
-            <Back it={item} dir={parsed!.dir} typed={typed} />
+            <Back it={item} dir={parsed!.dir} typed={typed} tr={tr} />
           </motion.div>
         </AnimatePresence>
       </div>
 
       <div className="study-bottom">
-        {!s.revealed && typingOn ? (
+        {!s.revealed && trOn ? (
+          <form
+            className="typing-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setTr(checkTranslation(item, draft))
+              reveal()
+            }}
+          >
+            <textarea
+              key={cardKey}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  setTr(checkTranslation(item, draft))
+                  reveal()
+                }
+              }}
+              placeholder={item.kind === 'sentence' ? 'Écris la traduction en français…' : 'Écris le sens en français…'}
+              rows={item.kind === 'sentence' ? 2 : 1}
+              autoCapitalize="sentences"
+              autoComplete="off"
+              enterKeyHint="go"
+              aria-label="Ta traduction"
+            />
+            <button className="btn" type="submit">Vérifier</button>
+            <button className="known-btn" type="button" onClick={() => { setTr(null); reveal() }}>Je ne sais pas — voir la réponse</button>
+          </form>
+        ) : !s.revealed && typingOn ? (
           <form
             className="typing-form"
             onSubmit={(e) => {
@@ -286,7 +335,7 @@ export function Study() {
         ) : (
           <div className="rate-grid">
             {([1, 2, 3, 4, 5] as Rating[]).map((r) => (
-              <button key={r} className={`rate r${r}` + (typed && typed.script !== 'vide' && ((typed.ok && r === 4) || (!typed.ok && r === 1)) ? ' suggest' : '')} onClick={() => rate(r)}>
+              <button key={r} className={`rate r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)}>
                 <span className="emo">{RATE_EMOJI[r]}</span>
                 {RATING_LABELS[r]}
                 <small>{s.practice ? '\u00a0' : labels?.[r]}</small>
