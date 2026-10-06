@@ -22,6 +22,8 @@ export interface Settings {
   fade: boolean
   /** Gestes : glisser la carte à droite = Bien, à gauche = Oublié. Ajouté en v1.3. */
   swipe: boolean
+  /** Phrases naturelles (tirées des vidéos) glissées chaque jour dans « À étudier » (0 = aucune). Ajouté en v1.4. */
+  naturalPerDay: number
   _t: number
 }
 
@@ -34,6 +36,7 @@ export interface DayStat {
   xp: number
   sec: number // secondes passées
   rv?: number // révisions de cartes déjà apprises (compte pour le quota du jour). Ajouté en v1.3 — optionnel
+  nv?: number // phrases naturelles (vidéos) découvertes ce jour-là. Ajouté en v1.4 — optionnel
 }
 
 export interface AppState {
@@ -58,6 +61,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reviewsPerDay: 30,
   fade: true,
   swipe: true,
+  naturalPerDay: 2,
   _t: 0
 }
 
@@ -98,7 +102,8 @@ export function mergeStates(a: AppState, b: AppState): AppState {
               ok: Math.max(cur.ok, st.ok),
               xp: Math.max(cur.xp, st.xp),
               sec: Math.max(cur.sec, st.sec),
-              ...(cur.rv !== undefined || st.rv !== undefined ? { rv: Math.max(cur.rv ?? 0, st.rv ?? 0) } : {})
+              ...(cur.rv !== undefined || st.rv !== undefined ? { rv: Math.max(cur.rv ?? 0, st.rv ?? 0) } : {}),
+              ...(cur.nv !== undefined || st.nv !== undefined ? { nv: Math.max(cur.nv ?? 0, st.nv ?? 0) } : {})
             }
           : { ...st }
       }
@@ -138,6 +143,7 @@ export function dayTotal(state: AppState, day: string): DayStat {
     t.xp += d.xp
     t.sec += d.sec
     t.rv = (t.rv ?? 0) + (d.rv ?? 0)
+    t.nv = (t.nv ?? 0) + (d.nv ?? 0)
   }
   return t
 }

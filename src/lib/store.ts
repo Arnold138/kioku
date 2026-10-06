@@ -14,7 +14,8 @@ import {
   totalXp,
   type Settings
 } from './state'
-import { type CardState, type Rating, answer, dayKey, dayNumber, newCard } from './scheduler'
+import { type CardState, type Rating, answer, answerPractice, dayKey, dayNumber, newCard } from './scheduler'
+import { isNaturalId } from './natural'
 import { type CustomCard, type Item, buildCatalog, parseCardId } from './deck'
 import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } from './queue'
 import { ACHIEVEMENTS, buildStats, newlyUnlocked, type Achievement } from './achievements'
@@ -26,7 +27,8 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.3'
+export const APP_VERSION = '1.4'
+const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -67,9 +69,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP2)) safeSet(LS_BACKUP2, raw)
   // v1.3 : une 3e copie, prise au premier lancement de la 1.3 (les deux premières restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP3)) safeSet(LS_BACKUP3, raw)
+  // v1.4 : une 4e copie (les trois premières restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP4)) safeSet(LS_BACKUP4, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -98,8 +102,10 @@ interface UndoInfo {
   wasNew: boolean
   forgot: boolean
   shownAt: number
-  practice?: boolean // entraînement : rien n'a été modifié dans le planning
+  practice?: boolean // séance d'entraînement (les cartes non dues ne bougent pas, sauf si on les rate)
   requeued?: boolean // la carte a été remise en fin de file
+  newMissed?: boolean // ce raté a ajouté la carte à la liste des ratés de la séance
+  newSeen?: boolean // ce mot a été ajouté à la liste des mots vus
 }
 
 export interface Session {
@@ -119,8 +125,12 @@ export interface Session {
   undo: UndoInfo | null
   finished: boolean
   newSeen: number
-  /** entraînement libre : les réponses ne changent ni le planning, ni l'XP */
+  /** entraînement : une réussite ne repousse pas la date de révision ; un raté, lui, compte comme une vraie révision. L'XP compte toujours. */
   practice: boolean
+  /** cartes ratées pendant cette séance (elles rejoignent tes points faibles) */
+  missed: string[]
+  /** mots (ids) vus pendant la séance — servent à choisir les phrases naturelles de fin de séance */
+  seen: string[]
   /** cartes « échauffement » (phrases à traduire en début de séance) */
   warm: string[]
   /** réponses écrites : on tape la traduction française avant de retourner la carte */
@@ -154,6 +164,8 @@ interface Store {
   endSession: () => void
   recordExam: (r: { lvl: ExamLevel; mode: ExamMode; ok: number; total: number }) => number
   recordListen: (r: { mode: 'sens' | 'dictee'; ok: number; total: number }) => number
+  /** Note une phrase naturelle de fin de séance : « Compris » ou « À revoir » (entre dans le planning comme une vraie carte, + XP). */
+  rateSentence: (itemId: string, ok: boolean) => void
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
   restoreSnapshot: (json: string) => boolean
   exportJson: () => string
@@ -177,7 +189,7 @@ export const useStore = create<Store>((set, get) => {
   }
 
   const addToDay = (state: AppState, dev: string, day: string, delta: Partial<DayStat>): AppState['daily'] => {
-    const cur = state.daily[day]?.[dev] ?? { n: 0, nw: 0, np: 0, ok: 0, xp: 0, sec: 0, rv: 0 }
+    const cur = state.daily[day]?.[dev] ?? { n: 0, nw: 0, np: 0, ok: 0, xp: 0, sec: 0, rv: 0, nv: 0 }
     const upd: DayStat = {
       n: cur.n + (delta.n ?? 0),
       nw: cur.nw + (delta.nw ?? 0),
@@ -185,7 +197,8 @@ export const useStore = create<Store>((set, get) => {
       ok: cur.ok + (delta.ok ?? 0),
       xp: cur.xp + (delta.xp ?? 0),
       sec: cur.sec + (delta.sec ?? 0),
-      rv: (cur.rv ?? 0) + (delta.rv ?? 0)
+      rv: (cur.rv ?? 0) + (delta.rv ?? 0),
+      nv: (cur.nv ?? 0) + (delta.nv ?? 0)
     }
     return { ...state.daily, [day]: { ...(state.daily[day] ?? {}), [dev]: upd } }
   }
@@ -247,10 +260,6 @@ export const useStore = create<Store>((set, get) => {
   const finishSession = () => {
     const { session, state, device } = get()
     if (!session) return
-    if (session.practice) {
-      set({ session: { ...session, finished: true } })
-      return
-    }
     const perfect = session.answered >= 10 && session.forgot === 0
     if (session.answered >= 5) {
       const before = levelFromXp(totalXp(state)).level
@@ -344,6 +353,7 @@ export const useStore = create<Store>((set, get) => {
           q.learning = q.learning.filter((k) => !w.has(k))
           q.review = q.review.filter((k) => !w.has(k))
           q.fresh = q.fresh.filter((k) => !w.has(k))
+          q.freshNat = q.freshNat.filter((k) => !w.has(k))
         }
         queue = [...warm, ...interleave(q)]
         if (f.free && f.limit != null) queue = queue.slice(0, f.limit + extra)
@@ -368,7 +378,9 @@ export const useStore = create<Store>((set, get) => {
         newSeen: 0,
         practice,
         warm,
-        typeTr: !!opts?.typeTr
+        typeTr: !!opts?.typeTr,
+        missed: [],
+        seen: []
       }
       set({ session: pickNext(s, now) })
     },
@@ -386,28 +398,13 @@ export const useStore = create<Store>((set, get) => {
       const day = dayKey(dn)
       const key = s.current
 
-      // Entraînement libre : on ne touche ni aux cartes, ni à l'XP, ni aux compteurs du jour.
-      if (s.practice) {
-        const again = r <= 2 // Oublié / Difficile : la carte revient en fin de séance
-        let ps: Session = {
-          ...s,
-          queue: again ? [...s.queue, key] : s.queue,
-          done: s.done + (again ? 0 : 1),
-          answered: s.answered + 1,
-          forgot: s.forgot + (r === 1 ? 1 : 0),
-          undo: { cardKey: key, prevCard: undefined, prevDay: undefined, xp: 0, wasNew: false, forgot: r === 1, shownAt: s.shownAt, practice: true, requeued: again }
-        }
-        ps = pickNext(ps, now)
-        set({ session: ps })
-        if (ps.finished) finishSession()
-        return
-      }
-
       const prevCard = state.cards[key]
       const card = prevCard ?? newCard(now)
-      const wasNew = card.s === 'new'
-      const { dir } = parseCardId(key)
-      const out = answer(card, r, now, dn)
+      const wasNew = card.s === 'new' && !s.practice // en entraînement, une carte jamais vue n'est pas « découverte »
+      const { dir, itemId } = parseCardId(key)
+      const natural = isNaturalId(itemId)
+      // entraînement : un raté compte comme une vraie révision, une réussite ne repousse pas la date de révision
+      const out = s.practice ? answerPractice(card, r, now, dn) : answer(card, r, now, dn)
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
@@ -417,28 +414,40 @@ export const useStore = create<Store>((set, get) => {
       const daily = addToDay(state, device, day, {
         n: 1,
         ok: r >= 2 ? 1 : 0,
-        nw: wasNew && dir === 'r' ? 1 : 0,
+        nw: wasNew && dir === 'r' && !natural ? 1 : 0,
         np: wasNew && dir === 'p' ? 1 : 0,
-        rv: card.s === 'review' ? 1 : 0, // compte pour le quota de révisions du jour
+        nv: wasNew && natural ? 1 : 0, // phrases naturelles : comptées à part (elles ne prennent pas la place des mots du jour)
+        rv: card.s === 'review' && !s.practice ? 1 : 0, // compte pour le quota de révisions du jour
         xp,
         sec
       })
-      commit({ cards: { ...state.cards, [key]: out.card }, daily })
+      commit({ cards: card.s === 'new' && s.practice ? state.cards : { ...state.cards, [key]: out.card }, daily })
 
       // file de la séance
       let learn = s.learn
+      let queue = s.queue
       let doneInc = 0
-      if (out.nextMinutes !== undefined) learn = [...s.learn, { id: key, due: now + out.nextMinutes * 60_000 }]
+      let requeued = false
+      if (s.practice) {
+        requeued = r <= 2 // Oublié / Difficile : la carte revient en fin de séance
+        if (requeued) queue = [...s.queue, key]
+        else doneInc = 1
+      } else if (out.nextMinutes !== undefined) learn = [...s.learn, { id: key, due: now + out.nextMinutes * 60_000 }]
       else doneInc = 1
+      const newMissed = r === 1 && !s.missed.includes(key)
+      const newSeen = itemId.startsWith('w') && !s.seen.includes(itemId)
       let ns: Session = {
         ...s,
         learn,
+        queue,
         done: s.done + doneInc,
         answered: s.answered + 1,
         forgot: s.forgot + (r === 1 ? 1 : 0),
         xp: s.xp + xp,
         newSeen: s.newSeen + (wasNew ? 1 : 0),
-        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, shownAt: s.shownAt }
+        missed: newMissed ? [...s.missed, key] : s.missed,
+        seen: newSeen ? [...s.seen, itemId] : s.seen,
+        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen }
       }
       ns = pickNext(ns, now)
       set({ session: ns })
@@ -486,8 +495,22 @@ export const useStore = create<Store>((set, get) => {
       if (!s || !s.undo) return
       const u = s.undo
       const now = Date.now()
+      const day = dayKey(dayNumber(now))
+      const cards = { ...state.cards }
+      if (u.prevCard) cards[u.cardKey] = u.prevCard
+      else delete cards[u.cardKey]
+      const daily = { ...state.daily }
+      if (u.prevDay) daily[day] = { ...(daily[day] ?? {}), [device]: u.prevDay }
+      else if (daily[day]) {
+        const d = { ...daily[day] }
+        delete d[device]
+        daily[day] = d
+      }
+      commit({ cards, daily })
+      const missed = u.newMissed ? s.missed.filter((k) => k !== u.cardKey) : s.missed
+      const seen = u.newSeen ? s.seen.filter((k) => k !== parseCardId(u.cardKey).itemId) : s.seen
       if (u.practice) {
-        // entraînement : on remet simplement la carte à l'écran
+        // entraînement : on remet la carte à l'écran (et on retire sa copie de fin de file si elle y a été remise)
         let queue = s.current ? [s.current, ...s.queue] : s.queue
         if (u.requeued) {
           const idx = queue.lastIndexOf(u.cardKey)
@@ -502,25 +525,17 @@ export const useStore = create<Store>((set, get) => {
             finished: false,
             answered: Math.max(0, s.answered - 1),
             forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
+            xp: Math.max(0, s.xp - u.xp),
+            newSeen: Math.max(0, s.newSeen - (u.wasNew ? 1 : 0)),
             done: Math.max(0, s.done - (u.requeued ? 0 : 1)),
+            missed,
+            seen,
             undo: null,
             shownAt: now
           }
         })
         return
       }
-      const day = dayKey(dayNumber(now))
-      const cards = { ...state.cards }
-      if (u.prevCard) cards[u.cardKey] = u.prevCard
-      else delete cards[u.cardKey]
-      const daily = { ...state.daily }
-      if (u.prevDay) daily[day] = { ...(daily[day] ?? {}), [device]: u.prevDay }
-      else if (daily[day]) {
-        const d = { ...daily[day] }
-        delete d[device]
-        daily[day] = d
-      }
-      commit({ cards, daily })
       // remet la carte actuelle en tête de file et la carte annulée à l'écran
       const queue = s.current ? [s.current, ...s.queue] : s.queue
       const learn = s.learn.filter((l) => l.id !== u.cardKey)
@@ -537,6 +552,8 @@ export const useStore = create<Store>((set, get) => {
           xp: Math.max(0, s.xp - u.xp),
           newSeen: Math.max(0, s.newSeen - (u.wasNew ? 1 : 0)),
           done: Math.max(0, s.done - (s.learn.some((l) => l.id === u.cardKey) ? 0 : 1)),
+          missed,
+          seen,
           undo: null,
           shownAt: now
         }
@@ -574,6 +591,24 @@ export const useStore = create<Store>((set, get) => {
       if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
       if (pct >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       return xp
+    },
+
+    rateSentence: (itemId, ok) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const dn = dayNumber(now)
+      const key = `${itemId}:r`
+      const card = state.cards[key] ?? newCard(now)
+      const wasNew = card.s === 'new'
+      const r: Rating = ok ? 4 : 1
+      const out = answer(card, r, now, dn)
+      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0)
+      const before = levelFromXp(totalXp(state)).level
+      const daily = addToDay(state, device, today(), { n: 1, ok: ok ? 1 : 0, nv: wasNew ? 1 : 0, xp })
+      commit({ cards: { ...state.cards, [key]: out.card }, daily })
+      const after = levelFromXp(totalXp(get().state)).level
+      if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+      checkAchievements()
     },
 
     restoreSnapshot: (json) => {

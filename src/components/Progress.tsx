@@ -3,10 +3,10 @@ import { motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { ACHIEVEMENTS } from '../lib/achievements'
 import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, streaks, totalReviews, totalXp } from '../lib/state'
-import { dayKey, dayNumber } from '../lib/scheduler'
+import { dayKey, dayNumber, misses } from '../lib/scheduler'
 import { Roadmap } from './Roadmap'
-import { Leeches } from './Leeches'
-import { forecast, leeches } from '../lib/insights'
+import { Weak } from './Weak'
+import { forecast, weakCards, weakGroups } from '../lib/insights'
 
 export function Progress() {
   const { state, items } = useStore()
@@ -22,7 +22,10 @@ export function Progress() {
   const [leechOpen, setLeechOpen] = useState(false)
   const fc = useMemo(() => forecast(state, now, 7), [state]) // eslint-disable-line
   const maxFc = Math.max(10, ...fc.map((d) => d.n))
-  const leechCount = useMemo(() => leeches(state, items).length, [state, items])
+  const weak = useMemo(() => weakCards(state, items, now), [state, items]) // eslint-disable-line
+  const groups = useMemo(() => weakGroups(weak), [weak])
+  const totalMisses = useMemo(() => Object.values(state.cards).reduce((n, c) => n + misses(c), 0), [state.cards])
+  const topWeak = [...groups.themes, ...groups.types].sort((a, b) => b.cards.length - a.cards.length).slice(0, 4)
   const minutes = Object.keys(state.daily).reduce((a, d) => a + Math.round(dayTotal(state, d).sec / 60), 0)
 
   // 14 derniers jours
@@ -76,6 +79,7 @@ export function Progress() {
         <div className="kpi"><b>{prog.wordsKnownR}</b><span>mots retenus</span></div>
         <div className="kpi"><b>{reviews}</b><span>{reviews > 1 ? "cartes révisées" : "carte révisée"}</span></div>
         <div className="kpi"><b>{minutes}<small style={{ fontSize: 15 }}> min</small></b><span>de pratique au total</span></div>
+        <div className="kpi"><b>{totalMisses}</b><span>ratés au total</span></div>
         <div className="kpi"><b>{ret === null ? '—' : Math.round(ret * 100) + '%'}</b><span>de réussite (30 j)</span></div>
       </div>
 
@@ -107,15 +111,26 @@ export function Progress() {
         )}
       </div>
 
-      <button className="card leech-card tap" onClick={() => setLeechOpen(true)}>
-        <div className="row-ico" style={{ background: 'hsl(35 95% 90%)' }}>🧲</div>
-        <div className="grow" style={{ textAlign: 'left' }}>
-          <div style={{ fontWeight: 700 }}>Mots difficiles</div>
-          <div className="muted small">{leechCount ? `${leechCount} mot${leechCount > 1 ? 's' : ''} souvent oublié${leechCount > 1 ? 's' : ''} · ajoute une astuce` : 'Aucun pour le moment'}</div>
+      <button className="card weak-card tap" onClick={() => setLeechOpen(true)} style={{ textAlign: 'left', display: 'block', width: '100%' }}>
+        <div className="row" style={{ gap: 12 }}>
+          <div className="row-ico" style={{ background: 'hsl(25 95% 90%)' }}>🔥</div>
+          <div className="grow">
+            <div style={{ fontWeight: 700 }}>Mes points faibles</div>
+            <div className="muted small">
+              {weak.length ? `${weak.length} carte${weak.length > 1 ? 's' : ''} à renforcer · ${weak.reduce((n, w) => n + w.misses, 0)} ratés` : 'Aucun pour le moment'}
+            </div>
+          </div>
+          <span className="chev">›</span>
         </div>
-        <span className="chev">›</span>
+        {topWeak.length > 0 && (
+          <div className="chips wrap" style={{ marginTop: 10 }}>
+            {topWeak.map((g) => (
+              <span key={g.id} className="chip miss-chip">{g.emoji} {g.label} <b className="tnum">{g.cards.length}</b></span>
+            ))}
+          </div>
+        )}
       </button>
-      <Leeches open={leechOpen} onClose={() => setLeechOpen(false)} />
+      <Weak open={leechOpen} onClose={() => setLeechOpen(false)} />
 
       <div className="card">
         <div style={{ fontWeight: 700, marginBottom: 12 }}>14 derniers jours</div>

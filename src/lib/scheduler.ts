@@ -18,7 +18,14 @@ export interface CardState {
   li: number // intervalle prévu après réapprentissage
   t: number // date de dernière modification (ms)
   m?: string // astuce personnelle (moyen mnémotechnique). Ajouté en v1.3 — optionnel, voyage avec la carte
+  f?: number // nombre total de fois où la carte a été ratée (« Oublié »), y compris à l'apprentissage. Ajouté en v1.4 — optionnel (sinon : `l`)
+  w?: number // réussites d'affilée depuis le dernier raté (3 = la carte est « récupérée »). Ajouté en v1.4 — optionnel
+  mt?: number // date (ms) du dernier raté. Ajouté en v1.4 — optionnel
 }
+
+/** Nombre de fois où la carte a été ratée (les anciennes sauvegardes n'ont que les oublis de révision). */
+export const misses = (c: CardState | undefined): number => (c ? c.f ?? c.l : 0)
+export const RECOVER_AT = 3 // réussites d'affilée pour sortir des « points faibles »
 
 export const LEARN_STEPS = [1, 10] // minutes
 export const RELEARN_STEPS = [10] // minutes
@@ -85,8 +92,29 @@ export interface Outcome {
   nextDays?: number
 }
 
+/** Suivi des ratés (additif, n'influence pas le planning) : total, série de réussites, date du dernier raté. */
+export function track(prev: CardState, next: CardState, rating: Rating, now: number): CardState {
+  if (rating === 1) return { ...next, f: misses(prev) + 1, w: 0, mt: now }
+  if (rating >= 3 && (prev.w !== undefined || prev.f !== undefined || prev.l >= 3)) return { ...next, w: (prev.w ?? 0) + 1 }
+  return next
+}
+
 /** Applique une réponse à une carte. `today` = numéro de jour courant. */
 export function answer(card: CardState, rating: Rating, now: number, today: number): Outcome {
+  const o = answerCore(card, rating, now, today)
+  return { ...o, card: track(card, o.card, rating, now) }
+}
+
+/** Entraînement libre : un raté compte comme une vraie révision (la carte revient bientôt) ; une réussite
+ *  est comptée (XP, série) mais ne repousse pas la date de révision d'une carte qui n'est pas encore due. */
+export function answerPractice(card: CardState, rating: Rating, now: number, today: number): Outcome {
+  if (card.s === 'new') return { card } // jamais vue : l'entraînement ne l'introduit pas (c'est le rôle de « Découvrir »)
+  if (rating === 1 || card.s !== 'review') return answer(card, rating, now, today)
+  const kept: CardState = track(card, { ...card, r: card.r + 1, t: now }, rating, now)
+  return { card: kept, nextDays: card.s === 'review' ? Math.max(0, card.d - today) : undefined }
+}
+
+function answerCore(card: CardState, rating: Rating, now: number, today: number): Outcome {
   const c: CardState = { ...card, t: now }
   const learningLike = c.s === 'new' || c.s === 'learning' || c.s === 'relearning'
 

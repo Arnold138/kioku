@@ -3,6 +3,7 @@ import type { AppState } from './state'
 import { dayTotal } from './state'
 import { dayKey, dayNumber, isDue, type CardState } from './scheduler'
 import { inTheme } from './themes'
+import { naturalSentences } from './natural'
 
 export type PosGroup = 'all' | 'verbs' | 'adjs' | 'nouns' | 'others'
 /** normal = révisions dues + nouvelles (planning habituel) · new = nouvelles seulement · practice = entraînement libre sans toucher au planning */
@@ -17,6 +18,7 @@ export interface Filter {
   moreReviews?: number // révisions supplémentaires au-delà du quota du jour (« Encore 10 révisions »)
   cap?: number // nombre max de cartes pour toute la séance (séance de 2 minutes)
   ids?: string[] // ne garder que ces éléments (ex. mots difficiles)
+  keys?: string[] // séance d'entraînement sur ces cartes précises (id de carte), dans cet ordre (ex. points faibles)
 }
 export const ALL: Filter = { deck: 'all', pos: 'all' }
 
@@ -54,6 +56,8 @@ export interface QueueBuild {
   review: string[]
   fresh: string[]
   freshProd: string[]
+  /** phrases naturelles des vidéos du jour (hors quota de mots) */
+  freshNat: string[]
   newLeft: number
   prodLeft: number
   /** Révisions dues mais reportées à un autre jour à cause du quota quotidien. */
@@ -107,12 +111,19 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     }
   }
   kept.sort((a, b) => a[0] - b[0])
+  // Phrases naturelles (vidéos) : quelques-unes par jour, choisies parmi ce que tu sais déjà lire
+  let freshNat: string[] = []
+  const natLeft = Math.max(0, (state.settings.naturalPerDay ?? 0) - (dt.nv ?? 0))
+  if (natLeft > 0 && !f.free && scope === 'normal' && f.deck === 'all' && f.pos === 'all' && !f.theme && !f.ids) {
+    freshNat = naturalSentences(state, items, natLeft).map((it) => `${it.id}:r`)
+  }
   return {
     learning: learning.map((x) => x[1]),
     review: kept.map((x) => x[1]),
     deferred: review.length - kept.length,
     fresh,
     freshProd,
+    freshNat,
     newLeft,
     prodLeft
   }
@@ -128,6 +139,11 @@ function shuffle<T>(a: T[]): T[] {
 
 /** Entraînement libre : toutes les cartes déjà vues du filtre, dans le désordre. Les réponses ne modifient PAS le planning. */
 export function buildPractice(state: AppState, items: Item[], f: Filter, extraNew = 0): string[] {
+  if (f.keys) {
+    // cartes choisies (points faibles, ratés de la séance) : dans l'ordre donné, seulement celles déjà commencées
+    const ok = f.keys.filter((k) => state.cards[k] && state.cards[k].s !== 'new')
+    return f.limit != null ? ok.slice(0, f.limit + extraNew) : ok
+  }
   const out: string[] = []
   for (const it of items) {
     if (!passes(it, f)) continue
@@ -163,7 +179,7 @@ export function pickWarmup(state: AppState, items: Item[], n: number, now: numbe
 /** Mélange : révisions d'abord, nouvelles cartes glissées régulièrement. */
 export function interleave(q: QueueBuild): string[] {
   const out: string[] = [...q.learning]
-  const news = [...q.fresh, ...q.freshProd]
+  const news = [...q.fresh, ...q.freshProd, ...q.freshNat]
   const rev = [...q.review]
   if (!rev.length) return [...out, ...news]
   const every = Math.max(2, Math.floor(rev.length / (news.length + 1)) + 1)
@@ -181,8 +197,8 @@ export function countDue(state: AppState, items: Item[], f: Filter, now: number,
   return {
     learning: q.learning.length,
     review: q.review.length,
-    fresh: q.fresh.length + q.freshProd.length,
+    fresh: q.fresh.length + q.freshProd.length + q.freshNat.length,
     deferred: q.deferred,
-    total: q.learning.length + q.review.length + q.fresh.length + q.freshProd.length
+    total: q.learning.length + q.review.length + q.fresh.length + q.freshProd.length + q.freshNat.length
   }
 }

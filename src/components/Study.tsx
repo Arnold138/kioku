@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { parseCardId, POS_LABEL, type Item } from '../lib/deck'
-import { RATING_LABELS, dayNumber, newCard, previewLabels, type Rating } from '../lib/scheduler'
+import { RATING_LABELS, dayNumber, misses, newCard, previewLabels, type Rating } from '../lib/scheduler'
 import { dayTotal, streaks, levelFromXp, totalXp, computeProgress } from '../lib/state'
 import { estimateLevel } from '../lib/level'
 import { countDue } from '../lib/queue'
 import { aidLevel, type Aid } from '../lib/aid'
-import { contextFor } from '../lib/context'
+import { contextFor, contextIndex } from '../lib/context'
+import { naturalSentences, sentencesForWords } from '../lib/natural'
+import { ALL } from '../lib/queue'
 import { LEECH_AT } from '../lib/insights'
 import { dayKey } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
@@ -41,7 +43,7 @@ function Extras({ it, cardKey, ctx, lapses }: { it: Item; cardKey: string; ctx: 
   const canMemo = it.kind !== 'sentence'
   return (
     <div className="extras" onClick={(e) => e.stopPropagation()}>
-      {leech && <span className="chip warn">🧲 Mot difficile · oublié {lapses} fois</span>}
+      {lapses > 0 && <span className="chip warn">🔥 Raté {lapses} fois{leech ? ' · mot difficile' : ''}</span>}
       {ctx.length > 0 && (
         <div className="ctx">
           <div className="ctx-label">En contexte</div>
@@ -167,6 +169,78 @@ function Back({ it, dir, typed, tr, extras }: { it: Item; dir: 'r' | 'p'; typed:
   )
 }
 
+/** Cartes ratées pendant la séance : elles rejoignent les points faibles. */
+function Missed({ keys, onRetry }: { keys: string[]; onRetry: () => void }) {
+  const byId = useStore((st) => st.byId)
+  const cards = useStore((st) => st.state.cards)
+  if (!keys.length) return null
+  const rows = keys.map((k) => ({ k, it: byId.get(parseCardId(k).itemId) })).filter((r): r is { k: string; it: Item } => !!r.it)
+  const shown = rows.slice(0, 8)
+  return (
+    <div className="nat">
+      <div className="nat-title">🔥 À retenir · {rows.length} carte{rows.length > 1 ? 's' : ''} ratée{rows.length > 1 ? 's' : ''}</div>
+      <div className="nat-sub">Ajoutée{rows.length > 1 ? 's' : ''} à tes points faibles.</div>
+      <div className="missed-list" style={{ boxShadow: 'none', padding: '4px 0 0' }}>
+        {shown.map(({ k, it }) => (
+          <div key={k} className="missed-row">
+            <span><b className="jp">{it.jp}</b> <span className="muted">{it.fr}</span></span>
+            <span className="chip miss-chip tnum">{misses(cards[k])}×</span>
+          </div>
+        ))}
+        {rows.length > shown.length && <div className="muted small" style={{ padding: '6px 0' }}>… et {rows.length - shown.length} autre{rows.length - shown.length > 1 ? 's' : ''}</div>}
+      </div>
+      <div className="nat-btns"><button className="btn" onClick={onRetry}>Les revoir maintenant</button></div>
+    </div>
+  )
+}
+
+/** Phrases naturelles (vidéos) qui reprennent les mots de la séance : « Compris » / « À revoir » les ajoute à tes révisions. */
+function Natural({ session }: { session: NonNullable<ReturnType<typeof useStore.getState>['session']> }) {
+  const { items, state, rateSentence } = useStore()
+  const [list] = useState<Item[]>(() => {
+    const idx = contextIndex(items)
+    const st = useStore.getState().state
+    const first = sentencesForWords(st, items, session.seen, idx, 3)
+    const ids = new Set(first.map((x) => x.id))
+    const more = first.length < 3 ? naturalSentences(st, items, 3 - first.length + 3).filter((x) => !ids.has(x.id)).slice(0, 3 - first.length) : []
+    return [...first, ...more]
+  })
+  const [shown, setShown] = useState<Record<string, boolean>>({})
+  const [res, setRes] = useState<Record<string, boolean>>({})
+  if (!list.length) return null
+  void state
+  return (
+    <div className="nat">
+      <div className="nat-title">🗣️ Dans la vraie vie</div>
+      <div className="nat-sub">Des phrases que disent les Japonais, avec des mots que tu connais.</div>
+      {list.map((it) => (
+        <div key={it.id} className="nat-row">
+          <div className="row spread" style={{ alignItems: 'flex-start', gap: 8 }}>
+            <div className="nat-jp jp">{it.jp}</div>
+            {canSpeak() && <button className="icon-btn" aria-label="Écouter" onClick={() => speak(it.kana || it.jp)}>{Icon.speaker()}</button>}
+          </div>
+          {!shown[it.id] ? (
+            <button className="btn plain" style={{ marginTop: 8, padding: '8px 14px', fontSize: 14 }} onClick={() => setShown({ ...shown, [it.id]: true })}>Voir la traduction</button>
+          ) : (
+            <>
+              <div className="kana-line jp" style={{ fontSize: 14, marginTop: 4 }}>{it.kana.replace(/\s+/g, '')}</div>
+              <div className="nat-fr">{it.fr}</div>
+              {res[it.id] === undefined ? (
+                <div className="nat-btns">
+                  <button className="btn plain" onClick={() => { rateSentence(it.id, false); setRes({ ...res, [it.id]: false }) }}>À revoir</button>
+                  <button className="btn" onClick={() => { rateSentence(it.id, true); setRes({ ...res, [it.id]: true }) }}>Compris ✓</button>
+                </div>
+              ) : (
+                <div className="nat-done">{res[it.id] ? '✓ Compris · +15 XP, elle reviendra dans tes révisions' : '↺ À revoir · ajoutée à tes points faibles'}</div>
+              )}
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function Study() {
   const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings } = useStore()
   const now = Date.now()
@@ -183,7 +257,7 @@ export function Study() {
 
   const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
   const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
-  const lapses = card?.l ?? 0
+  const lapses = misses(card ?? undefined)
 
   // Gestes (iPhone) : une fois la carte retournée, glisser à droite = Bien, à gauche = Oublié.
   const [dx, setDx] = useState(0)
@@ -286,12 +360,16 @@ export function Study() {
             <>
               <motion.div className="emoji" initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>🏋️</motion.div>
               <h2 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.02em' }}>Entraînement terminé</h2>
-              <p className="muted" style={{ margin: 0, maxWidth: 320 }}>Ton planning de révision n'a pas changé : cette séance était juste pour t'exercer.</p>
+              <p className="muted" style={{ margin: 0, maxWidth: 320 }}>
+                {s.forgot > 0 ? 'Les cartes ratées sont retenues dans tes points faibles et reviendront bientôt.' : 'Aucun raté : bravo !'}
+              </p>
               <div className="stat-grid">
                 <div className="stat"><b>{s.answered}</b><span>réponses</span></div>
                 <div className="stat"><b>{acc}%</b><span>retenues</span></div>
-                <div className="stat"><b>{mins}</b><span>min</span></div>
+                <div className="stat"><b>+{s.xp}</b><span>XP</span></div>
               </div>
+              <Missed keys={s.missed} onRetry={() => startSession({ ...ALL, scope: 'practice', keys: s.missed }, 0)} />
+              <Natural session={s} />
               <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
               <button className="btn plain block" onClick={() => startSession(s.filter, s.extra, { typeTr: s.typeTr })}>Recommencer</button>
             </>
@@ -332,6 +410,8 @@ export function Study() {
                 )}
                 {est.next && <div className="bar thin"><i style={{ width: `${Math.round(est.pct * 100)}%` }} /></div>}
               </div>
+              <Missed keys={s.missed} onRetry={() => startSession({ ...ALL, scope: 'practice', keys: s.missed }, 0)} />
+              <Natural session={s} />
               <p className="muted small" style={{ margin: 0 }}>
                 {mins} min{s.newSeen > 0 ? ` · ${s.newSeen} nouvelle${s.newSeen > 1 ? 's' : ''} carte${s.newSeen > 1 ? 's' : ''} découverte${s.newSeen > 1 ? 's' : ''}` : ''}
                 {deferred > 0 ? ` · ${deferred} révision${deferred > 1 ? 's' : ''} reportée${deferred > 1 ? 's' : ''} à demain` : ''}
@@ -368,6 +448,7 @@ export function Study() {
         {s.warm.includes(cardKey!) && <span className="chip accent">📝 Échauffement</span>}
         <span className={'chip ' + (isNew || s.practice ? 'accent' : '')}>{stageLabel}</span>
         <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
+        {lapses > 0 && <span className={'chip tnum ' + (lapses >= 3 ? 'warn' : 'miss-chip')}>🔥 raté {lapses} fois</span>}
         {parsed!.dir === 'p' && !s.revealed && (
           <button className="known-btn" onClick={() => updateSettings({ typing: !state.settings.typing })}>
             {state.settings.typing ? '✋ Je réponds dans ma tête' : '⌨️ Écrire la réponse'}

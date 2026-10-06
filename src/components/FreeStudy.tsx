@@ -67,7 +67,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
   const modes: Array<{ id: Scope; title: string; desc: string; n: number }> = [
     { id: 'normal', title: 'Réviser + découvrir', desc: `${counts.due} à revoir · ${counts.fresh} nouvelles`, n: cap(counts.due + counts.fresh) },
     { id: 'new', title: 'Découvrir du nouveau', desc: 'Seulement des cartes jamais vues', n: cap(counts.news) },
-    { id: 'practice', title: "S'entraîner", desc: 'Cartes déjà vues, sans toucher au planning ni à l\'XP', n: cap(counts.practice) }
+    { id: 'practice', title: "S'entraîner", desc: 'Cartes déjà vues · XP compté, les ratés sont retenus', n: cap(counts.practice) }
   ]
 
   const go = () => {

@@ -1,7 +1,7 @@
 // Indicateurs pour « voir où j'en suis » : mots difficiles, prévision des révisions, feuille de route par niveau.
 import type { Item } from './deck'
 import type { AppState } from './state'
-import { isKnown, isMature, dayNumber, dayKey, type CardState } from './scheduler'
+import { isKnown, isMature, dayNumber, dayKey, misses, RECOVER_AT, type CardState } from './scheduler'
 import { posGroup, type PosGroup } from './queue'
 import { THEMES, inTheme } from './themes'
 
@@ -21,11 +21,83 @@ export function leeches(state: AppState, items: Item[]): Leech[] {
     for (const dir of ['r', 'p'] as const) {
       const key = `${it.id}:${dir}`
       const c = state.cards[key]
-      if (c && c.l >= LEECH_AT && (!best || c.l > best.lapses)) best = { item: it, lapses: c.l, key }
+      if (c && misses(c) >= LEECH_AT && (!best || misses(c) > best.lapses)) best = { item: it, lapses: misses(c), key }
     }
     if (best) out.push(best)
   }
   return out.sort((a, b) => b.lapses - a.lapses)
+}
+
+// ───────── Points faibles ─────────
+export const WEAK_MISSES = 3 // ratés à partir desquels une carte est un point faible
+export const RECENT_MS = 2 * 86_400_000 // un raté de moins de 2 jours compte aussi (mauvaise séance)
+
+/** Point faible : ratée ≥ 3 fois, ou ratée très récemment — tant qu'on ne l'a pas réussie 3 fois d'affilée. */
+export function isWeak(c: CardState | undefined, now: number): boolean {
+  if (!c || c.s === 'new') return false
+  if ((c.w ?? 0) >= RECOVER_AT) return false
+  const recent = c.mt !== undefined && now - c.mt < RECENT_MS
+  return misses(c) >= WEAK_MISSES || recent
+}
+
+export interface WeakCard {
+  item: Item
+  key: string // carte la plus ratée (id de carte)
+  misses: number
+  streak: number // réussites d'affilée depuis le dernier raté
+  recent: boolean
+}
+
+/** Points faibles (un par mot ou phrase), les plus ratés d'abord. */
+export function weakCards(state: AppState, items: Item[], now: number): WeakCard[] {
+  const out: WeakCard[] = []
+  for (const it of items) {
+    let best: WeakCard | null = null
+    for (const dir of ['r', 'p'] as const) {
+      const key = `${it.id}:${dir}`
+      const c = state.cards[key]
+      if (!isWeak(c, now)) continue
+      const m = misses(c)
+      if (!best || m > best.misses) best = { item: it, key, misses: m, streak: c!.w ?? 0, recent: c!.mt !== undefined && now - c!.mt < RECENT_MS }
+    }
+    if (best) out.push(best)
+  }
+  return out.sort((a, b) => b.misses - a.misses || Number(b.recent) - Number(a.recent) || a.item.order - b.item.order)
+}
+
+export interface WeakGroup {
+  id: string
+  label: string
+  emoji: string
+  cards: WeakCard[]
+  misses: number
+}
+
+const TYPE_LABELS: Array<{ id: string; label: string; emoji: string }> = [
+  { id: 'verbs', label: 'Verbes', emoji: '🏃' },
+  { id: 'adjs', label: 'Adjectifs', emoji: '🎨' },
+  { id: 'nouns', label: 'Noms', emoji: '📦' },
+  { id: 'others', label: 'Autres mots', emoji: '🔗' },
+  { id: 'phrases', label: 'Phrases', emoji: '💬' },
+  { id: 'perso', label: 'Mes cartes', emoji: '⭐' }
+]
+
+const group = (id: string, label: string, emoji: string, cards: WeakCard[]): WeakGroup => ({ id, label, emoji, cards, misses: cards.reduce((n, c) => n + c.misses, 0) })
+
+/** Classe les points faibles par type de mot et par thème (nourriture, météo, couleurs…). Un mot peut être dans plusieurs thèmes. */
+export function weakGroups(list: WeakCard[]): { types: WeakGroup[]; themes: WeakGroup[] } {
+  const types = TYPE_LABELS.map((t) =>
+    group(
+      t.id,
+      t.label,
+      t.emoji,
+      list.filter((w) => (w.item.kind === 'word' ? posGroup(w.item.pos) === t.id : w.item.kind === 'sentence' ? t.id === 'phrases' : t.id === 'perso'))
+    )
+  ).filter((g) => g.cards.length)
+  const themes = THEMES.map((t) => group(t.id, t.label, t.emoji, list.filter((w) => w.item.kind === 'word' && inTheme(w.item.id, t.id))))
+    .filter((g) => g.cards.length)
+    .sort((a, b) => b.cards.length - a.cards.length || b.misses - a.misses)
+  return { types, themes }
 }
 
 export interface ForecastDay {

@@ -119,7 +119,7 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
       <div className="stack" style={{ gap: 16 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Écoute 🎧</h2>
-          <p className="muted small" style={{ margin: '4px 0 0' }}>Entraîne ton oreille : tu entends, tu comprends. Ça ne change pas ton planning de révision.</p>
+          <p className="muted small" style={{ margin: '4px 0 0' }}>Entraîne ton oreille : tu entends, tu comprends. Tu gagnes de l'XP ; ça ne change pas ton planning de révision.</p>
         </div>
 
         {!ready && <div className="typed-result bad" style={{ alignItems: 'flex-start' }}>La voix japonaise n'est pas disponible sur cet appareil.</div>}

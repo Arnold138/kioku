@@ -4,6 +4,15 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.4
+
+- **Compteur de ratés** : chaque carte affiche « 🔥 raté N fois » (avant et après l'avoir retournée), y compris les ratés faits pendant l'apprentissage. Le total est dans *Progrès* et dans la fiche de chaque carte.
+- **🔥 Mes points faibles**, juste sous « Commencer » : les cartes ratées 3 fois ou plus, ou ratées très récemment, jusqu'à 3 réussites d'affilée. Classées **par type** (verbes, adjectifs, noms…) et **par thème** (nourriture, météo, couleurs…), avec un bouton pour les travailler à part. Ce deck est séparé de ton « À étudier » normal.
+- **Une séance ratée n'est pas perdue** : les cartes oubliées entrent automatiquement dans les points faibles, et l'écran de fin de séance les liste avec « Les revoir maintenant ».
+- **L'XP compte partout** : *S'entraîner* (Réviser librement), points faibles, phrases de fin de séance, écoute et examens rapportent de l'expérience. En entraînement, un raté compte comme une vraie révision ; une réussite ne repousse pas la date de révision.
+- **Phrases naturelles des vidéos** : 2 par jour (réglable) glissées dans « À étudier », choisies parmi celles dont presque tous les mots te sont déjà connus ; 3 autres à la fin de chaque séance, avec les mots que tu viens de voir (« Compris » / « À revoir » les ajoute à tes révisions).
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), seulement des champs optionnels ajoutés ; une copie `kioku:backup:avant-v1.4` est faite à la première ouverture.
+
 ## Nouveautés de la version 1.3
 
 - **Quota de révisions par jour** (Réglages, 30 par défaut) : les cartes les plus difficiles passent en premier, le reste est reporté à demain. **« Encore 10 révisions »** et **« ⚡ 2 minutes »** (10 cartes) sur l'accueil.

@@ -12,6 +12,8 @@ import { FreeStudy } from './FreeStudy'
 import { DecksSheet } from './Decks'
 import { Exams } from './Exams'
 import { Listening } from './Listening'
+import { Weak } from './Weak'
+import { weakCards } from '../lib/insights'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } }
@@ -23,10 +25,13 @@ export function Home({ onAdd }: { onAdd: () => void }) {
   const [decksOpen, setDecksOpen] = useState(false)
   const [examsOpen, setExamsOpen] = useState(false)
   const [listenOpen, setListenOpen] = useState(false)
+  const [weakOpen, setWeakOpen] = useState(false)
   const now = Date.now()
   const day = dayKey(dayNumber(now))
   const due = useMemo(() => countDue(state, items, ALL, now), [state, items]) // eslint-disable-line
   const prog = useMemo(() => computeProgress(state, items), [state, items])
+  const weak = useMemo(() => weakCards(state, items, now), [state, items]) // eslint-disable-line
+  const weakMisses = weak.reduce((n, w) => n + w.misses, 0)
   const dt = dayTotal(state, day)
   const xp = totalXp(state)
   const lv = levelFromXp(xp)
@@ -111,6 +116,12 @@ export function Home({ onAdd }: { onAdd: () => void }) {
             <motion.button whileTap={{ scale: 0.97 }} className="btn white block" style={{ marginTop: 16 }} onClick={() => startSession(ALL, 0, { warm })}>
               Commencer
             </motion.button>
+            {weak.length > 0 && (
+              <motion.button whileTap={{ scale: 0.97 }} className="weak-btn" onClick={() => setWeakOpen(true)}>
+                <span>🔥 Mes points faibles</span>
+                <small className="tnum">{weak.length} carte{weak.length > 1 ? 's' : ''} · {weakMisses} raté{weakMisses > 1 ? 's' : ''} ›</small>
+              </motion.button>
+            )}
             <div className="hero-actions">
               <motion.button whileTap={{ scale: 0.97 }} className="btn glass" onClick={() => startSession({ ...ALL, cap: QUICK }, 0)}>⚡ 2 minutes</motion.button>
               {due.deferred > 0 && (
@@ -121,6 +132,12 @@ export function Home({ onAdd }: { onAdd: () => void }) {
         ) : (
           <>
             <p style={{ margin: '12px 0 0', opacity: 0.9 }}>{due.deferred > 0 ? 'Quota du jour atteint ✨' : 'Tout est à jour pour aujourd\'hui ✨'}</p>
+            {weak.length > 0 && (
+              <motion.button whileTap={{ scale: 0.97 }} className="weak-btn" onClick={() => setWeakOpen(true)}>
+                <span>🔥 Mes points faibles</span>
+                <small className="tnum">{weak.length} carte{weak.length > 1 ? 's' : ''} · {weakMisses} raté{weakMisses > 1 ? 's' : ''} ›</small>
+              </motion.button>
+            )}
             <div className="hero-actions">
               {due.deferred > 0 && (
                 <motion.button whileTap={{ scale: 0.97 }} className="btn white" onClick={() => startSession({ ...ALL, moreReviews: 10 }, 0)}>Encore 10 révisions</motion.button>
@@ -178,6 +195,7 @@ export function Home({ onAdd }: { onAdd: () => void }) {
 
       <FreeStudy open={freeOpen} onClose={() => setFreeOpen(false)} />
       <Listening open={listenOpen} onClose={() => setListenOpen(false)} />
+      <Weak open={weakOpen} onClose={() => setWeakOpen(false)} />
       <Exams open={examsOpen} onClose={() => setExamsOpen(false)} />
       <DecksSheet open={decksOpen} onClose={() => setDecksOpen(false)} />
     </motion.div>

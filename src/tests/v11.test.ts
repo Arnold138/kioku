@@ -173,19 +173,32 @@ describe('séances dans le store', () => {
     const { state } = oldSave()
     useStore.setState({ state })
   })
-  it('l\'entraînement ne modifie ni les cartes, ni l\'XP, ni les compteurs', () => {
-    const before = JSON.stringify(useStore.getState().state)
+  it('l\'entraînement rapporte de l\'XP mais ne repousse pas le planning des cartes réussies', () => {
+    const before = useStore.getState().state
+    const xp0 = totalXp(before)
     useStore.getState().startSession({ ...ALL, free: true, scope: 'practice', limit: 6 })
+    const keys: string[] = []
     let guard = 0
     while (useStore.getState().session && !useStore.getState().session!.finished && guard++ < 30) {
+      keys.push(useStore.getState().session!.current!)
       useStore.getState().reveal()
       useStore.getState().rate(4)
     }
     const s = useStore.getState().session!
     expect(s.finished).toBe(true)
     expect(s.answered).toBe(6)
-    expect(s.xp).toBe(0)
-    expect(JSON.stringify(useStore.getState().state)).toBe(before)
+    expect(s.xp).toBeGreaterThan(0)
+    const after = useStore.getState().state
+    expect(totalXp(after)).toBeGreaterThan(xp0)
+    for (const k of keys) {
+      const b = before.cards[k]
+      const a = after.cards[k]
+      if (!b) {
+        expect(a).toBeUndefined() // une carte jamais vue n'est pas introduite par l'entraînement
+        continue
+      }
+      expect([a.s, a.i, a.d, a.e, a.l]).toEqual([b.s, b.i, b.d, b.e, b.l])
+    }
   })
   it('entraînement : « Oublié » remet la carte en fin de séance, et l\'annulation fonctionne', () => {
     useStore.getState().startSession({ ...ALL, free: true, scope: 'practice', limit: 3 })

@@ -75,9 +75,13 @@ export function buildContextIndex(items: Item[]): Map<string, Item[]> {
   return out
 }
 
+export function contextIndex(items: Item[]): Map<string, Item[]> {
+  if (!cache || cache.key !== items.length) cache = { key: items.length, idx: buildContextIndex(items) }
+  return cache.idx
+}
+
 let cache: { key: number; idx: Map<string, Item[]> } | null = null
 export function contextFor(word: Item, items: Item[]): Item[] {
   if (word.kind !== 'word') return []
-  if (!cache || cache.key !== items.length) cache = { key: items.length, idx: buildContextIndex(items) }
-  return cache.idx.get(word.id) ?? []
+  return contextIndex(items).get(word.id) ?? []
 }

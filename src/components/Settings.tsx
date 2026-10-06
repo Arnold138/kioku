@@ -208,6 +208,13 @@ export function Settings() {
             </div>
             <Segmented value={String(s.reviewsPerDay)} onChange={(v) => updateSettings({ reviewsPerDay: Number(v) })} options={[['10', '10'], ['20', '20'], ['30', '30'], ['50', '50'], ['100', '100'], ['0', 'Illimité']]} />
           </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Phrases naturelles / jour</div>
+              <div className="muted small">Des phrases de tes vidéos (japonais parlé) glissées dans « À étudier », avec des mots que tu connais déjà</div>
+            </div>
+            <Segmented value={String(s.naturalPerDay ?? 2)} onChange={(v) => updateSettings({ naturalPerDay: Number(v) })} options={[['0', 'Aucune'], ['1', '1'], ['2', '2'], ['3', '3'], ['5', '5']]} />
+          </div>
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
           <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}
