@@ -11,6 +11,7 @@ import { Progress } from './components/Progress'
 import { Settings } from './components/Settings'
 import { Study } from './components/Study'
 import { AddCard } from './components/AddCard'
+import { autoSnapshot } from './lib/snapshots'
 
 type Tab = 'home' | 'library' | 'progress' | 'settings'
 const TABS: Array<{ id: Tab; label: string; icon: (a?: boolean) => JSX.Element }> = [
@@ -63,6 +64,9 @@ export default function App() {
   useEffect(() => {
     init()
     void startSync()
+    // copie hebdomadaire de sécurité (après le chargement de la progression)
+    const t = setTimeout(() => void autoSnapshot(useStore.getState().state), 4000)
+    return () => clearTimeout(t)
   }, [init])
 
   useEffect(() => {

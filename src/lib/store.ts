@@ -25,7 +25,8 @@ const LS_DEVICE = 'kioku:device'
 const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
-export const APP_VERSION = '1.2'
+const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
+export const APP_VERSION = '1.3'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -64,9 +65,11 @@ function snapshotBeforeUpdate() {
   if (raw && !safeGet(LS_BACKUP)) safeSet(LS_BACKUP, raw)
   // v1.2 : une 2e copie, prise au premier lancement de la 1.2 (la première reste intacte)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP2)) safeSet(LS_BACKUP2, raw)
+  // v1.3 : une 3e copie, prise au premier lancement de la 1.3 (les deux premières restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP3)) safeSet(LS_BACKUP3, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -139,6 +142,7 @@ interface Store {
   setSync: (s: Store['sync']) => void
   applyRemote: (remote: AppState) => void
   updateSettings: (patch: Partial<Settings>) => void
+  setMemo: (cardKey: string, text: string) => void
   addCustom: (c: { jp: string; kana: string; fr: string; note?: string }) => string
   editCustom: (id: string, c: { jp: string; kana: string; fr: string; note?: string }) => void
   deleteCustom: (id: string) => void
@@ -149,6 +153,9 @@ interface Store {
   undo: () => void
   endSession: () => void
   recordExam: (r: { lvl: ExamLevel; mode: ExamMode; ok: number; total: number }) => number
+  recordListen: (r: { mode: 'sens' | 'dictee'; ok: number; total: number }) => number
+  /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
+  restoreSnapshot: (json: string) => boolean
   exportJson: () => string
   importJson: (json: string) => boolean
   resetAll: () => void
@@ -287,6 +294,19 @@ export const useStore = create<Store>((set, get) => {
 
     updateSettings: (patch) => commit({ settings: { ...get().state.settings, ...patch, _t: Date.now() } }),
 
+    /** Astuce personnelle sur une carte déjà vue : voyage avec la carte (même format de sauvegarde). */
+    setMemo: (cardKey, text) => {
+      const st = get().state
+      const c = st.cards[cardKey]
+      if (!c) return
+      const m = text.trim().slice(0, 240)
+      if ((c.m ?? '') === m) return
+      const next: CardState = { ...c, t: Date.now() }
+      if (m) next.m = m
+      else delete next.m
+      commit({ cards: { ...st.cards, [cardKey]: next } })
+    },
+
     addCustom: (c) => {
       const id = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5)
       const card: CustomCard = { id, jp: c.jp.trim(), kana: c.kana.trim(), fr: c.fr.trim(), note: c.note?.trim(), t: Date.now() }
@@ -327,6 +347,7 @@ export const useStore = create<Store>((set, get) => {
         }
         queue = [...warm, ...interleave(q)]
         if (f.free && f.limit != null) queue = queue.slice(0, f.limit + extra)
+        if (f.cap != null) queue = queue.slice(0, f.cap)
       }
       const s: Session = {
         filter: f,
@@ -538,6 +559,45 @@ export const useStore = create<Store>((set, get) => {
       if (pct >= 0.7) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       checkAchievements()
       return xp
+    },
+
+    /** Exercice d'écoute terminé : XP bonus (aucun effet sur le planning des cartes) + historique dans `ach` (clé « l:… »). */
+    recordListen: (r) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const pct = r.total ? r.ok / r.total : 0
+      const xp = Math.round(6 + 14 * pct)
+      const before = levelFromXp(totalXp(state)).level
+      const ach = { ...state.ach, [`l:${r.mode === 'sens' ? 's' : 'd'}:${r.ok}:${r.total}:${now}`]: now }
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp }) })
+      const after = levelFromXp(totalXp(get().state)).level
+      if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+      if (pct >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
+      return xp
+    },
+
+    restoreSnapshot: (json) => {
+      try {
+        const snap = sanitize(JSON.parse(json))
+        const cur = get().state
+        const now = Date.now()
+        const cards: Record<string, CardState> = {}
+        for (const key of new Set([...Object.keys(cur.cards), ...Object.keys(snap.cards)])) {
+          const old = snap.cards[key]
+          // une carte apprise après la copie redevient « nouvelle » ; les autres reprennent l'état de la copie
+          cards[key] = old ? { ...old, t: now } : { ...newCard(now), t: now }
+        }
+        const custom: AppState['custom'] = {}
+        for (const id of new Set([...Object.keys(cur.custom), ...Object.keys(snap.custom)])) {
+          const old = snap.custom[id]
+          custom[id] = old ? { ...old, t: now } : { ...cur.custom[id], del: true, t: now }
+        }
+        const ach = { ...cur.ach, ...snap.ach }
+        commit({ cards, custom, ach })
+        return true
+      } catch {
+        return false
+      }
     },
 
     exportJson: () => JSON.stringify(get().state),

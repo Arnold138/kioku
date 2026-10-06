@@ -1630,5 +1630,1415 @@
 "jp": "次の動画で会いましょう。じゃあ、またね。",
 "kana": "つぎ の どうが で あいましょう じゃあ また ね",
 "fr": "Rendez-vous dans la prochaine vidéo. Alors, à bientôt."
+},
+{
+"id": "v3-0",
+"jp": "みなさん、こんにちは！Kenです！",
+"kana": "みなさん こんにちは ケン です",
+"fr": "Bonjour à tous ! Moi, c'est Ken !"
+},
+{
+"id": "v3-1",
+"jp": "元気ですか？今、僕は僕の地元にいます。",
+"kana": "げんき です か いま ぼく は ぼく の じもと に います",
+"fr": "Ça va ? En ce moment, je suis dans ma ville natale."
+},
+{
+"id": "v3-2",
+"jp": "ここは日本の愛知県瀬戸市です。",
+"kana": "ここ は にほん の あいちけん せとし です",
+"fr": "Ici, c'est la ville de Seto, dans la préfecture d'Aichi, au Japon."
+},
+{
+"id": "v3-3",
+"jp": "愛知県は名古屋っていう大きい街があります。",
+"kana": "あいちけん は なごや って いう おおきい まち が あります",
+"fr": "Dans la préfecture d'Aichi, il y a une grande ville qu'on appelle Nagoya."
+},
+{
+"id": "v3-4",
+"jp": "この街は名古屋の隣の街です。僕の地元です。",
+"kana": "この まち は なごや の となり の まち です ぼく の じもと です",
+"fr": "Cette ville est voisine de Nagoya. C'est ma ville natale."
+},
+{
+"id": "v3-5",
+"jp": "僕が生まれて育った場所です。",
+"kana": "ぼく が うまれて そだった ばしょ です",
+"fr": "C'est l'endroit où je suis né et où j'ai grandi."
+},
+{
+"id": "v3-6",
+"jp": "今日は皆さんと一緒に、この僕の地元を歩きたいと思います。",
+"kana": "きょう は みなさん と いっしょ に この ぼく の じもと を あるきたい と おもいます",
+"fr": "Aujourd'hui, j'aimerais me promener avec vous dans ma ville natale."
+},
+{
+"id": "v3-7",
+"jp": "面白いところがたくさんありますから、一緒に歩きましょう！",
+"kana": "おもしろい ところ が たくさん あります から いっしょ に あるきましょう",
+"fr": "Il y a plein d'endroits intéressants, alors promenons-nous ensemble !"
+},
+{
+"id": "v3-8",
+"jp": "見えますか？僕の後ろに壁があります。",
+"kana": "みえます か ぼく の うしろ に かべ が あります",
+"fr": "Vous voyez ? Il y a un mur derrière moi."
+},
+{
+"id": "v3-9",
+"jp": "ここもこの街の有名な場所です。この街は陶器が有名です。",
+"kana": "ここ も この まち の ゆうめい な ばしょ です この まち は とうき が ゆうめい です",
+"fr": "C'est aussi un endroit célèbre de la ville. Cette ville est célèbre pour sa céramique."
+},
+{
+"id": "v3-10",
+"jp": "こういう陶器。食べる時のお皿とか陶器が有名です。",
+"kana": "こういう とうき たべる とき の おさら とか とうき が ゆうめい です",
+"fr": "Des céramiques comme ça. Les assiettes pour manger, par exemple, sont très réputées."
+},
+{
+"id": "v3-11",
+"jp": "皆さんの街の有名なものは何ですか？",
+"kana": "みなさん の まち の ゆうめい な もの は なん です か",
+"fr": "Et dans votre ville, quelles sont les choses célèbres ?"
+},
+{
+"id": "v3-12",
+"jp": "この街はいろんなところに陶器のものがあります。",
+"kana": "この まち は いろんな ところ に とうき の もの が あります",
+"fr": "Dans cette ville, il y a des objets en céramique un peu partout."
+},
+{
+"id": "v3-13",
+"jp": "例えば、ここ。見てください。",
+"kana": "たとえば ここ みて ください",
+"fr": "Par exemple, ici. Regardez."
+},
+{
+"id": "v3-14",
+"jp": "猫ちゃん！こんにちは！",
+"kana": "ねこちゃん こんにちは",
+"fr": "Petit chat ! Bonjour !"
+},
+{
+"id": "v3-15",
+"jp": "この猫も陶器でできています。陶器の猫ちゃんです。",
+"kana": "この ねこ も とうき で できて います とうき の ねこちゃん です",
+"fr": "Ce chat aussi est fait en céramique. C'est un petit chat en céramique."
+},
+{
+"id": "v3-16",
+"jp": "あ、そう、この街は招き猫も有名です。",
+"kana": "あ そう この まち は まねきねこ も ゆうめい です",
+"fr": "Ah oui, cette ville est aussi connue pour ses maneki-neko."
+},
+{
+"id": "v3-17",
+"jp": "これを日本語で招き猫って言います。",
+"kana": "これ を にほんご で まねきねこ って いいます",
+"fr": "En japonais, on appelle ça un maneki-neko."
+},
+{
+"id": "v3-18",
+"jp": "皆さんは日本に来たことがありますか？",
+"kana": "みなさん は にほん に きた こと が あります か",
+"fr": "Êtes-vous déjà venus au Japon ?"
+},
+{
+"id": "v3-19",
+"jp": "日本に来たことがある人は分かると思います。",
+"kana": "にほん に きた こと が ある ひと は わかる と おもいます",
+"fr": "Je pense que ceux qui sont déjà venus au Japon comprendront."
+},
+{
+"id": "v3-20",
+"jp": "日本のお店とかレストランに招き猫が時々います。",
+"kana": "にほん の おみせ とか レストラン に まねきねこ が ときどき います",
+"fr": "Dans les magasins ou les restaurants japonais, il y a parfois des maneki-neko."
+},
+{
+"id": "v3-21",
+"jp": "本当の猫じゃないけど、招き猫の...",
+"kana": "ほんとう の ねこ じゃ ない けど まねきねこ の",
+"fr": "Ce n'est pas un vrai chat, mais un maneki-neko…"
+},
+{
+"id": "v3-22",
+"jp": "さっきの陶器の招き猫が置いてあります。",
+"kana": "さっき の とうき の まねきねこ が おいて あります",
+"fr": "Il y a un maneki-neko en céramique, comme celui de tout à l'heure."
+},
+{
+"id": "v3-23",
+"jp": "この辺いいですね。雰囲気がいいですよ。緑もあります。",
+"kana": "この へん いい です ね ふんいき が いい です よ みどり も あります",
+"fr": "Ce coin est sympa. L'ambiance est agréable. Il y a aussi de la verdure."
+},
+{
+"id": "v3-24",
+"jp": "建物も日本の建物で、きれいですね！",
+"kana": "たてもの も にほん の たてもの で きれい です ね",
+"fr": "Les bâtiments sont aussi de style japonais, c'est joli !"
+},
+{
+"id": "v3-25",
+"jp": "ここはギャラリーって書いてあります。",
+"kana": "ここ は ギャラリー って かいて あります",
+"fr": "Ici, c'est écrit « galerie »."
+},
+{
+"id": "v3-26",
+"jp": "でも、今日はお休みですね。残念です。",
+"kana": "でも きょう は おやすみ です ね ざんねん です",
+"fr": "Mais aujourd'hui, c'est fermé. Dommage."
+},
+{
+"id": "v3-27",
+"jp": "今日はお休みですけど、",
+"kana": "きょう は おやすみ です けど",
+"fr": "Même si c'est fermé aujourd'hui,"
+},
+{
+"id": "v3-28",
+"jp": "すごい日本らしい建物があります。",
+"kana": "すごい にほんらしい たてもの が あります",
+"fr": "il y a un bâtiment vraiment typiquement japonais."
+},
+{
+"id": "v3-29",
+"jp": "こっちに行ってみましょう！",
+"kana": "こっち に いって みましょう",
+"fr": "Allons voir par là !"
+},
+{
+"id": "v3-30",
+"jp": "ちょっと道が細いですよ。いいね。",
+"kana": "ちょっと みち が ほそい です よ いい ね",
+"fr": "La rue est un peu étroite. J'aime bien."
+},
+{
+"id": "v3-31",
+"jp": "雰囲気がいいですよ。この壁もね、いい感じですね。",
+"kana": "ふんいき が いい です よ この かべ も ね いい かんじ です ね",
+"fr": "L'ambiance est bonne. Ce mur aussi a un bon charme."
+},
+{
+"id": "v3-32",
+"jp": "すごいきれい！陶器！",
+"kana": "すごい きれい とうき",
+"fr": "Trop joli ! De la céramique !"
+},
+{
+"id": "v3-33",
+"jp": "これも全部陶器が使ってあります。きれいですね。",
+"kana": "これ も ぜんぶ とうき が つかって あります きれい です ね",
+"fr": "Tout ça aussi est fait avec de la céramique. C'est joli."
+},
+{
+"id": "v3-34",
+"jp": "この下もいい感じですね。",
+"kana": "この した も いい かんじ です ね",
+"fr": "Le dessous a aussi un bon aspect."
+},
+{
+"id": "v3-35",
+"jp": "花が咲いています。紫色の花が咲いています。",
+"kana": "はな が さいて います むらさきいろ の はな が さいて います",
+"fr": "Des fleurs sont écloses. Des fleurs violettes sont écloses."
+},
+{
+"id": "v3-36",
+"jp": "きれいですね。",
+"kana": "きれい です ね",
+"fr": "C'est joli."
+},
+{
+"id": "v3-37",
+"jp": "え？！猫がいます。",
+"kana": "え ねこ が います",
+"fr": "Hein ?! Il y a un chat."
+},
+{
+"id": "v3-38",
+"jp": "猫さん、こんにちは。お昼寝ですか？",
+"kana": "ねこさん こんにちは おひるね です か",
+"fr": "Bonjour, monsieur le chat. Tu fais la sieste ?"
+},
+{
+"id": "v3-39",
+"jp": "気持ちよさそうですね。",
+"kana": "きもちよさそう です ね",
+"fr": "Il a l'air bien."
+},
+{
+"id": "v3-40",
+"jp": "猫さん、この街のいいところを教えてください。",
+"kana": "ねこさん この まち の いい ところ を おしえて ください",
+"fr": "Monsieur le chat, dis-moi ce qu'il y a de bien dans cette ville."
+},
+{
+"id": "v3-41",
+"jp": "いいところ、たくさんあるね？",
+"kana": "いい ところ たくさん ある ね",
+"fr": "Il y a plein de bons côtés, n'est-ce pas ?"
+},
+{
+"id": "v3-42",
+"jp": "猫さんは好きな食べ物がありますか？",
+"kana": "ねこさん は すき な たべもの が あります か",
+"fr": "Monsieur le chat, as-tu un plat préféré ?"
+},
+{
+"id": "v3-43",
+"jp": "「瀬戸やきそば」どうですか？おいしいですね！",
+"kana": "せと やきそば どう です か おいしい です ね",
+"fr": "Et le « Seto yakisoba », ça te dit ? C'est délicieux, hein !"
+},
+{
+"id": "v3-44",
+"jp": "じゃあ、ゆっくりしてください。猫さん、バイバイ！",
+"kana": "じゃあ ゆっくり して ください ねこさん バイバイ",
+"fr": "Bon, repose-toi bien. Monsieur le chat, salut !"
+},
+{
+"id": "v3-45",
+"jp": "猫さんと話していた時に「瀬戸やきそば」って言いました。",
+"kana": "ねこさん と はなして いた とき に せと やきそば って いいました",
+"fr": "En parlant avec le chat, j'ai dit « Seto yakisoba »."
+},
+{
+"id": "v3-46",
+"jp": "この街においしいやきそばがあります。",
+"kana": "この まち に おいしい やきそば が あります",
+"fr": "Dans cette ville, il y a un délicieux yakisoba."
+},
+{
+"id": "v3-47",
+"jp": "前、僕は「瀬戸焼きそば」を買いに行く動画を撮りました。",
+"kana": "まえ ぼく は せと やきそば を かい に いく どうが を とりました",
+"fr": "Avant, j'ai filmé une vidéo où j'allais acheter du « Seto yakisoba »."
+},
+{
+"id": "v3-48",
+"jp": "皆さんはその動画を見ましたか？",
+"kana": "みなさん は その どうが を みました か",
+"fr": "Avez-vous vu cette vidéo ?"
+},
+{
+"id": "v3-49",
+"jp": "まだ見てない人はその動画も見てください。",
+"kana": "まだ みて ない ひと は その どうが も みて ください",
+"fr": "Ceux qui ne l'ont pas encore vue, regardez-la aussi."
+},
+{
+"id": "v3-50",
+"jp": "おすすめです！めっちゃおいしいと思います。",
+"kana": "おすすめ です めっちゃ おいしい と おもいます",
+"fr": "Je vous la recommande ! Je pense que c'est super bon."
+},
+{
+"id": "v3-51",
+"jp": "道がたくさんあります。こっち？違う？",
+"kana": "みち が たくさん あります こっち ちがう",
+"fr": "Il y a plein de chemins. Par ici ? Non ?"
+},
+{
+"id": "v3-52",
+"jp": "お、猫さん！あれ？また猫さん会いましたね！",
+"kana": "お ねこさん あれ また ねこさん あいました ね",
+"fr": "Oh, un chat ! Tiens ? On a encore rencontré un chat !"
+},
+{
+"id": "v3-53",
+"jp": "昼寝してるね。あ〜ら、気持ちよさそうですね！",
+"kana": "ひるね してる ね あーら きもちよさそう です ね",
+"fr": "Il fait la sieste. Oh là là, il a l'air bien !"
+},
+{
+"id": "v3-54",
+"jp": "ごめんなさい。じゃあ、猫さん、バイバイ！",
+"kana": "ごめんなさい じゃあ ねこさん バイバイ",
+"fr": "Pardon. Allez, monsieur le chat, salut !"
+},
+{
+"id": "v3-55",
+"jp": "猫さんが昼寝していました。",
+"kana": "ねこさん が ひるね して いました",
+"fr": "Le chat faisait la sieste."
+},
+{
+"id": "v3-56",
+"jp": "あっちかな？あっちの道に行ってみましょう。",
+"kana": "あっち かな あっち の みち に いって みましょう",
+"fr": "C'est par là peut-être ? Essayons ce chemin-là."
+},
+{
+"id": "v3-57",
+"jp": "ここにお店がありますね。でも店員さんがいません。",
+"kana": "ここ に おみせ が あります ね でも てんいんさん が いません",
+"fr": "Il y a un magasin ici. Mais il n'y a pas de vendeur."
+},
+{
+"id": "v3-58",
+"jp": "「無人販売中」",
+"kana": "むじん はんばいちゅう",
+"fr": "« Vente sans personnel »"
+},
+{
+"id": "v3-59",
+"jp": "「無人」は誰もいませんの意味です。",
+"kana": "むじん は だれ も いません の いみ です",
+"fr": "« Mujin » veut dire qu'il n'y a personne."
+},
+{
+"id": "v3-60",
+"jp": "「販売中」は今、物を売っていますの意味ですね。",
+"kana": "はんばいちゅう は いま もの を うって います の いみ です ね",
+"fr": "« Hanbai-chū » veut dire qu'on vend des choses en ce moment."
+},
+{
+"id": "v3-61",
+"jp": "お皿があります。コップもありますね。",
+"kana": "おさら が あります コップ も あります ね",
+"fr": "Il y a des assiettes. Il y a aussi des verres."
+},
+{
+"id": "v3-62",
+"jp": "きれいですね。５０円？！５０円ですか？",
+"kana": "きれい です ね ごじゅうえん ごじゅうえん です か",
+"fr": "C'est joli. 50 yens ?! C'est 50 yens ?"
+},
+{
+"id": "v3-63",
+"jp": "安いですよ！安すぎますよ！",
+"kana": "やすい です よ やすすぎます よ",
+"fr": "C'est pas cher ! C'est beaucoup trop bon marché !"
+},
+{
+"id": "v3-64",
+"jp": "これはお茶を飲むためのものですね。",
+"kana": "これ は おちゃ を のむ ため の もの です ね",
+"fr": "Ça, c'est fait pour boire du thé."
+},
+{
+"id": "v3-65",
+"jp": "これは抹茶かな？抹茶を飲むための物かな？いいですね！",
+"kana": "これ は まっちゃ かな まっちゃ を のむ ため の もの かな いい です ね",
+"fr": "C'est peut-être pour le matcha ? Pour boire du matcha ? Super !"
+},
+{
+"id": "v3-66",
+"jp": "この街にはあのお店みたいに陶器を売っているお店がたくさんあります。",
+"kana": "この まち に は あの おみせ みたい に とうき を うって いる おみせ が たくさん あります",
+"fr": "Dans cette ville, il y a beaucoup de magasins qui vendent de la céramique, comme celui-là."
+},
+{
+"id": "v3-67",
+"jp": "街を歩くと、いろんなところで見かけますよ。",
+"kana": "まち を あるく と いろんな ところ で みかけます よ",
+"fr": "Quand on se promène en ville, on en voit un peu partout."
+},
+{
+"id": "v3-68",
+"jp": "陶器のお店を見かけます。",
+"kana": "とうき の おみせ を みかけます",
+"fr": "On voit des boutiques de céramique."
+},
+{
+"id": "v3-69",
+"jp": "あっちの方に行ってみましょう！",
+"kana": "あっち の ほう に いって みましょう",
+"fr": "Allons voir de ce côté !"
+},
+{
+"id": "v3-70",
+"jp": "あ、ちなみに、今、僕の息子が来ました。",
+"kana": "あ ちなみに いま ぼく の むすこ が きました",
+"fr": "Ah, au fait, mon fils vient d'arriver."
+},
+{
+"id": "v3-71",
+"jp": "こんにちは。みなさん、こんにちは。",
+"kana": "こんにちは みなさん こんにちは",
+"fr": "Bonjour. Bonjour à tous."
+},
+{
+"id": "v3-72",
+"jp": "僕の妻もいます。僕のお母さんもいるんですけど、",
+"kana": "ぼく の つま も います ぼく の おかあさん も いる ん です けど",
+"fr": "Ma femme est là aussi. Ma mère aussi, d'ailleurs, mais…"
+},
+{
+"id": "v3-73",
+"jp": "僕のお母さんと僕の妻はゆっくりお店で見ています。",
+"kana": "ぼく の おかあさん と ぼく の つま は ゆっくり おみせ で みて います",
+"fr": "ma mère et ma femme regardent tranquillement dans le magasin."
+},
+{
+"id": "v3-74",
+"jp": "だから、後で、また来ると思います。",
+"kana": "だから あとで また くる と おもいます",
+"fr": "Donc je pense qu'elles viendront nous rejoindre plus tard."
+},
+{
+"id": "v3-75",
+"jp": "その間に僕たちはちょっと先の方に行ってみましょう。",
+"kana": "その あいだ に ぼくたち は ちょっと さき の ほう に いって みましょう",
+"fr": "En attendant, nous, allons un peu plus loin."
+},
+{
+"id": "v3-76",
+"jp": "はい、今、商店街に来ました。ここは商店街ですね。",
+"kana": "はい いま しょうてんがい に きました ここ は しょうてんがい です ね",
+"fr": "Voilà, nous sommes arrivés dans une rue commerçante. C'est une rue commerçante."
+},
+{
+"id": "v3-77",
+"jp": "この街には商店街がいくつかあります。",
+"kana": "この まち に は しょうてんがい が いくつか あります",
+"fr": "Dans cette ville, il y a plusieurs rues commerçantes."
+},
+{
+"id": "v3-78",
+"jp": "えーと、車の道があっちの方にあるんですけど、",
+"kana": "えーと くるま の みち が あっち の ほう に ある ん です けど",
+"fr": "Euh, il y a une route pour les voitures par là, mais…"
+},
+{
+"id": "v3-79",
+"jp": "その車の道の向かい側にもう一つ商店街があります。",
+"kana": "その くるま の みち の むかいがわ に も もう ひとつ しょうてんがい が あります",
+"fr": "de l'autre côté de cette route, il y a encore une autre rue commerçante."
+},
+{
+"id": "v3-80",
+"jp": "僕はそっちの商店街は行ったことあるけど、",
+"kana": "ぼく は そっち の しょうてんがい は いった こと ある けど",
+"fr": "J'ai déjà marché dans cette rue commerçante-là, mais"
+},
+{
+"id": "v3-81",
+"jp": "こっちの商店街は初めて歩きます。",
+"kana": "こっち の しょうてんがい は はじめて あるきます",
+"fr": "celle-ci, c'est la première fois que je m'y promène."
+},
+{
+"id": "v3-82",
+"jp": "皆さん、面白いものがあったら、教えてください。",
+"kana": "みなさん おもしろい もの が あったら おしえて ください",
+"fr": "Si vous voyez quelque chose d'intéressant, dites-le-moi."
+},
+{
+"id": "v3-83",
+"jp": "この商店街は服のお店がたくさんあります。",
+"kana": "この しょうてんがい は ふく の おみせ が たくさん あります",
+"fr": "Cette rue commerçante a beaucoup de magasins de vêtements."
+},
+{
+"id": "v3-84",
+"jp": "さっきカフェがありました。他には何かありますか？",
+"kana": "さっき カフェ が ありました ほか に は なに か あります か",
+"fr": "Tout à l'heure, il y avait un café. Y a-t-il autre chose ?"
+},
+{
+"id": "v3-85",
+"jp": "ここは休みですね。こっちは服のお店です。",
+"kana": "ここ は やすみ です ね こっち は ふく の おみせ です",
+"fr": "Ici, c'est fermé. Là, c'est un magasin de vêtements."
+},
+{
+"id": "v3-86",
+"jp": "あれはフィリピンの国旗ですね。",
+"kana": "あれ は フィリピン の こっき です ね",
+"fr": "Ça, c'est le drapeau des Philippines."
+},
+{
+"id": "v3-87",
+"jp": "フィリピンご飯って書いてあります。フィリピンご飯。",
+"kana": "フィリピン ごはん って かいて あります フィリピン ごはん",
+"fr": "C'est écrit « cuisine philippine ». Cuisine philippine."
+},
+{
+"id": "v3-88",
+"jp": "あ、そうですか。フィリピンパンメニューって書いてあります。",
+"kana": "あ そう です か フィリピン パン メニュー って かいて あります",
+"fr": "Ah bon ? C'est écrit « menu de pains philippins »."
+},
+{
+"id": "v3-89",
+"jp": "フィリピンのパンですか？",
+"kana": "フィリピン の パン です か",
+"fr": "Du pain philippin ?"
+},
+{
+"id": "v3-90",
+"jp": "この動画を見ている人、フィリピン人いますか？",
+"kana": "この どうが を みて いる ひと フィリピンじん います か",
+"fr": "Parmi ceux qui regardent cette vidéo, y a-t-il des Philippins ?"
+},
+{
+"id": "v3-91",
+"jp": "ここにフィリピンのお店があります。",
+"kana": "ここ に フィリピン の おみせ が あります",
+"fr": "Il y a un magasin philippin ici."
+},
+{
+"id": "v3-92",
+"jp": "カフェもありますね。",
+"kana": "カフェ も あります ね",
+"fr": "Il y a aussi un café."
+},
+{
+"id": "v3-93",
+"jp": "あっちの方に行ってみましょう。",
+"kana": "あっち の ほう に いって みましょう",
+"fr": "Allons voir de ce côté-là."
+},
+{
+"id": "v3-94",
+"jp": "ここ、いいですよ。建物がきれいですね。お店です。",
+"kana": "ここ いい です よ たてもの が きれい です ね おみせ です",
+"fr": "Ici, c'est bien. Le bâtiment est joli. C'est un magasin."
+},
+{
+"id": "v3-95",
+"jp": "それから、ここに、招き猫ミュージアムがあります。",
+"kana": "それから ここ に まねきねこ ミュージアム が あります",
+"fr": "Et puis, ici, il y a le musée des maneki-neko."
+},
+{
+"id": "v3-96",
+"jp": "招き猫ミュージアム。僕はここに来たことがあります。",
+"kana": "まねきねこ ミュージアム ぼく は ここ に きた こと が あります",
+"fr": "Le musée des maneki-neko. Je suis déjà venu ici."
+},
+{
+"id": "v3-97",
+"jp": "ちょっと入ってみましょう。",
+"kana": "ちょっと はいって みましょう",
+"fr": "Entrons un peu."
+},
+{
+"id": "v3-98",
+"jp": "あの...今、行ってきたんですけど、",
+"kana": "あの いま いって きた ん です けど",
+"fr": "Euh… j'y suis allé à l'instant, mais"
+},
+{
+"id": "v3-99",
+"jp": "お店の中で動画撮影禁止でした。",
+"kana": "おみせ の なか で どうが さつえい きんし でした",
+"fr": "la vidéo était interdite à l'intérieur du magasin."
+},
+{
+"id": "v3-100",
+"jp": "動画撮影は動画を撮ること。",
+"kana": "どうが さつえい は どうが を とる こと",
+"fr": "« Dōga satsuei », c'est filmer une vidéo."
+},
+{
+"id": "v3-101",
+"jp": "撮影禁止。「禁止」の意味はダメ、できませんの意味です。",
+"kana": "さつえい きんし きんし の いみ は ダメ できません の いみ です",
+"fr": "« Satsuei kinshi » : « kinshi » veut dire « interdit », « pas possible »."
+},
+{
+"id": "v3-102",
+"jp": "だから、お店の中で動画を撮るのはダメでした。",
+"kana": "だから おみせ の なか で どうが を とる の は ダメ でした",
+"fr": "Donc c'était interdit de filmer à l'intérieur du magasin."
+},
+{
+"id": "v3-103",
+"jp": "まあ、それはね、ルールですから、大丈夫です。分かります。",
+"kana": "まあ それ は ね ルール です から だいじょうぶ です わかります",
+"fr": "Bon, c'est la règle, alors ça va. Je comprends."
+},
+{
+"id": "v3-104",
+"jp": "でも、お店で僕は何か買いました。",
+"kana": "でも おみせ で ぼく は なに か かいました",
+"fr": "Mais j'ai acheté quelque chose dans le magasin."
+},
+{
+"id": "v3-105",
+"jp": "お店で何か買ってきました。",
+"kana": "おみせ で なに か かって きました",
+"fr": "J'ai acheté quelque chose au magasin."
+},
+{
+"id": "v3-106",
+"jp": "これは後で開けましょう！",
+"kana": "これ は あとで あけましょう",
+"fr": "On l'ouvrira plus tard !"
+},
+{
+"id": "v3-107",
+"jp": "皆さん、僕は何を買ったと思いますか？",
+"kana": "みなさん ぼく は なに を かった と おもいます か",
+"fr": "Qu'est-ce que j'ai acheté, à votre avis ?"
+},
+{
+"id": "v3-108",
+"jp": "ちょっと予想してください。考えてください。",
+"kana": "ちょっと よそう して ください かんがえて ください",
+"fr": "Faites une petite prédiction. Réfléchissez."
+},
+{
+"id": "v3-109",
+"jp": "僕は何を買ったと思いますか？",
+"kana": "ぼく は なに を かった と おもいます か",
+"fr": "Qu'est-ce que j'ai acheté, à votre avis ?"
+},
+{
+"id": "v3-110",
+"jp": "じゃあ、散歩の続き、行きましょう！",
+"kana": "じゃあ さんぽ の つづき いきましょう",
+"fr": "Bon, continuons la promenade !"
+},
+{
+"id": "v3-111",
+"jp": "ここに歩道橋があります。見えますか？",
+"kana": "ここ に ほどうきょう が あります みえます か",
+"fr": "Il y a une passerelle piétonne ici. Vous la voyez ?"
+},
+{
+"id": "v3-112",
+"jp": "皆さん、歩道橋は道を渡るための橋ですね。",
+"kana": "みなさん ほどうきょう は みち を わたる ため の はし です ね",
+"fr": "Une passerelle piétonne, c'est un pont pour traverser la rue."
+},
+{
+"id": "v3-113",
+"jp": "歩道橋を歩きましょう！",
+"kana": "ほどうきょう を あるきましょう",
+"fr": "Marchons sur la passerelle !"
+},
+{
+"id": "v3-114",
+"jp": "今日はね、天気がいいから、散歩も気持ちいいですよ。",
+"kana": "きょう は ね てんき が いい から さんぽ も きもちいい です よ",
+"fr": "Aujourd'hui, il fait beau, donc la balade est agréable."
+},
+{
+"id": "v3-115",
+"jp": "きれいな景色が見えます。山と街の景色ですね。",
+"kana": "きれい な けしき が みえます やま と まち の けしき です ね",
+"fr": "On voit un joli paysage. Un paysage de montagnes et de ville."
+},
+{
+"id": "v3-116",
+"jp": "あっちの方に山が見えます。建物も見えますね。",
+"kana": "あっち の ほう に やま が みえます たてもの も みえます ね",
+"fr": "De ce côté, on voit des montagnes. On voit aussi des bâtiments."
+},
+{
+"id": "v3-117",
+"jp": "それから、川もあります。",
+"kana": "それから かわ も あります",
+"fr": "Et puis il y a aussi une rivière."
+},
+{
+"id": "v3-118",
+"jp": "反対側を見てみましょう。",
+"kana": "はんたいがわ を みて みましょう",
+"fr": "Regardons de l'autre côté."
+},
+{
+"id": "v3-119",
+"jp": "どうですか？ここが僕の地元です。",
+"kana": "どう です か ここ が ぼく の じもと です",
+"fr": "Alors ? Voilà ma ville natale."
+},
+{
+"id": "v3-120",
+"jp": "僕はこの街で生まれて育ちました。きれいでしょう？",
+"kana": "ぼく は この まち で うまれて そだちました きれい でしょう",
+"fr": "Je suis né et j'ai grandi dans cette ville. Elle est belle, non ?"
+},
+{
+"id": "v3-121",
+"jp": "僕は自分の地元が大好きです。",
+"kana": "ぼく は じぶん の じもと が だいすき です",
+"fr": "J'adore ma ville natale."
+},
+{
+"id": "v3-122",
+"jp": "皆さんも皆さんの地元が大好きですか？",
+"kana": "みなさん も みなさん の じもと が だいすき です か",
+"fr": "Et vous, aimez-vous aussi votre ville natale ?"
+},
+{
+"id": "v3-123",
+"jp": "ここに大きい鳥居がありますよ。",
+"kana": "ここ に おおきい とりい が あります よ",
+"fr": "Il y a un grand torii ici."
+},
+{
+"id": "v3-124",
+"jp": "神社の鳥居です。すごい日本らしい景色でしょう？",
+"kana": "じんじゃ の とりい です すごい にほんらしい けしき でしょう",
+"fr": "C'est le torii d'un sanctuaire. C'est un paysage typiquement japonais, non ?"
+},
+{
+"id": "v3-125",
+"jp": "こっちにも商店街があります。",
+"kana": "こっち に も しょうてんがい が あります",
+"fr": "Il y a aussi une rue commerçante par ici."
+},
+{
+"id": "v3-126",
+"jp": "もうすぐ午後４時ぐらいです。",
+"kana": "もうすぐ ごご よじ ぐらい です",
+"fr": "Il sera bientôt environ 16 h."
+},
+{
+"id": "v3-127",
+"jp": "だから、もう終わってしまったかもしれないです。",
+"kana": "だから もう おわって しまった かも しれない です",
+"fr": "Donc c'est peut-être déjà fini."
+},
+{
+"id": "v3-128",
+"jp": "はい、もう一つの商店街に来ました。",
+"kana": "はい もう ひとつ の しょうてんがい に きました",
+"fr": "Voilà, nous sommes arrivés dans l'autre rue commerçante."
+},
+{
+"id": "v3-129",
+"jp": "こっちは昔、皆さんと一緒に歩いたことがありますよ。",
+"kana": "こっち は むかし みなさん と いっしょ に あるいた こと が あります よ",
+"fr": "Celle-ci, j'ai déjà marché ici avec vous il y a longtemps."
+},
+{
+"id": "v3-130",
+"jp": "やっぱり、あっちもこっちも陶器のお店がたくさんありますね。",
+"kana": "やっぱり あっち も こっち も とうき の おみせ が たくさん あります ね",
+"fr": "Comme prévu, de ce côté comme de l'autre, il y a plein de magasins de céramique."
+},
+{
+"id": "v3-131",
+"jp": "ここはレストランですね。",
+"kana": "ここ は レストラン です ね",
+"fr": "Ici, c'est un restaurant."
+},
+{
+"id": "v3-132",
+"jp": "今、準備中。ここに「準備中です」って書いてあります。",
+"kana": "いま じゅんびちゅう ここ に じゅんびちゅう です って かいて あります",
+"fr": "En ce moment, c'est en préparation. C'est écrit « en préparation » ici."
+},
+{
+"id": "v3-133",
+"jp": "まだやってないですね。",
+"kana": "まだ やって ない です ね",
+"fr": "Ce n'est pas encore ouvert."
+},
+{
+"id": "v3-134",
+"jp": "でも、後で、夜になると、開くと思います。",
+"kana": "でも あとで よる に なる と あく と おもいます",
+"fr": "Mais plus tard, quand il fera nuit, ça ouvrira, je pense."
+},
+{
+"id": "v3-135",
+"jp": "ちょっとおなかがすいてきました。",
+"kana": "ちょっと おなか が すいて きました",
+"fr": "J'ai un peu faim."
+},
+{
+"id": "v3-136",
+"jp": "お！いいところにお店があります。",
+"kana": "お いい ところ に おみせ が あります",
+"fr": "Oh ! Il y a un magasin au bon endroit."
+},
+{
+"id": "v3-137",
+"jp": "これは和菓子のお店です。",
+"kana": "これ は わがし の おみせ です",
+"fr": "C'est une boutique de wagashi."
+},
+{
+"id": "v3-138",
+"jp": "和菓子は日本の昔のお菓子ですね。",
+"kana": "わがし は にほん の むかし の おかし です ね",
+"fr": "Les wagashi sont les confiseries japonaises traditionnelles."
+},
+{
+"id": "v3-139",
+"jp": "もちろん今もありますよ。日本のお菓子です。",
+"kana": "もちろん いま も ありますよ にほん の おかし です",
+"fr": "Bien sûr, il y en a encore aujourd'hui. Ce sont des sucreries japonaises."
+},
+{
+"id": "v3-140",
+"jp": "和菓子って言います。",
+"kana": "わがし って いいます",
+"fr": "On appelle ça des « wagashi »."
+},
+{
+"id": "v3-141",
+"jp": "ケーキとかクッキーとかは洋菓子って言います。",
+"kana": "ケーキ とか クッキー とか は ようがし って いいます",
+"fr": "Les gâteaux, les biscuits, etc., on appelle ça des « yōgashi »."
+},
+{
+"id": "v3-142",
+"jp": "日本人からすると、",
+"kana": "にほんじん から する と",
+"fr": "Du point de vue des Japonais,"
+},
+{
+"id": "v3-143",
+"jp": "ヨーロッパのお菓子だから、洋菓子って言います。",
+"kana": "ヨーロッパ の おかし だから ようがし って いいます",
+"fr": "comme ce sont des sucreries d'Europe, on les appelle « yōgashi »."
+},
+{
+"id": "v3-144",
+"jp": "で、ここは和菓子のお店ですね。",
+"kana": "で ここ は わがし の おみせ です ね",
+"fr": "Voilà, ici, c'est une boutique de wagashi."
+},
+{
+"id": "v3-145",
+"jp": "ちょっと何か買ってきます。",
+"kana": "ちょっと なに か かって きます",
+"fr": "Je vais acheter quelque chose."
+},
+{
+"id": "v3-146",
+"jp": "皆さん、ちょっと待っていてください。",
+"kana": "みなさん ちょっと まって いて ください",
+"fr": "Attendez-moi un instant, s'il vous plaît."
+},
+{
+"id": "v3-147",
+"jp": "はい、今、和菓子を買ってきました。",
+"kana": "はい いま わがし を かって きました",
+"fr": "Voilà, je viens d'acheter des wagashi."
+},
+{
+"id": "v3-148",
+"jp": "ちょっとこの辺は座れる場所がなさそうなので、",
+"kana": "ちょっと この へん は すわれる ばしょ が なさそう な ので",
+"fr": "Il n'a pas l'air d'y avoir d'endroit pour s'asseoir par ici, donc"
+},
+{
+"id": "v3-149",
+"jp": "もうちょっと向こうの方に行ってみましょう！",
+"kana": "もうちょっと むこう の ほう に いって みましょう",
+"fr": "allons un peu plus loin."
+},
+{
+"id": "v3-150",
+"jp": "ここにも陶器のお店があります。",
+"kana": "ここ に も とうき の おみせ が あります",
+"fr": "Il y a aussi une boutique de céramique ici."
+},
+{
+"id": "v3-151",
+"jp": "たくさんお皿とか、ありますね！",
+"kana": "たくさん おさら とか あります ね",
+"fr": "Il y a plein d'assiettes et d'autres choses !"
+},
+{
+"id": "v3-152",
+"jp": "あ、ここにスポーツショップがあります。",
+"kana": "あ ここ に スポーツ ショップ が あります",
+"fr": "Ah, il y a un magasin de sport ici."
+},
+{
+"id": "v3-153",
+"jp": "僕は昔、野球をやっていました。",
+"kana": "ぼく は むかし やきゅう を やって いました",
+"fr": "Avant, je jouais au baseball."
+},
+{
+"id": "v3-154",
+"jp": "子供の頃、野球をやっていました。",
+"kana": "こども の ころ やきゅう を やって いました",
+"fr": "Quand j'étais enfant, je jouais au baseball."
+},
+{
+"id": "v3-155",
+"jp": "だから、野球の道具を買うために、",
+"kana": "だから やきゅう の どうぐ を かう ため に",
+"fr": "Donc, pour acheter du matériel de baseball,"
+},
+{
+"id": "v3-156",
+"jp": "時々、スポーツショップに行きましたよ。",
+"kana": "ときどき スポーツ ショップ に いきました よ",
+"fr": "j'allais de temps en temps dans des magasins de sport."
+},
+{
+"id": "v3-157",
+"jp": "いろんなスポーツショップに行きました。",
+"kana": "いろんな スポーツ ショップ に いきました",
+"fr": "Je suis allé dans plein de magasins de sport différents."
+},
+{
+"id": "v3-158",
+"jp": "今、僕は横断歩道を渡っています。",
+"kana": "いま ぼく は おうだんほどう を わたって います",
+"fr": "En ce moment, je traverse un passage piéton."
+},
+{
+"id": "v3-159",
+"jp": "えーっと、あっちの方に電車の駅があるので、",
+"kana": "えーっと あっち の ほう に でんしゃ の えき が ある ので",
+"fr": "Euh, comme il y a une gare de train par là,"
+},
+{
+"id": "v3-160",
+"jp": "ちょっとだけ見に行ってみましょう。",
+"kana": "ちょっと だけ みに いって みましょう",
+"fr": "Allons juste y jeter un œil."
+},
+{
+"id": "v3-161",
+"jp": "ここ、電車の駅です。",
+"kana": "ここ でんしゃ の えき です",
+"fr": "Ici, c'est la gare."
+},
+{
+"id": "v3-162",
+"jp": "あ〜、懐かしい。昔、よくこの電車に乗りました。",
+"kana": "あー なつかしい むかし よく この でんしゃ に のりました",
+"fr": "Ah, quelle nostalgie. Avant, je prenais souvent ce train."
+},
+{
+"id": "v3-163",
+"jp": "ここから名古屋の街に行けますよ。",
+"kana": "ここ から なごや の まち に いけます よ",
+"fr": "D'ici, on peut aller en ville à Nagoya."
+},
+{
+"id": "v3-164",
+"jp": "だいたい４０分ぐらいかな。",
+"kana": "だいたい よんじゅっぷん ぐらい かな",
+"fr": "Environ 40 minutes, je dirais."
+},
+{
+"id": "v3-165",
+"jp": "まぁ、１時間あったら、名古屋まで行けます。",
+"kana": "まぁ いちじかん あったら なごや まで いけます",
+"fr": "Bon, en une heure, on peut aller jusqu'à Nagoya."
+},
+{
+"id": "v3-166",
+"jp": "あの電車、懐かしいね！皆さん、見えますか？",
+"kana": "あの でんしゃ なつかしい ね みなさん みえます か",
+"fr": "Ce train, quelle nostalgie ! Vous le voyez ?"
+},
+{
+"id": "v3-167",
+"jp": "皆さんの街にも電車の駅がありますか？",
+"kana": "みなさん の まち に も でんしゃ の えき が あります か",
+"fr": "Y a-t-il aussi une gare dans votre ville ?"
+},
+{
+"id": "v3-168",
+"jp": "皆さんはよく電車に乗りますか？",
+"kana": "みなさん は よく でんしゃ に のります か",
+"fr": "Prenez-vous souvent le train ?"
+},
+{
+"id": "v3-169",
+"jp": "あっちの方に、タクシーって書いてあります。",
+"kana": "あっち の ほう に タクシー って かいて あります",
+"fr": "De ce côté, il est écrit « taxi »."
+},
+{
+"id": "v3-170",
+"jp": "大きい看板がありますね。タクシーの看板。",
+"kana": "おおきい かんばん が あります ね タクシー の かんばん",
+"fr": "Il y a un grand panneau. Un panneau de taxi."
+},
+{
+"id": "v3-171",
+"jp": "皆さんはタクシーに乗りますか？",
+"kana": "みなさん は タクシー に のります か",
+"fr": "Prenez-vous le taxi ?"
+},
+{
+"id": "v3-172",
+"jp": "僕は最近あんまりタクシーに乗りません。",
+"kana": "ぼく は さいきん あんまり タクシー に のりません",
+"fr": "Moi, ces derniers temps, je ne prends pas beaucoup le taxi."
+},
+{
+"id": "v3-173",
+"jp": "子供の頃は全然タクシーに乗らなかったですよ。",
+"kana": "こども の ころ は ぜんぜん タクシー に のらなかった です よ",
+"fr": "Quand j'étais enfant, je ne prenais jamais le taxi."
+},
+{
+"id": "v3-174",
+"jp": "田舎に住んでいたから、家から街に行く時は、",
+"kana": "いなか に すんで いた から いえ から まち に いく とき は",
+"fr": "Comme j'habitais à la campagne, pour aller en ville depuis la maison,"
+},
+{
+"id": "v3-175",
+"jp": "自転車か、お父さんかお母さんに運転してもらうか。",
+"kana": "じてんしゃ か おとうさん か おかあさん に うんてん して もらう か",
+"fr": "c'était à vélo, ou bien papa ou maman me conduisait."
+},
+{
+"id": "v3-176",
+"jp": "それぐらいでしたね。",
+"kana": "それ ぐらい でした ね",
+"fr": "C'était à peu près tout."
+},
+{
+"id": "v3-177",
+"jp": "もうちょっと歩いてきました。",
+"kana": "もうちょっと あるいて きました",
+"fr": "J'ai encore un peu marché."
+},
+{
+"id": "v3-178",
+"jp": "ここに川があります。皆さん、見えますか？",
+"kana": "ここ に かわ が あります みなさん みえます か",
+"fr": "Il y a une rivière ici. Vous la voyez ?"
+},
+{
+"id": "v3-179",
+"jp": "僕は川を見ると、すごい落ち着きます。",
+"kana": "ぼく は かわ を みる と すごい おちつきます",
+"fr": "Quand je regarde une rivière, je me sens très apaisé."
+},
+{
+"id": "v3-180",
+"jp": "川を見ると、いい気分になります。",
+"kana": "かわ を みる と いい きぶん に なります",
+"fr": "Regarder une rivière me met de bonne humeur."
+},
+{
+"id": "v3-181",
+"jp": "皆さんはどうですか？僕だけですかね？",
+"kana": "みなさん は どう です か ぼく だけ です か ね",
+"fr": "Et vous ? C'est peut-être seulement moi ?"
+},
+{
+"id": "v3-182",
+"jp": "川を見ると、いい気分になるのは僕だけですか？",
+"kana": "かわ を みる と いい きぶん に なる の は ぼく だけ です か",
+"fr": "Suis-je le seul à me sentir bien en regardant une rivière ?"
+},
+{
+"id": "v3-183",
+"jp": "皆さんも川を見ると、いい気持ちになりますか？",
+"kana": "みなさん も かわ を みる と いい きもち に なります か",
+"fr": "Vous aussi, vous vous sentez bien en regardant une rivière ?"
+},
+{
+"id": "v3-184",
+"jp": "もうちょっと歩いてきました。",
+"kana": "もうちょっと あるいて きました",
+"fr": "J'ai encore un peu marché."
+},
+{
+"id": "v3-185",
+"jp": "ここに大きいスーパーがあります。",
+"kana": "ここ に おおきい スーパー が あります",
+"fr": "Il y a un grand supermarché ici."
+},
+{
+"id": "v3-186",
+"jp": "今、僕の家族はこのスーパーで買い物をしています。",
+"kana": "いま ぼく の かぞく は この スーパー で かいもの を して います",
+"fr": "En ce moment, ma famille fait les courses dans ce supermarché."
+},
+{
+"id": "v3-187",
+"jp": "ちょうどここで待ち合わせの予定です。",
+"kana": "ちょうど ここ で まちあわせ の よてい です",
+"fr": "Justement, nous avons prévu de nous retrouver ici."
+},
+{
+"id": "v3-188",
+"jp": "だから、今から僕はこのスーパーに行ってきます。",
+"kana": "だから いま から ぼく は この スーパー に いって きます",
+"fr": "Donc, je vais aller dans ce supermarché maintenant."
+},
+{
+"id": "v3-189",
+"jp": "買い物して、家に帰ります。",
+"kana": "かいもの して いえ に かえります",
+"fr": "On fera les courses, puis on rentrera à la maison."
+},
+{
+"id": "v3-190",
+"jp": "さっきのお店で買ったものを家で見せますね。",
+"kana": "さっき の おみせ で かった もの を いえ で みせます ね",
+"fr": "Je vous montrerai à la maison ce que j'ai acheté dans la boutique de tout à l'heure."
+},
+{
+"id": "v3-191",
+"jp": "皆さん、楽しみにしていてください！",
+"kana": "みなさん たのしみ に して いて ください",
+"fr": "Attendez-le avec impatience !"
+},
+{
+"id": "v3-192",
+"jp": "じゃあ、また後で！",
+"kana": "じゃあ また あとで",
+"fr": "Bon, à tout à l'heure !"
+},
+{
+"id": "v3-193",
+"jp": "ただいま！今、僕は家にいます。",
+"kana": "ただいま いま ぼく は いえ に います",
+"fr": "Je suis rentré ! Maintenant, je suis à la maison."
+},
+{
+"id": "v3-194",
+"jp": "実家にいます。実家は家族の家です。",
+"kana": "じっか に います じっか は かぞく の いえ です",
+"fr": "Je suis chez mes parents. « Jikka », c'est la maison de la famille."
+},
+{
+"id": "v3-195",
+"jp": "特にお父さんとお母さんの家です。実家です。",
+"kana": "とくに おとうさん と おかあさん の いえ です じっか です",
+"fr": "Plus précisément, la maison de mon père et de ma mère. C'est « jikka »."
+},
+{
+"id": "v3-196",
+"jp": "今９時ですね。夜９時です。",
+"kana": "いま くじ です ね よる くじ です",
+"fr": "Il est 21 h maintenant. 21 h le soir."
+},
+{
+"id": "v3-197",
+"jp": "今日、僕は街を歩いている時に、２つ物を買いました。",
+"kana": "きょう ぼく は まち を あるいて いる とき に ふたつ もの を かいました",
+"fr": "Aujourd'hui, pendant ma promenade en ville, j'ai acheté deux choses."
+},
+{
+"id": "v3-198",
+"jp": "覚えていますか？",
+"kana": "おぼえて います か",
+"fr": "Vous vous en souvenez ?"
+},
+{
+"id": "v3-199",
+"jp": "まず、こっちから開けていきましょう！",
+"kana": "まず こっち から あけて いきましょう",
+"fr": "D'abord, ouvrons celui-ci !"
+},
+{
+"id": "v3-200",
+"jp": "見えますか？和菓子を一つ買いました。",
+"kana": "みえます か わがし を ひとつ かいました",
+"fr": "Vous voyez ? J'ai acheté un wagashi."
+},
+{
+"id": "v3-201",
+"jp": "和菓子もいろんなタイプがあります。",
+"kana": "わがし も いろんな タイプ が あります",
+"fr": "Il y a aussi différents types de wagashi."
+},
+{
+"id": "v3-202",
+"jp": "これはまんじゅうかな？柔らかいです。",
+"kana": "これ は まんじゅう かな やわらかい です",
+"fr": "C'est peut-être un manjū ? C'est moelleux."
+},
+{
+"id": "v3-203",
+"jp": "これは甘いお菓子ですね。いただきます。",
+"kana": "これ は あまい おかし です ね いただきます",
+"fr": "C'est une sucrerie. Itadakimasu !"
+},
+{
+"id": "v3-204",
+"jp": "中にあんこが入っています。おいしいですよ。",
+"kana": "なか に あんこ が はいって います おいしい です よ",
+"fr": "Il y a de la pâte de haricots rouges à l'intérieur. C'est délicieux."
+},
+{
+"id": "v3-205",
+"jp": "最近、僕は夜遅い時間に食べ物を食べません。",
+"kana": "さいきん ぼく は よる おそい じかん に たべもの を たべません",
+"fr": "Ces derniers temps, je ne mange pas tard le soir."
+},
+{
+"id": "v3-206",
+"jp": "昔はね、夜１１時とか１２時でも、",
+"kana": "むかし は ね よる じゅういちじ とか じゅうにじ でも",
+"fr": "Avant, même à 23 h ou minuit,"
+},
+{
+"id": "v3-207",
+"jp": "おなかがすいたら、何か食べていましたけど、",
+"kana": "おなか が すいたら なに か たべて いました けど",
+"fr": "quand j'avais faim, je mangeais quelque chose, mais"
+},
+{
+"id": "v3-208",
+"jp": "最近は全然夜遅い時間に食べ物を食べません。",
+"kana": "さいきん は ぜんぜん よる おそい じかん に たべもの を たべません",
+"fr": "maintenant, je ne mange plus du tout tard le soir."
+},
+{
+"id": "v3-209",
+"jp": "今日は特別です。",
+"kana": "きょう は とくべつ です",
+"fr": "Aujourd'hui, c'est exceptionnel."
+},
+{
+"id": "v3-210",
+"jp": "もう一つ、開けていきましょう！",
+"kana": "もう ひとつ あけて いきましょう",
+"fr": "Ouvrons l'autre !"
+},
+{
+"id": "v3-211",
+"jp": "楽しみですね！",
+"kana": "たのしみ です ね",
+"fr": "J'ai hâte !"
+},
+{
+"id": "v3-212",
+"jp": "皆さん、僕は何を買ったと思いますか？",
+"kana": "みなさん ぼく は なに を かった と おもいます か",
+"fr": "Qu'est-ce que j'ai acheté, à votre avis ?"
+},
+{
+"id": "v3-213",
+"jp": "お店でいいものを見つけました。",
+"kana": "おみせ で いい もの を みつけました",
+"fr": "J'ai trouvé quelque chose de bien au magasin."
+},
+{
+"id": "v3-214",
+"jp": "店員さんがきれいにしっかり包んでくれました。",
+"kana": "てんいんさん が きれい に しっかり つつんで くれました",
+"fr": "Le vendeur me l'a emballé joliment et solidement."
+},
+{
+"id": "v3-215",
+"jp": "壊れないように、きれいに包んでくれましたね。",
+"kana": "こわれない ように きれい に つつんで くれました ね",
+"fr": "Il l'a bien emballé pour que ça ne casse pas."
+},
+{
+"id": "v3-216",
+"jp": "すごいね。嬉しいです。",
+"kana": "すごい ね うれしい です",
+"fr": "Génial ! Je suis content."
+},
+{
+"id": "v3-217",
+"jp": "じゃん！猫です！",
+"kana": "じゃん ねこ です",
+"fr": "Tadam ! C'est un chat !"
+},
+{
+"id": "v3-218",
+"jp": "猫の置物を買いました。かわいいですよね！",
+"kana": "ねこ の おきもの を かいました かわいい ですよね",
+"fr": "J'ai acheté une figurine de chat. Elle est mignonne, non ?"
+},
+{
+"id": "v3-219",
+"jp": "こうやって飾りますね。",
+"kana": "こう やって かざります ね",
+"fr": "On la pose comme ça, pour décorer."
+},
+{
+"id": "v3-220",
+"jp": "あのお店に猫の置物がたくさんありました。",
+"kana": "あの おみせ に ねこ の おきもの が たくさん ありました",
+"fr": "Dans ce magasin, il y avait plein de figurines de chats."
+},
+{
+"id": "v3-221",
+"jp": "皆さんは猫が好きですか？",
+"kana": "みなさん は ねこ が すき です か",
+"fr": "Aimez-vous les chats ?"
+},
+{
+"id": "v3-222",
+"jp": "お店に入って、これを見つけた時、",
+"kana": "おみせ に はいって これ を みつけた とき",
+"fr": "Quand je suis entré dans le magasin et que j'ai trouvé ça,"
+},
+{
+"id": "v3-223",
+"jp": "「あ！ん〜、欲しい！」と思いました。",
+"kana": "あ んー ほしい と おもいました",
+"fr": "j'ai pensé : « Ah ! Hmm… je la veux ! »"
+},
+{
+"id": "v3-224",
+"jp": "僕の地元は本当に面白いと思います。",
+"kana": "ぼく の じもと は ほんとう に おもしろい と おもいます",
+"fr": "Je trouve ma ville natale vraiment intéressante."
+},
+{
+"id": "v3-225",
+"jp": "皆さんの地元はどうですか？",
+"kana": "みなさん の じもと は どう です か",
+"fr": "Et votre ville natale ?"
+},
+{
+"id": "v3-226",
+"jp": "皆さんの地元は何が有名ですか？",
+"kana": "みなさん の じもと は なに が ゆうめい です か",
+"fr": "Qu'est-ce qui est célèbre dans votre ville natale ?"
+},
+{
+"id": "v3-227",
+"jp": "もしよかったら、コメント欄で教えてください。",
+"kana": "もし よかったら コメントらん で おしえて ください",
+"fr": "Si vous le voulez bien, dites-le-moi dans les commentaires."
+},
+{
+"id": "v3-228",
+"jp": "皆さんの街の有名なものをコメント欄に書いてください。",
+"kana": "みなさん の まち の ゆうめい な もの を コメントらん に かいて ください",
+"fr": "Écrivez dans les commentaires les choses célèbres de votre ville."
+},
+{
+"id": "v3-229",
+"jp": "あと、皆さんの地元の名前も教えてください。",
+"kana": "あと みなさん の じもと の なまえ も おしえて ください",
+"fr": "Dites-moi aussi le nom de votre ville natale."
+},
+{
+"id": "v3-230",
+"jp": "僕の地元は愛知県瀬戸市です。",
+"kana": "ぼく の じもと は あいちけん せとし です",
+"fr": "Ma ville natale, c'est Seto, dans la préfecture d'Aichi."
+},
+{
+"id": "v3-231",
+"jp": "じゃあ、また僕の地元で動画を撮りたいと思います。",
+"kana": "じゃあ また ぼく の じもと で どうが を とりたい と おもいます",
+"fr": "Je pense que je referai une vidéo dans ma ville natale."
+},
+{
+"id": "v3-232",
+"jp": "次の動画、山の方に行きます。",
+"kana": "つぎ の どうが やま の ほう に いきます",
+"fr": "Dans la prochaine vidéo, on ira vers la montagne."
+},
+{
+"id": "v3-233",
+"jp": "ハイキングしようと思います。ハイキングに行きますよ！",
+"kana": "ハイキング しよう と おもいます ハイキング に いきます よ",
+"fr": "Je pense faire de la randonnée. On va faire une randonnée !"
+},
+{
+"id": "v3-234",
+"jp": "次の動画も一緒に行きましょう！",
+"kana": "つぎ の どうが も いっしょ に いきましょう",
+"fr": "Venez avec moi aussi dans la prochaine vidéo !"
 }
 ]

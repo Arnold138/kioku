@@ -1,0 +1,1822 @@
+{
+"w3": {
+"jp": "空が青いです。",
+"kana": "そら が あおい です",
+"fr": "Le ciel est bleu."
+},
+"w4": {
+"jp": "空が青いですね。",
+"kana": "そら が あおい です ね",
+"fr": "Le ciel est bleu, n'est-ce pas ?"
+},
+"w5": {
+"jp": "赤いりんごが好きです。",
+"kana": "あかい りんご が すき です",
+"fr": "J'aime les pommes rouges."
+},
+"w6": {
+"jp": "赤いかばんを買いました。",
+"kana": "あかい かばん を かいました",
+"fr": "J'ai acheté un sac rouge."
+},
+"w7": {
+"jp": "この部屋は明るいです。",
+"kana": "この へや は あかるい です",
+"fr": "Cette pièce est lumineuse."
+},
+"w8": {
+"jp": "秋は涼しくて、好きです。",
+"kana": "あき は すずしくて すき です",
+"fr": "J'aime l'automne : il fait frais."
+},
+"w14": {
+"jp": "明後日、試験があります。",
+"kana": "あさって しけん が あります",
+"fr": "Après-demain, j'ai un examen."
+},
+"w15": {
+"jp": "歩きすぎて、足が痛いです。",
+"kana": "あるきすぎて あし が いたい です",
+"fr": "J'ai trop marché, j'ai mal aux pieds."
+},
+"w19": {
+"jp": "今日は暖かいです。",
+"kana": "きょう は あたたかい です",
+"fr": "Aujourd'hui, il fait doux."
+},
+"w20": {
+"jp": "頭が痛いです。",
+"kana": "あたま が いたい です",
+"fr": "J'ai mal à la tête."
+},
+"w22": {
+"jp": "トイレはあちらです。",
+"kana": "トイレ は あちら です",
+"fr": "Les toilettes sont par là."
+},
+"w23": {
+"jp": "今日は暑いですね。",
+"kana": "きょう は あつい です ね",
+"fr": "Il fait chaud aujourd'hui, n'est-ce pas ?"
+},
+"w24": {
+"jp": "このお茶は熱いです。",
+"kana": "この おちゃ は あつい です",
+"fr": "Ce thé est chaud."
+},
+"w25": {
+"jp": "この本は厚いです。",
+"kana": "この ほん は あつい です",
+"fr": "Ce livre est épais."
+},
+"w28": {
+"jp": "あなたはどこから来ましたか？",
+"kana": "あなた は どこ から きました か",
+"fr": "D'où venez-vous ?"
+},
+"w29": {
+"jp": "兄は車の会社で働いています。",
+"kana": "あに は くるま の かいしゃ で はたらいて います",
+"fr": "Mon grand frère travaille dans une entreprise automobile."
+},
+"w30": {
+"jp": "姉は先生です。",
+"kana": "あね は せんせい です",
+"fr": "Ma grande sœur est professeure."
+},
+"w31": {
+"jp": "小さいアパートに住んでいます。",
+"kana": "ちいさい アパート に すんで います",
+"fr": "J'habite dans un petit appartement."
+},
+"w33": {
+"jp": "寝る前にシャワーを浴びます。",
+"kana": "ねる まえ に シャワー を あびます",
+"fr": "Je prends une douche avant de dormir."
+},
+"w34": {
+"jp": "夜の道は危ないです。",
+"kana": "よる の みち は あぶない です",
+"fr": "Les routes de nuit sont dangereuses."
+},
+"w39": {
+"jp": "食べる前に手を洗います。",
+"kana": "たべる まえ に て を あらいます",
+"fr": "Je me lave les mains avant de manger."
+},
+"w45": {
+"jp": "いいえ、違います。",
+"kana": "いいえ ちがいます",
+"fr": "Non, ce n'est pas ça."
+},
+"w48": {
+"jp": "お茶はいかがですか？",
+"kana": "おちゃ は いかが です か",
+"fr": "Voulez-vous un peu de thé ?"
+},
+"w50": {
+"jp": "りんごはいくつありますか？",
+"kana": "りんご は いくつ あります か",
+"fr": "Combien y a-t-il de pommes ?"
+},
+"w52": {
+"jp": "公園に大きい池があります。",
+"kana": "こうえん に おおきい いけ が あります",
+"fr": "Il y a un grand étang dans le parc."
+},
+"w53": {
+"jp": "頭が痛いので、医者に行きました。",
+"kana": "あたま が いたい ので いしゃ に いきました",
+"fr": "J'avais mal à la tête, alors je suis allé chez le médecin."
+},
+"w54": {
+"jp": "この椅子に座ってください。",
+"kana": "この いす に すわって ください",
+"fr": "Asseyez-vous sur cette chaise, s'il vous plaît."
+},
+"w55": {
+"jp": "今日は仕事が忙しいです。",
+"kana": "きょう は しごと が いそがしい です",
+"fr": "Aujourd'hui, j'ai beaucoup de travail."
+},
+"w58": {
+"jp": "今日は一日中、家にいました。",
+"kana": "きょう は いちにちじゅう いえ に いました",
+"fr": "Aujourd'hui, je suis resté à la maison toute la journée."
+},
+"w61": {
+"jp": "旅行は五日間です。",
+"kana": "りょこう は いつかかん です",
+"fr": "Le voyage dure cinq jours."
+},
+"w63": {
+"jp": "卵が五つあります。",
+"kana": "たまご が いつつ あります",
+"fr": "Il y a cinq œufs."
+},
+"w64": {
+"jp": "彼はいつも元気です。",
+"kana": "かれ は いつも げんき です",
+"fr": "Il est toujours en forme."
+},
+"w68": {
+"jp": "妹は十歳です。",
+"kana": "いもうと は じゅっさい です",
+"fr": "Ma petite sœur a dix ans."
+},
+"w70": {
+"jp": "入口はあちらです。",
+"kana": "いりぐち は あちら です",
+"fr": "L'entrée est par là."
+},
+"w74": {
+"jp": "好きな色は何ですか？",
+"kana": "すき な いろ は なん です か",
+"fr": "Quelle est ta couleur préférée ?"
+},
+"w75": {
+"jp": "店には色々な物があります。",
+"kana": "みせ に は いろいろな もの が あります",
+"fr": "Il y a toutes sortes de choses dans ce magasin."
+},
+"w78": {
+"jp": "このスープは味が薄いです。",
+"kana": "この スープ は あじ が うすい です",
+"fr": "Le goût de cette soupe est léger."
+},
+"w79": {
+"jp": "この歌が好きです。",
+"kana": "この うた が すき です",
+"fr": "J'aime cette chanson."
+},
+"w80": {
+"jp": "カラオケで日本の歌を歌います。",
+"kana": "カラオケ で にほん の うた を うたいます",
+"fr": "Je chante des chansons japonaises au karaoké."
+},
+"w81": {
+"jp": "私のうちは駅から近いです。",
+"kana": "わたし の うち は えき から ちかい です",
+"fr": "Chez moi, c'est près de la gare."
+},
+"w83": {
+"jp": "夏休みに海へ行きました。",
+"kana": "なつやすみ に うみ へ いきました",
+"fr": "Pendant les vacances d'été, je suis allé à la mer."
+},
+"w85": {
+"jp": "隣の部屋がうるさいです。",
+"kana": "となり の へや が うるさい です",
+"fr": "La pièce d'à côté est bruyante."
+},
+"w86": {
+"jp": "寒いので、上着を着ます。",
+"kana": "さむい ので うわぎ を きます",
+"fr": "Comme il fait froid, je mets une veste."
+},
+"w89": {
+"jp": "映画館で映画を見ます。",
+"kana": "えいがかん で えいが を みます",
+"fr": "Je regarde un film au cinéma."
+},
+"w91": {
+"jp": "ええ、そうです。",
+"kana": "ええ そう です",
+"fr": "Oui, c'est ça."
+},
+"w93": {
+"jp": "エレベーターで五階まで行きます。",
+"kana": "エレベーター で ごかい まで いきます",
+"fr": "Je monte au cinquième étage en ascenseur."
+},
+"w94": {
+"jp": "鉛筆で名前を書いてください。",
+"kana": "えんぴつ で なまえ を かいて ください",
+"fr": "Écrivez votre nom au crayon, s'il vous plaît."
+},
+"w98": {
+"jp": "大きな犬を見ました。",
+"kana": "おおきな いぬ を みました",
+"fr": "J'ai vu un gros chien."
+},
+"w99": {
+"jp": "駅に大勢の人がいました。",
+"kana": "えき に おおぜい の ひと が いました",
+"fr": "Il y avait beaucoup de monde à la gare."
+},
+"w102": {
+"jp": "お金がありません。",
+"kana": "おかね が ありません",
+"fr": "Je n'ai pas d'argent."
+},
+"w105": {
+"jp": "田中さんの奥さんは先生です。",
+"kana": "たなかさん の おくさん は せんせい です",
+"fr": "L'épouse de M. Tanaka est professeure."
+},
+"w108": {
+"jp": "おじさんは大阪に住んでいます。",
+"kana": "おじさん は おおさか に すんで います",
+"fr": "Mon oncle habite à Osaka."
+},
+"w109": {
+"jp": "おじいさんは毎朝散歩します。",
+"kana": "おじいさん は まいあさ さんぽ します",
+"fr": "Mon grand-père se promène tous les matins."
+},
+"w114": {
+"jp": "すみません、お手洗いはどこですか？",
+"kana": "すみません おてあらい は どこ です か",
+"fr": "Excusez-moi, où sont les toilettes ?"
+},
+"w116": {
+"jp": "弟は高校生です。",
+"kana": "おとうと は こうこうせい です",
+"fr": "Mon petit frère est lycéen."
+},
+"w117": {
+"jp": "あの男の人は誰ですか？",
+"kana": "あの おとこ の ひと は だれ です か",
+"fr": "Qui est cet homme, là-bas ?"
+},
+"w118": {
+"jp": "あの男の子は私の弟です。",
+"kana": "あの おとこのこ は わたし の おとうと です",
+"fr": "Ce petit garçon est mon petit frère."
+},
+"w119": {
+"jp": "一昨日、映画を見ました。",
+"kana": "おととい えいが を みました",
+"fr": "Avant-hier, j'ai vu un film."
+},
+"w120": {
+"jp": "おととし、日本に来ました。",
+"kana": "おととし にほん に きました",
+"fr": "Je suis venu au Japon il y a deux ans."
+},
+"w121": {
+"jp": "大人は千円です。",
+"kana": "おとな は せんえん です",
+"fr": "Le tarif adulte est de mille yens."
+},
+"w123": {
+"jp": "私と彼は同じ学校です。",
+"kana": "わたし と かれ は おなじ がっこう です",
+"fr": "Lui et moi, nous sommes dans la même école."
+},
+"w124": {
+"jp": "田中さんのお兄さんは医者です。",
+"kana": "たなかさん の おにいさん は いしゃ です",
+"fr": "Le grand frère de M. Tanaka est médecin."
+},
+"w125": {
+"jp": "お姉さんは何歳ですか？",
+"kana": "おねえさん は なんさい です か",
+"fr": "Quel âge a votre grande sœur ?"
+},
+"w126": {
+"jp": "おばさんが来ました。",
+"kana": "おばさん が きました",
+"fr": "Ma tante est venue."
+},
+"w127": {
+"jp": "おばあさんは優しいです。",
+"kana": "おばあさん は やさしい です",
+"fr": "Ma grand-mère est gentille."
+},
+"w129": {
+"jp": "昼にお弁当を食べます。",
+"kana": "ひる に おべんとう を たべます",
+"fr": "À midi, je mange mon bento."
+},
+"w131": {
+"jp": "おまわりさんに道を聞きました。",
+"kana": "おまわりさん に みち を ききました",
+"fr": "J'ai demandé mon chemin à un policier."
+},
+"w134": {
+"jp": "夏はプールで泳ぎます。",
+"kana": "なつ は プール で およぎます",
+"fr": "L'été, je nage à la piscine."
+},
+"w135": {
+"jp": "次の駅で電車を降ります。",
+"kana": "つぎ の えき で でんしゃ を おります",
+"fr": "Je descends du train à la prochaine station."
+},
+"w138": {
+"jp": "あの女の人は先生です。",
+"kana": "あの おんな の ひと は せんせい です",
+"fr": "Cette femme est professeure."
+},
+"w139": {
+"jp": "あの女の子はだれですか？",
+"kana": "あの おんなのこ は だれ です か",
+"fr": "Qui est cette petite fille ?"
+},
+"w141": {
+"jp": "この町には外国人がたくさんいます。",
+"kana": "この まち に は がいこくじん が たくさん います",
+"fr": "Il y a beaucoup d'étrangers dans cette ville."
+},
+"w143": {
+"jp": "階段で二階に行きます。",
+"kana": "かいだん で にかい に いきます",
+"fr": "Je monte à l'étage par l'escalier."
+},
+"w148": {
+"jp": "顔を洗ってから、朝ご飯を食べます。",
+"kana": "かお を あらって から あさごはん を たべます",
+"fr": "Je me lave le visage, puis je prends mon petit-déjeuner."
+},
+"w150": {
+"jp": "鍵をなくしました。",
+"kana": "かぎ を なくしました",
+"fr": "J'ai perdu ma clé."
+},
+"w153": {
+"jp": "壁に絵を掛けます。",
+"kana": "かべ に え を かけます",
+"fr": "J'accroche un tableau au mur."
+},
+"w154": {
+"jp": "友達に電話をかけます。",
+"kana": "ともだち に でんわ を かけます",
+"fr": "J'appelle un ami."
+},
+"w155": {
+"jp": "雨なので、傘を持って行きます。",
+"kana": "あめ なので かさ を もって いきます",
+"fr": "Comme il pleut, j'emporte un parapluie."
+},
+"w156": {
+"jp": "友達にお金を貸しました。",
+"kana": "ともだち に おかね を かしました",
+"fr": "J'ai prêté de l'argent à un ami."
+},
+"w161": {
+"jp": "片仮名はまだ難しいです。",
+"kana": "かたかな は まだ むずかしい です",
+"fr": "Les katakana sont encore difficiles."
+},
+"w162": {
+"jp": "学校は朝八時に始まります。",
+"kana": "がっこう は あさ はちじ に はじまります",
+"fr": "L'école commence à huit heures du matin."
+},
+"w163": {
+"jp": "コーヒーをカップに入れました。",
+"kana": "コーヒー を カップ に いれました",
+"fr": "J'ai versé le café dans la tasse."
+},
+"w164": {
+"jp": "うちは四人の家庭です。",
+"kana": "うち は よにん の かてい です",
+"fr": "Chez nous, c'est une famille de quatre personnes."
+},
+"w167": {
+"jp": "テーブルの上に花瓶があります。",
+"kana": "テーブル の うえ に かびん が あります",
+"fr": "Il y a un vase sur la table."
+},
+"w168": {
+"jp": "夏は帽子をかぶります。",
+"kana": "なつ は ぼうし を かぶります",
+"fr": "L'été, je mets un chapeau."
+},
+"w169": {
+"jp": "紙を一枚ください。",
+"kana": "かみ を いちまい ください",
+"fr": "Donnez-moi une feuille de papier, s'il vous plaît."
+},
+"w170": {
+"jp": "新しいカメラを買いました。",
+"kana": "あたらしい カメラ を かいました",
+"fr": "J'ai acheté un nouvel appareil photo."
+},
+"w171": {
+"jp": "火曜日に病院に行きます。",
+"kana": "かようび に びょういん に いきます",
+"fr": "Je vais à l'hôpital mardi."
+},
+"w173": {
+"jp": "体に気をつけてください。",
+"kana": "からだ に き を つけて ください",
+"fr": "Prenez soin de votre santé."
+},
+"w174": {
+"jp": "図書館で本を借ります。",
+"kana": "としょかん で ほん を かります",
+"fr": "J'emprunte des livres à la bibliothèque."
+},
+"w175": {
+"jp": "このかばんは軽いです。",
+"kana": "この かばん は かるい です",
+"fr": "Ce sac est léger."
+},
+"w176": {
+"jp": "昨日の夜、カレーを作りました。",
+"kana": "きのう の よる カレー を つくりました",
+"fr": "Hier soir, j'ai préparé du curry."
+},
+"w177": {
+"jp": "カレンダーに予定を書きます。",
+"kana": "カレンダー に よてい を かきます",
+"fr": "J'écris mes projets sur le calendrier."
+},
+"w182": {
+"jp": "庭に黄色の花が咲いています。",
+"kana": "にわ に きいろ の はな が さいて います",
+"fr": "Des fleurs jaunes sont écloses dans le jardin."
+},
+"w183": {
+"jp": "黄色い花が咲いています。",
+"kana": "きいろい はな が さいて います",
+"fr": "Des fleurs jaunes sont écloses."
+},
+"w184": {
+"jp": "雪が消えました。",
+"kana": "ゆき が きえました",
+"fr": "La neige a disparu."
+},
+"w187": {
+"jp": "兄はギターが上手です。",
+"kana": "あに は ギター が じょうず です",
+"fr": "Mon grand frère joue bien de la guitare."
+},
+"w188": {
+"jp": "靴が汚いですね。",
+"kana": "くつ が きたない です ね",
+"fr": "Tes chaussures sont sales, dis donc."
+},
+"w189": {
+"jp": "友達と喫茶店でコーヒーを飲みました。",
+"kana": "ともだち と きっさてん で コーヒー を のみました",
+"fr": "J'ai bu un café avec un ami dans un salon de café."
+},
+"w190": {
+"jp": "はがきに切手を貼ります。",
+"kana": "はがき に きって を はります",
+"fr": "Je colle un timbre sur la carte postale."
+},
+"w193": {
+"jp": "これは九百円です。",
+"kana": "これ は きゅうひゃくえん です",
+"fr": "Ça coûte neuf cents yens."
+},
+"w194": {
+"jp": "今日の晩ご飯は牛肉です。",
+"kana": "きょう の ばんごはん は ぎゅうにく です",
+"fr": "Ce soir, on mange du bœuf."
+},
+"w195": {
+"jp": "毎朝、牛乳を飲みます。",
+"kana": "まいあさ ぎゅうにゅう を のみます",
+"fr": "Je bois du lait tous les matins."
+},
+"w197": {
+"jp": "教室に生徒が三人います。",
+"kana": "きょうしつ に せいと が さんにん います",
+"fr": "Il y a trois élèves dans la salle de classe."
+},
+"w201": {
+"jp": "はさみで紙を切ります。",
+"kana": "はさみ で かみ を きります",
+"fr": "Je coupe du papier avec des ciseaux."
+},
+"w204": {
+"jp": "肉を一キロ買いました。",
+"kana": "にく を いちキロ かいました",
+"fr": "J'ai acheté un kilo de viande."
+},
+"w207": {
+"jp": "金曜日の夜、友達と食事します。",
+"kana": "きんようび の よる ともだち と しょくじ します",
+"fr": "Vendredi soir, je dîne avec des amis."
+},
+"w208": {
+"jp": "九時に家を出ます。",
+"kana": "くじ に いえ を でます",
+"fr": "Je quitte la maison à neuf heures."
+},
+"w211": {
+"jp": "果物の中で、りんごが一番好きです。",
+"kana": "くだもの の なか で りんご が いちばん すき です",
+"fr": "Parmi les fruits, ce que j'aime le plus, ce sont les pommes."
+},
+"w212": {
+"jp": "口を大きく開けてください。",
+"kana": "くち を おおきく あけて ください",
+"fr": "Ouvrez grand la bouche, s'il vous plaît."
+},
+"w213": {
+"jp": "新しい靴を買いました。",
+"kana": "あたらしい くつ を かいました",
+"fr": "J'ai acheté de nouvelles chaussures."
+},
+"w214": {
+"jp": "靴下を二足買いました。",
+"kana": "くつした を にそく かいました",
+"fr": "J'ai acheté deux paires de chaussettes."
+},
+"w216": {
+"jp": "今日は曇りです。",
+"kana": "きょう は くもり です",
+"fr": "Aujourd'hui, le temps est nuageux."
+},
+"w217": {
+"jp": "午後から曇るでしょう。",
+"kana": "ごご から くもる でしょう",
+"fr": "Le ciel devrait se couvrir à partir de l'après-midi."
+},
+"w219": {
+"jp": "このクラスは二十人です。",
+"kana": "この クラス は にじゅうにん です",
+"fr": "Cette classe compte vingt élèves."
+},
+"w220": {
+"jp": "砂糖を百グラム入れます。",
+"kana": "さとう を ひゃくグラム いれます",
+"fr": "J'ajoute cent grammes de sucre."
+},
+"w223": {
+"jp": "黒が好きです。",
+"kana": "くろ が すき です",
+"fr": "J'aime le noir."
+},
+"w224": {
+"jp": "黒い猫がいます。",
+"kana": "くろい ねこ が います",
+"fr": "Il y a un chat noir."
+},
+"w225": {
+"jp": "警官に道を聞きました。",
+"kana": "けいかん に みち を ききました",
+"fr": "J'ai demandé mon chemin à un policier."
+},
+"w226": {
+"jp": "今朝は六時に起きました。",
+"kana": "けさ は ろくじ に おきました",
+"fr": "Ce matin, je me suis levé à six heures."
+},
+"w227": {
+"jp": "出かける前に、電気を消してください。",
+"kana": "でかける まえ に でんき を けして ください",
+"fr": "Avant de sortir, éteignez la lumière s'il vous plaît."
+},
+"w229": {
+"jp": "兄は去年、結婚しました。",
+"kana": "あに は きょねん けっこん しました",
+"fr": "Mon grand frère s'est marié l'an dernier."
+},
+"w230": {
+"jp": "月曜日は仕事が忙しいです。",
+"kana": "げつようび は しごと が いそがしい です",
+"fr": "Le lundi, j'ai beaucoup de travail."
+},
+"w231": {
+"jp": "玄関で靴を脱いでください。",
+"kana": "げんかん で くつ を ぬいで ください",
+"fr": "Enlevez vos chaussures à l'entrée, s'il vous plaît."
+},
+"w233": {
+"jp": "五分だけ待ってください。",
+"kana": "ごふん だけ まって ください",
+"fr": "Attendez seulement cinq minutes, s'il vous plaît."
+},
+"w234": {
+"jp": "公園で友達と遊びました。",
+"kana": "こうえん で ともだち と あそびました",
+"fr": "J'ai joué avec des amis au parc."
+},
+"w235": {
+"jp": "次の交差点を右に曲がってください。",
+"kana": "つぎ の こうさてん を みぎ に まがって ください",
+"fr": "Tournez à droite au prochain carrefour, s'il vous plaît."
+},
+"w236": {
+"jp": "朝は紅茶を飲みます。",
+"kana": "あさ は こうちゃ を のみます",
+"fr": "Le matin, je bois du thé noir."
+},
+"w237": {
+"jp": "交番で道を聞きました。",
+"kana": "こうばん で みち を ききました",
+"fr": "J'ai demandé mon chemin au poste de police."
+},
+"w238": {
+"jp": "大きい声で話してください。",
+"kana": "おおきい こえ で はなして ください",
+"fr": "Parlez à voix haute, s'il vous plaît."
+},
+"w239": {
+"jp": "寒いので、コートを着ます。",
+"kana": "さむい ので コート を きます",
+"fr": "Comme il fait froid, je mets mon manteau."
+},
+"w243": {
+"jp": "旅行は九日までです。",
+"kana": "りょこう は ここのか まで です",
+"fr": "Le voyage dure jusqu'au 9."
+},
+"w244": {
+"jp": "箱の中にりんごが九つあります。",
+"kana": "はこ の なか に りんご が ここのつ あります",
+"fr": "Il y a neuf pommes dans la boîte."
+},
+"w245": {
+"jp": "午前十時に会いましょう。",
+"kana": "ごぜん じゅうじ に あいましょう",
+"fr": "Retrouvons-nous à dix heures du matin."
+},
+"w246": {
+"jp": "先生の質問に答えました。",
+"kana": "せんせい の しつもん に こたえました",
+"fr": "J'ai répondu à la question du professeur."
+},
+"w247": {
+"jp": "こちらは友達の田中さんです。",
+"kana": "こちら は ともだち の たなかさん です",
+"fr": "Voici mon ami, M. Tanaka."
+},
+"w255": {
+"jp": "この紙を三枚コピーしてください。",
+"kana": "この かみ を さんまい コピーして ください",
+"fr": "Faites trois copies de cette feuille, s'il vous plaît."
+},
+"w256": {
+"jp": "財布がなくて、困りました。",
+"kana": "さいふ が なくて こまりました",
+"fr": "Je n'avais plus mon portefeuille, j'étais bien embêté."
+},
+"w258": {
+"jp": "今月は仕事が忙しいです。",
+"kana": "こんげつ は しごと が いそがしい です",
+"fr": "Ce mois-ci, j'ai beaucoup de travail."
+},
+"w259": {
+"jp": "今週は忙しいです。",
+"kana": "こんしゅう は いそがしい です",
+"fr": "Cette semaine, je suis occupé."
+},
+"w261": {
+"jp": "今晩、友達と会います。",
+"kana": "こんばん ともだち と あいます",
+"fr": "Ce soir, je retrouve un ami."
+},
+"w262": {
+"jp": "さあ、行きましょう。",
+"kana": "さあ いきましょう",
+"fr": "Allez, on y va !"
+},
+"w263": {
+"jp": "財布を忘れました。",
+"kana": "さいふ を わすれました",
+"fr": "J'ai oublié mon portefeuille."
+},
+"w267": {
+"jp": "日本語で作文を書きました。",
+"kana": "にほんご で さくぶん を かきました",
+"fr": "J'ai écrit une rédaction en japonais."
+},
+"w268": {
+"jp": "雨が降っているので、傘を差します。",
+"kana": "あめ が ふって いる ので かさ を さします",
+"fr": "Comme il pleut, j'ouvre mon parapluie."
+},
+"w269": {
+"jp": "美容院で雑誌を読みます。",
+"kana": "びよういん で ざっし を よみます",
+"fr": "Je lis un magazine chez le coiffeur."
+},
+"w270": {
+"jp": "コーヒーに砂糖を入れます。",
+"kana": "コーヒー に さとう を いれます",
+"fr": "Je mets du sucre dans mon café."
+},
+"w272": {
+"jp": "さ来年、日本へ行きたいです。",
+"kana": "さらいねん にほん へ いきたい です",
+"fr": "Dans deux ans, je voudrais aller au Japon."
+},
+"w273": {
+"jp": "三人で行きます。",
+"kana": "さんにん で いきます",
+"fr": "On y va à trois."
+},
+"w275": {
+"jp": "四月に日本へ行きます。",
+"kana": "しがつ に にほん へ いきます",
+"fr": "J'irai au Japon en avril."
+},
+"w277": {
+"jp": "高いです。しかし、おいしいです。",
+"kana": "たかい です しかし おいしい です",
+"fr": "C'est cher. Mais c'est délicieux."
+},
+"w280": {
+"jp": "辞書で言葉を調べます。",
+"kana": "じしょ で ことば を しらべます",
+"fr": "Je cherche un mot dans le dictionnaire."
+},
+"w283": {
+"jp": "七月は暑いです。",
+"kana": "しちがつ は あつい です",
+"fr": "En juillet, il fait chaud."
+},
+"w284": {
+"jp": "質問がありますか？",
+"kana": "しつもん が あります か",
+"fr": "Avez-vous des questions ?"
+},
+"w286": {
+"jp": "自動車の工場で働いています。",
+"kana": "じどうしゃ の こうじょう で はたらいて います",
+"fr": "Je travaille dans une usine automobile."
+},
+"w287": {
+"jp": "その犬は去年死にました。",
+"kana": "その いぬ は きょねん しにました",
+"fr": "Ce chien est mort l'année dernière."
+},
+"w288": {
+"jp": "わからない言葉は字引で調べます。",
+"kana": "わからない ことば は じびき で しらべます",
+"fr": "Les mots que je ne comprends pas, je les cherche dans le dictionnaire."
+},
+"w291": {
+"jp": "寒いから、窓を閉めてください。",
+"kana": "さむい から まど を しめて ください",
+"fr": "Il fait froid, alors fermez la fenêtre s'il vous plaît."
+},
+"w292": {
+"jp": "ネクタイを締めて、会社に行きます。",
+"kana": "ネクタイ を しめて かいしゃ に いきます",
+"fr": "Je noue ma cravate et je vais au travail."
+},
+"w295": {
+"jp": "白いシャツを着ています。",
+"kana": "しろい シャツ を きて います",
+"fr": "Je porte une chemise blanche."
+},
+"w296": {
+"jp": "寝る前にシャワーを浴びます。",
+"kana": "ねる まえ に シャワー を あびます",
+"fr": "Je prends une douche avant de dormir."
+},
+"w297": {
+"jp": "十月に旅行します。",
+"kana": "じゅうがつ に りょこう します",
+"fr": "Je voyagerai en octobre."
+},
+"w298": {
+"jp": "授業は九時に始まります。",
+"kana": "じゅぎょう は くじ に はじまります",
+"fr": "Le cours commence à neuf heures."
+},
+"w301": {
+"jp": "この机は丈夫です。",
+"kana": "この つくえ は じょうぶ です",
+"fr": "Ce bureau est solide."
+},
+"w302": {
+"jp": "醤油を取ってください。",
+"kana": "しょうゆ を とって ください",
+"fr": "Passez-moi la sauce soja, s'il vous plaît."
+},
+"w303": {
+"jp": "昼は学校の食堂で食べます。",
+"kana": "ひる は がっこう の しょくどう で たべます",
+"fr": "Le midi, je mange à la cantine de l'école."
+},
+"w307": {
+"jp": "毎朝、新聞を読みます。",
+"kana": "まいあさ しんぶん を よみます",
+"fr": "Je lis le journal tous les matins."
+},
+"w308": {
+"jp": "水曜日に日本語の授業があります。",
+"kana": "すいようび に にほんご の じゅぎょう が あります",
+"fr": "Le mercredi, j'ai cours de japonais."
+},
+"w309": {
+"jp": "ここでたばこを吸わないでください。",
+"kana": "ここ で たばこ を すわないで ください",
+"fr": "Ne fumez pas ici, s'il vous plaît."
+},
+"w310": {
+"jp": "姉は赤いスカートをはいています。",
+"kana": "あね は あかい スカート を はいて います",
+"fr": "Ma grande sœur porte une jupe rouge."
+},
+"w312": {
+"jp": "今年は雪が少ないです。",
+"kana": "ことし は ゆき が すくない です",
+"fr": "Cette année, il y a peu de neige."
+},
+"w313": {
+"jp": "すぐに行きます。",
+"kana": "すぐに いきます",
+"fr": "J'arrive tout de suite."
+},
+"w315": {
+"jp": "秋は涼しいです。",
+"kana": "あき は すずしい です",
+"fr": "En automne, il fait frais."
+},
+"w316": {
+"jp": "寒いので、ストーブをつけました。",
+"kana": "さむい ので ストーブ を つけました",
+"fr": "Comme il fait froid, j'ai allumé le poêle."
+},
+"w317": {
+"jp": "スプーンでスープを飲みます。",
+"kana": "スプーン で スープ を のみます",
+"fr": "Je prends la soupe avec une cuillère."
+},
+"w319": {
+"jp": "黒いズボンをはいています。",
+"kana": "くろい ズボン を はいて います",
+"fr": "Je porte un pantalon noir."
+},
+"w323": {
+"jp": "兄は私より背が高いです。",
+"kana": "あに は わたし より せ が たかい です",
+"fr": "Mon grand frère est plus grand que moi."
+},
+"w324": {
+"jp": "生徒が十人います。",
+"kana": "せいと が じゅうにん います",
+"fr": "Il y a dix élèves."
+},
+"w325": {
+"jp": "このセーターは温かいです。",
+"kana": "この セーター は あたたかい です",
+"fr": "Ce pull est chaud."
+},
+"w326": {
+"jp": "手を石鹸で洗ってください。",
+"kana": "て を せっけん で あらって ください",
+"fr": "Lavez-vous les mains avec du savon, s'il vous plaît."
+},
+"w327": {
+"jp": "父は毎日、背広を着て会社に行きます。",
+"kana": "ちち は まいにち せびろ を きて かいしゃ に いきます",
+"fr": "Mon père va au travail en costume tous les jours."
+},
+"w328": {
+"jp": "私の部屋は狭いです。",
+"kana": "わたし の へや は せまい です",
+"fr": "Ma chambre est étroite."
+},
+"w329": {
+"jp": "答えはゼロです。",
+"kana": "こたえ は ゼロ です",
+"fr": "La réponse est zéro."
+},
+"w330": {
+"jp": "このかばんは千円です。",
+"kana": "この かばん は せんえん です",
+"fr": "Ce sac coûte mille yens."
+},
+"w331": {
+"jp": "先月、引っ越しをしました。",
+"kana": "せんげつ ひっこし を しました",
+"fr": "J'ai déménagé le mois dernier."
+},
+"w332": {
+"jp": "先週、映画を見ました。",
+"kana": "せんしゅう えいが を みました",
+"fr": "La semaine dernière, j'ai vu un film."
+},
+"w333": {
+"jp": "先生に質問しました。",
+"kana": "せんせい に しつもん しました",
+"fr": "J'ai posé une question au professeur."
+},
+"w334": {
+"jp": "日曜日は洗濯をします。",
+"kana": "にちようび は せんたく を します",
+"fr": "Le dimanche, je fais la lessive."
+},
+"w338": {
+"jp": "朝起きて、そうして、顔を洗いました。",
+"kana": "あさ おきて そうして かお を あらいました",
+"fr": "Je me suis levé le matin, et puis je me suis lavé le visage."
+},
+"w339": {
+"jp": "そこに座ってください。",
+"kana": "そこ に すわって ください",
+"fr": "Asseyez-vous là, s'il vous plaît."
+},
+"w340": {
+"jp": "そちらは今、何時ですか？",
+"kana": "そちら は いま なんじ です か",
+"fr": "Chez vous, il est quelle heure en ce moment ?"
+},
+"w342": {
+"jp": "外は雨が降っています。",
+"kana": "そと は あめ が ふって います",
+"fr": "Dehors, il pleut."
+},
+"w344": {
+"jp": "駅のそばに店があります。",
+"kana": "えき の そば に みせ が あります",
+"fr": "Il y a un magasin près de la gare."
+},
+"w345": {
+"jp": "空に雲がありません。",
+"kana": "そら に くも が ありません",
+"fr": "Il n'y a pas un nuage dans le ciel."
+},
+"w348": {
+"jp": "それでは、また明日。",
+"kana": "それでは また あした",
+"fr": "Bon, alors à demain."
+},
+"w349": {
+"jp": "兄は大学で勉強しています。",
+"kana": "あに は だいがく で べんきょう して います",
+"fr": "Mon grand frère étudie à l'université."
+},
+"w350": {
+"jp": "大使館はどこですか？",
+"kana": "たいしかん は どこ です か",
+"fr": "Où est l'ambassade ?"
+},
+"w353": {
+"jp": "家族は大切です。",
+"kana": "かぞく は たいせつ です",
+"fr": "La famille est importante."
+},
+"w354": {
+"jp": "母は台所にいます。",
+"kana": "はは は だいどころ に います",
+"fr": "Ma mère est dans la cuisine."
+},
+"w360": {
+"jp": "電車の中で立っていました。",
+"kana": "でんしゃ の なか で たって いました",
+"fr": "Je suis resté debout dans le train."
+},
+"w361": {
+"jp": "たてと横の長さを測ります。",
+"kana": "たて と よこ の ながさ を はかります",
+"fr": "Je mesure la longueur et la largeur."
+},
+"w365": {
+"jp": "父はたばこをやめました。",
+"kana": "ちち は たばこ を やめました",
+"fr": "Mon père a arrêté de fumer."
+},
+"w369": {
+"jp": "朝ご飯に卵を食べます。",
+"kana": "あさごはん に たまご を たべます",
+"fr": "Au petit-déjeuner, je mange un œuf."
+},
+"w371": {
+"jp": "部屋に誰かいますか？",
+"kana": "へや に だれか います か",
+"fr": "Y a-t-il quelqu'un dans la pièce ?"
+},
+"w372": {
+"jp": "明日は私の誕生日です。",
+"kana": "あした は わたし の たんじょうび です",
+"fr": "Demain, c'est mon anniversaire."
+},
+"w373": {
+"jp": "日本語が段々わかってきました。",
+"kana": "にほんご が だんだん わかって きました",
+"fr": "Je comprends peu à peu le japonais."
+},
+"w375": {
+"jp": "小さな犬が走っています。",
+"kana": "ちいさな いぬ が はしって います",
+"fr": "Un petit chien est en train de courir."
+},
+"w379": {
+"jp": "地下鉄で会社に行きます。",
+"kana": "ちかてつ で かいしゃ に いきます",
+"fr": "Je vais au travail en métro."
+},
+"w380": {
+"jp": "地図を見て、駅まで歩きます。",
+"kana": "ちず を みて えき まで あるきます",
+"fr": "Je regarde la carte et je marche jusqu'à la gare."
+},
+"w382": {
+"jp": "茶色の靴を買いました。",
+"kana": "ちゃいろ の くつ を かいました",
+"fr": "J'ai acheté des chaussures marron."
+},
+"w383": {
+"jp": "茶碗にご飯を入れます。",
+"kana": "ちゃわん に ごはん を いれます",
+"fr": "Je mets du riz dans le bol."
+},
+"w386": {
+"jp": "会議は来月の一日です。",
+"kana": "かいぎ は らいげつ の ついたち です",
+"fr": "La réunion a lieu le premier du mois prochain."
+},
+"w394": {
+"jp": "父は銀行に勤めています。",
+"kana": "ちち は ぎんこう に つとめて います",
+"fr": "Mon père travaille dans une banque."
+},
+"w396": {
+"jp": "冷たい水をください。",
+"kana": "つめたい みず を ください",
+"fr": "Donnez-moi de l'eau froide, s'il vous plaît."
+},
+"w397": {
+"jp": "風が強いです。",
+"kana": "かぜ が つよい です",
+"fr": "Il y a beaucoup de vent."
+},
+"w398": {
+"jp": "手を洗ってください。",
+"kana": "て を あらって ください",
+"fr": "Lavez-vous les mains, s'il vous plaît."
+},
+"w399": {
+"jp": "テープで紙をはります。",
+"kana": "テープ で かみ を はります",
+"fr": "Je colle le papier avec du ruban adhésif."
+},
+"w400": {
+"jp": "テープレコーダーで日本語を聞きます。",
+"kana": "テープレコーダー で にほんご を ききます",
+"fr": "J'écoute du japonais sur un magnétophone."
+},
+"w401": {
+"jp": "テーブルの上に花があります。",
+"kana": "テーブル の うえ に はな が あります",
+"fr": "Il y a des fleurs sur la table."
+},
+"w405": {
+"jp": "出口はどこですか？",
+"kana": "でぐち は どこ です か",
+"fr": "Où est la sortie ?"
+},
+"w406": {
+"jp": "明日、日本語のテストがあります。",
+"kana": "あした にほんご の テスト が あります",
+"fr": "Demain, j'ai un contrôle de japonais."
+},
+"w408": {
+"jp": "デパートで靴を買いました。",
+"kana": "デパート で くつ を かいました",
+"fr": "J'ai acheté des chaussures au grand magasin."
+},
+"w416": {
+"jp": "戸を閉めてください。",
+"kana": "と を しめて ください",
+"fr": "Fermez la porte, s'il vous plaît."
+},
+"w417": {
+"jp": "ドアを開けてください。",
+"kana": "ドア を あけて ください",
+"fr": "Ouvrez la porte, s'il vous plaît."
+},
+"w420": {
+"jp": "どうして遅れましたか？",
+"kana": "どうして おくれました か",
+"fr": "Pourquoi êtes-vous arrivé en retard ?"
+},
+"w422": {
+"jp": "動物園で動物を見ました。",
+"kana": "どうぶつえん で どうぶつ を みました",
+"fr": "J'ai vu des animaux au zoo."
+},
+"w423": {
+"jp": "どうもありがとうございます。",
+"kana": "どうも ありがとう ございます",
+"fr": "Merci beaucoup."
+},
+"w424": {
+"jp": "子どもは十まで数えられます。",
+"kana": "こども は とお まで かぞえられます",
+"fr": "L'enfant sait compter jusqu'à dix."
+},
+"w426": {
+"jp": "十日は休みです。",
+"kana": "とおか は やすみ です",
+"fr": "Le 10, c'est un jour de congé."
+},
+"w428": {
+"jp": "時計を見たら、もう九時でした。",
+"kana": "とけい を みたら もう くじ でした",
+"fr": "J'ai regardé l'horloge : il était déjà neuf heures."
+},
+"w432": {
+"jp": "図書館で本を借りました。",
+"kana": "としょかん で ほん を かりました",
+"fr": "J'ai emprunté des livres à la bibliothèque."
+},
+"w433": {
+"jp": "駅はどちらですか？",
+"kana": "えき は どちら です か",
+"fr": "Où est la gare ?"
+},
+"w434": {
+"jp": "どっちがいいですか？",
+"kana": "どっち が いい です か",
+"fr": "Lequel préfères-tu ?"
+},
+"w436": {
+"jp": "あの方はどなたですか？",
+"kana": "あの かた は どなた です か",
+"fr": "Qui est cette personne ?"
+},
+"w438": {
+"jp": "どの電車に乗りますか？",
+"kana": "どの でんしゃ に のります か",
+"fr": "Quel train prenez-vous ?"
+},
+"w439": {
+"jp": "鳥が空を飛んでいます。",
+"kana": "とり が そら を とんで います",
+"fr": "Des oiseaux volent dans le ciel."
+},
+"w442": {
+"jp": "土曜日は何をしますか？",
+"kana": "どようび は なに を します か",
+"fr": "Que faites-vous samedi ?"
+},
+"w443": {
+"jp": "庭に鳥が来ました。",
+"kana": "にわ に とり が きました",
+"fr": "Un oiseau est venu dans le jardin."
+},
+"w444": {
+"jp": "今晩は鶏肉を食べます。",
+"kana": "こんばん は とりにく を たべます",
+"fr": "Ce soir, je mange du poulet."
+},
+"w447": {
+"jp": "あなたのかばんはどれですか？",
+"kana": "あなた の かばん は どれ です か",
+"fr": "Lequel est ton sac ?"
+},
+"w450": {
+"jp": "ナイフで肉を切ります。",
+"kana": "ナイフ で にく を きります",
+"fr": "Je coupe la viande avec un couteau."
+},
+"w452": {
+"jp": "姉は髪が長いです。",
+"kana": "あね は かみ が ながい です",
+"fr": "Ma grande sœur a les cheveux longs."
+},
+"w453": {
+"jp": "庭で鳥が鳴いています。",
+"kana": "にわ で とり が ないて います",
+"fr": "Un oiseau chante dans le jardin."
+},
+"w455": {
+"jp": "なぜ日本語を勉強しますか？",
+"kana": "なぜ にほんご を べんきょう します か",
+"fr": "Pourquoi étudiez-vous le japonais ?"
+},
+"w456": {
+"jp": "夏は海に行きたいです。",
+"kana": "なつ は うみ に いきたい です",
+"fr": "L'été, j'ai envie d'aller à la mer."
+},
+"w457": {
+"jp": "夏休みに北海道へ行きます。",
+"kana": "なつやすみ に ほっかいどう へ いきます",
+"fr": "Pendant les vacances d'été, je vais à Hokkaidō."
+},
+"w458": {
+"jp": "かばんにりんごが七つ入っています。",
+"kana": "かばん に りんご が ななつ はいって います",
+"fr": "Il y a sept pommes dans le sac."
+},
+"w460": {
+"jp": "旅行は七日までです。",
+"kana": "りょこう は なのか まで です",
+"fr": "Le voyage dure jusqu'au 7."
+},
+"w462": {
+"jp": "私は母にピアノを習いました。",
+"kana": "わたし は はは に ピアノ を ならいました",
+"fr": "J'ai appris le piano auprès de ma mère."
+},
+"w463": {
+"jp": "店の前に並んでいます。",
+"kana": "みせ の まえ に ならんで います",
+"fr": "Les gens font la queue devant le magasin."
+},
+"w464": {
+"jp": "机の上に本を並べます。",
+"kana": "つくえ の うえ に ほん を ならべます",
+"fr": "Je range les livres sur le bureau."
+},
+"w466": {
+"jp": "二月は寒いです。",
+"kana": "にがつ は さむい です",
+"fr": "En février, il fait froid."
+},
+"w467": {
+"jp": "この町は夜もにぎやかです。",
+"kana": "この まち は よる も にぎやか です",
+"fr": "Cette ville est animée même la nuit."
+},
+"w469": {
+"jp": "太陽は西にしずみます。",
+"kana": "たいよう は にし に しずみます",
+"fr": "Le soleil se couche à l'ouest."
+},
+"w472": {
+"jp": "毎朝、ニュースを見ます。",
+"kana": "まいあさ ニュース を みます",
+"fr": "Tous les matins, je regarde les infos."
+},
+"w473": {
+"jp": "庭に花が咲いています。",
+"kana": "にわ に はな が さいて います",
+"fr": "Des fleurs sont écloses dans le jardin."
+},
+"w474": {
+"jp": "家に入る時、靴を脱ぎます。",
+"kana": "いえ に はいる とき くつ を ぬぎます",
+"fr": "On enlève ses chaussures en entrant dans la maison."
+},
+"w476": {
+"jp": "父は毎日ネクタイをしています。",
+"kana": "ちち は まいにち ネクタイ を して います",
+"fr": "Mon père porte une cravate tous les jours."
+},
+"w479": {
+"jp": "ノートに漢字を書きます。",
+"kana": "ノート に かんじ を かきます",
+"fr": "J'écris des kanji dans mon cahier."
+},
+"w480": {
+"jp": "友達と山に登りました。",
+"kana": "ともだち と やま に のぼりました",
+"fr": "J'ai grimpé une montagne avec des amis."
+},
+"w481": {
+"jp": "飲み物は何がいいですか？",
+"kana": "のみもの は なに が いい です か",
+"fr": "Qu'est-ce que vous voulez comme boisson ?"
+},
+"w484": {
+"jp": "寝る前に歯を磨きます。",
+"kana": "ねる まえ に は を みがきます",
+"fr": "Je me brosse les dents avant de dormir."
+},
+"w487": {
+"jp": "灰皿はありますか？",
+"kana": "はいざら は あります か",
+"fr": "Y a-t-il un cendrier ?"
+},
+"w489": {
+"jp": "友達に葉書を書きました。",
+"kana": "ともだち に はがき を かきました",
+"fr": "J'ai écrit une carte postale à un ami."
+},
+"w490": {
+"jp": "靴をはいて、出かけます。",
+"kana": "くつ を はいて でかけます",
+"fr": "Je mets mes chaussures et je sors."
+},
+"w499": {
+"jp": "パンにバターをつけます。",
+"kana": "パン に バター を つけます",
+"fr": "Je mets du beurre sur mon pain."
+},
+"w500": {
+"jp": "私の妹は来年二十歳です。",
+"kana": "わたし の いもうと は らいねん はたち です",
+"fr": "Ma petite sœur aura vingt ans l'année prochaine."
+},
+"w501": {
+"jp": "私は銀行で働いています。",
+"kana": "わたし は ぎんこう で はたらいて います",
+"fr": "Je travaille dans une banque."
+},
+"w502": {
+"jp": "八時に起きます。",
+"kana": "はちじ に おきます",
+"fr": "Je me lève à huit heures."
+},
+"w503": {
+"jp": "旅行は二十日からです。",
+"kana": "りょこう は はつか から です",
+"fr": "Le voyage commence le 20."
+},
+"w511": {
+"jp": "春になると、桜が咲きます。",
+"kana": "はる に なる と さくら が さきます",
+"fr": "Au printemps, les cerisiers fleurissent."
+},
+"w512": {
+"jp": "壁にポスターを貼ります。",
+"kana": "かべ に ポスター を はります",
+"fr": "Je colle une affiche sur le mur."
+},
+"w515": {
+"jp": "三時半に会いましょう。",
+"kana": "さんじはん に あいましょう",
+"fr": "Retrouvons-nous à trois heures et demie."
+},
+"w518": {
+"jp": "ポケットにハンカチを入れました。",
+"kana": "ポケット に ハンカチ を いれました",
+"fr": "J'ai mis un mouchoir dans ma poche."
+},
+"w519": {
+"jp": "電話番号を教えてください。",
+"kana": "でんわ ばんごう を おしえて ください",
+"fr": "Donnez-moi votre numéro de téléphone, s'il vous plaît."
+},
+"w521": {
+"jp": "ケーキを半分食べました。",
+"kana": "ケーキ を はんぶん たべました",
+"fr": "J'ai mangé la moitié du gâteau."
+},
+"w522": {
+"jp": "東の空が明るくなりました。",
+"kana": "ひがし の そら が あかるく なりました",
+"fr": "Le ciel à l'est s'est éclairci."
+},
+"w524": {
+"jp": "兄はピアノを弾きます。",
+"kana": "あに は ピアノ を ひきます",
+"fr": "Mon grand frère joue du piano."
+},
+"w525": {
+"jp": "この机は低いです。",
+"kana": "この つくえ は ひくい です",
+"fr": "Ce bureau est bas."
+},
+"w526": {
+"jp": "飛行機で東京へ行きます。",
+"kana": "ひこうき で とうきょう へ いきます",
+"fr": "Je vais à Tokyo en avion."
+},
+"w527": {
+"jp": "次の角を左に曲がってください。",
+"kana": "つぎ の かど を ひだり に まがって ください",
+"fr": "Tournez à gauche au prochain coin, s'il vous plaît."
+},
+"w530": {
+"jp": "日本に来て、一月たちました。",
+"kana": "にほん に きて ひとつき たちました",
+"fr": "Cela fait un mois que je suis arrivé au Japon."
+},
+"w531": {
+"jp": "一人でご飯を食べます。",
+"kana": "ひとり で ごはん を たべます",
+"fr": "Je mange seul."
+},
+"w532": {
+"jp": "今日は暇です。",
+"kana": "きょう は ひま です",
+"fr": "Aujourd'hui, je suis libre."
+},
+"w533": {
+"jp": "この本は百円です。",
+"kana": "この ほん は ひゃくえん です",
+"fr": "Ce livre coûte cent yens."
+},
+"w534": {
+"jp": "熱があるので、病院に行きます。",
+"kana": "ねつ が ある ので びょういん に いきます",
+"fr": "J'ai de la fièvre, alors je vais à l'hôpital."
+},
+"w535": {
+"jp": "病気で学校を休みました。",
+"kana": "びょうき で がっこう を やすみました",
+"fr": "J'ai été absent de l'école à cause d'une maladie."
+},
+"w536": {
+"jp": "平仮名は全部書けます。",
+"kana": "ひらがな は ぜんぶ かけます",
+"fr": "Je sais écrire tous les hiragana."
+},
+"w537": {
+"jp": "昼はいつもパンを食べます。",
+"kana": "ひる は いつも パン を たべます",
+"fr": "À midi, je mange toujours du pain."
+},
+"w538": {
+"jp": "昼御飯はいつも一人で食べます。",
+"kana": "ひるごはん は いつも ひとり で たべます",
+"fr": "Je déjeune toujours seul."
+},
+"w539": {
+"jp": "この部屋は広いです。",
+"kana": "この へや は ひろい です",
+"fr": "Cette pièce est spacieuse."
+},
+"w540": {
+"jp": "カメラにフィルムを入れます。",
+"kana": "カメラ に フィルム を いれます",
+"fr": "Je mets une pellicule dans l'appareil photo."
+},
+"w541": {
+"jp": "封筒に手紙を入れます。",
+"kana": "ふうとう に てがみ を いれます",
+"fr": "Je mets la lettre dans l'enveloppe."
+},
+"w542": {
+"jp": "夏はプールで泳ぎます。",
+"kana": "なつ は プール で およぎます",
+"fr": "L'été, je nage à la piscine."
+},
+"w543": {
+"jp": "フォークでケーキを食べます。",
+"kana": "フォーク で ケーキ を たべます",
+"fr": "Je mange le gâteau avec une fourchette."
+},
+"w547": {
+"jp": "今日は豚肉を食べます。",
+"kana": "きょう は ぶたにく を たべます",
+"fr": "Aujourd'hui, je mange du porc."
+},
+"w548": {
+"jp": "二人でご飯を食べました。",
+"kana": "ふたり で ごはん を たべました",
+"fr": "Nous avons mangé à deux."
+},
+"w549": {
+"jp": "旅行は二日間です。",
+"kana": "りょこう は ふつか かん です",
+"fr": "Le voyage dure deux jours."
+},
+"w550": {
+"jp": "この木は太いです。",
+"kana": "この き は ふとい です",
+"fr": "Cet arbre est gros."
+},
+"w551": {
+"jp": "冬は雪が降ります。",
+"kana": "ふゆ は ゆき が ふります",
+"fr": "En hiver, il neige."
+},
+"w553": {
+"jp": "この家はとても古いです。",
+"kana": "この いえ は とても ふるい です",
+"fr": "Cette maison est très vieille."
+},
+"w554": {
+"jp": "この文章は少し長いです。",
+"kana": "この ぶんしょう は すこし ながい です",
+"fr": "Ce texte est un peu long."
+},
+"w555": {
+"jp": "この本は百ページあります。",
+"kana": "この ほん は ひゃくページ あります",
+"fr": "Ce livre fait cent pages."
+},
+"w558": {
+"jp": "私はペットに猫を飼っています。",
+"kana": "わたし は ペット に ねこ を かって います",
+"fr": "J'ai un chat comme animal de compagnie."
+},
+"w561": {
+"jp": "このペンは書きやすいです。",
+"kana": "この ペン は かきやすい です",
+"fr": "Ce stylo écrit bien."
+},
+"w564": {
+"jp": "帽子をかぶって、出かけます。",
+"kana": "ぼうし を かぶって でかけます",
+"fr": "Je mets un chapeau et je sors."
+},
+"w565": {
+"jp": "ボールペンで名前を書いてください。",
+"kana": "ボールペン で なまえ を かいて ください",
+"fr": "Écrivez votre nom au stylo à bille, s'il vous plaît."
+},
+"w567": {
+"jp": "鍵はポケットの中にあります。",
+"kana": "かぎ は ポケット の なか に あります",
+"fr": "La clé est dans la poche."
+},
+"w569": {
+"jp": "手紙をポストに入れます。",
+"kana": "てがみ を ポスト に いれます",
+"fr": "Je mets la lettre dans la boîte aux lettres."
+},
+"w572": {
+"jp": "駅の近くにホテルがあります。",
+"kana": "えき の ちかく に ホテル が あります",
+"fr": "Il y a un hôtel près de la gare."
+},
+"w574": {
+"jp": "本棚に新しい本を並べました。",
+"kana": "ほんだな に あたらしい ほん を ならべました",
+"fr": "J'ai rangé de nouveaux livres sur la bibliothèque."
+},
+"w577": {
+"jp": "毎月、友達に会います。",
+"kana": "まいげつ ともだち に あいます",
+"fr": "Je vois des amis tous les mois."
+},
+"w578": {
+"jp": "毎週、日曜日に洗濯します。",
+"kana": "まいしゅう にちようび に せんたく します",
+"fr": "Je fais la lessive tous les dimanches."
+},
+"w581": {
+"jp": "毎晩、十一時に寝ます。",
+"kana": "まいばん じゅういちじ に ねます",
+"fr": "Tous les soirs, je me couche à onze heures."
+},
+"w590": {
+"jp": "マッチで火をつけます。",
+"kana": "マッチ で ひ を つけます",
+"fr": "J'allume le feu avec une allumette."
+},
+"w591": {
+"jp": "窓を開けてもいいですか？",
+"kana": "まど を あけて も いい です か",
+"fr": "Puis-je ouvrir la fenêtre ?"
+},
+"w592": {
+"jp": "丸いテーブルを買いました。",
+"kana": "まるい テーブル を かいました",
+"fr": "J'ai acheté une table ronde."
+},
+"w593": {
+"jp": "この本は一万円です。",
+"kana": "この ほん は いちまんえん です",
+"fr": "Ce livre coûte dix mille yens."
+},
+"w594": {
+"jp": "父は万年筆で手紙を書きます。",
+"kana": "ちち は まんねんひつ で てがみ を かきます",
+"fr": "Mon père écrit ses lettres avec un stylo-plume."
+},
+"w595": {
+"jp": "寝る前に歯を磨きます。",
+"kana": "ねる まえ に は を みがきます",
+"fr": "Je me brosse les dents avant de dormir."
+},
+"w597": {
+"jp": "この鉛筆は短いです。",
+"kana": "この えんぴつ は みじかい です",
+"fr": "Ce crayon est court."
+},
+"w602": {
+"jp": "旅行は三日までです。",
+"kana": "りょこう は みっか まで です",
+"fr": "Le voyage dure jusqu'au 3."
+},
+"w603": {
+"jp": "りんごを三つください。",
+"kana": "りんご を みっつ ください",
+"fr": "Donnez-moi trois pommes, s'il vous plaît."
+},
+"w606": {
+"jp": "南の島に行ってみたいです。",
+"kana": "みなみ の しま に いって みたい です",
+"fr": "J'aimerais aller sur une île du sud."
+},
+"w607": {
+"jp": "耳が痛いです。",
+"kana": "みみ が いたい です",
+"fr": "J'ai mal à l'oreille."
+},
+"w610": {
+"jp": "六日は雨でした。",
+"kana": "むいか は あめ でした",
+"fr": "Le 6, il a plu."
+},
+"w613": {
+"jp": "りんごを六つください。",
+"kana": "りんご を むっつ ください",
+"fr": "Donnez-moi six pommes, s'il vous plaît."
+},
+"w614": {
+"jp": "私は小さい村で生まれました。",
+"kana": "わたし は ちいさい むら で うまれました",
+"fr": "Je suis né dans un petit village."
+},
+"w615": {
+"jp": "目が痛いです。",
+"kana": "め が いたい です",
+"fr": "J'ai mal aux yeux."
+},
+"w616": {
+"jp": "駅まで百メートルです。",
+"kana": "えき まで ひゃくメートル です",
+"fr": "La gare est à cent mètres."
+},
+"w617": {
+"jp": "眼鏡をかけて、本を読みます。",
+"kana": "めがね を かけて ほん を よみます",
+"fr": "Je mets mes lunettes et je lis un livre."
+},
+"w619": {
+"jp": "木曜日は休みです。",
+"kana": "もくようび は やすみ です",
+"fr": "Le jeudi, je suis en congé."
+},
+"w620": {
+"jp": "もしもし、田中ですが。",
+"kana": "もしもし たなか です が",
+"fr": "Allô, ici Tanaka."
+},
+"w624": {
+"jp": "学校の門の前で会いましょう。",
+"kana": "がっこう の もん の まえ で あいましょう",
+"fr": "Retrouvons-nous devant le portail de l'école."
+},
+"w625": {
+"jp": "問題は難しくありませんでした。",
+"kana": "もんだい は むずかしく ありません でした",
+"fr": "Le problème n'était pas difficile."
+},
+"w626": {
+"jp": "八百屋で野菜を買いました。",
+"kana": "やおや で やさい を かいました",
+"fr": "J'ai acheté des légumes chez le marchand de légumes."
+},
+"w627": {
+"jp": "毎日、野菜を食べます。",
+"kana": "まいにち やさい を たべます",
+"fr": "Je mange des légumes tous les jours."
+},
+"w628": {
+"jp": "このテストは易しかったです。",
+"kana": "この テスト は やさしかった です",
+"fr": "Ce test était facile."
+},
+"w632": {
+"jp": "卵を八つ買いました。",
+"kana": "たまご を やっつ かいました",
+"fr": "J'ai acheté huit œufs."
+},
+"w635": {
+"jp": "夕方、犬と散歩します。",
+"kana": "ゆうがた いぬ と さんぽ します",
+"fr": "En fin d'après-midi, je me promène avec le chien."
+},
+"w636": {
+"jp": "夕飯は何を食べますか？",
+"kana": "ゆうはん は なに を たべます か",
+"fr": "Qu'est-ce qu'on mange pour le dîner ?"
+},
+"w637": {
+"jp": "郵便局で切手を買いました。",
+"kana": "ゆうびんきょく で きって を かいました",
+"fr": "J'ai acheté des timbres à la poste."
+},
+"w638": {
+"jp": "ゆうべは早く寝ました。",
+"kana": "ゆうべ は はやく ねました",
+"fr": "Hier soir, je me suis couché tôt."
+},
+"w641": {
+"jp": "もう少しゆっくりと話してください。",
+"kana": "もう すこし ゆっくりと はなして ください",
+"fr": "Parlez un peu plus lentement, s'il vous plaît."
+},
+"w642": {
+"jp": "八日は日曜日です。",
+"kana": "ようか は にちようび です",
+"fr": "Le 8, c'est un dimanche."
+},
+"w643": {
+"jp": "今日は洋服を買いに行きます。",
+"kana": "きょう は ようふく を かい に いきます",
+"fr": "Aujourd'hui, je vais acheter des vêtements."
+},
+"w645": {
+"jp": "私の横に座ってください。",
+"kana": "わたし の よこ に すわって ください",
+"fr": "Asseyez-vous à côté de moi, s'il vous plaît."
+},
+"w646": {
+"jp": "四日に友達と会います。",
+"kana": "よっか に ともだち と あいます",
+"fr": "Le 4, je retrouve un ami."
+},
+"w647": {
+"jp": "りんごを四つ買いました。",
+"kana": "りんご を よっつ かいました",
+"fr": "J'ai acheté quatre pommes."
+},
+"w651": {
+"jp": "私は体が弱いです。",
+"kana": "わたし は からだ が よわい です",
+"fr": "J'ai une santé fragile."
+},
+"w652": {
+"jp": "来月、友達が来ます。",
+"kana": "らいげつ ともだち が きます",
+"fr": "Le mois prochain, un ami vient."
+},
+"w654": {
+"jp": "来年、日本に行く予定です。",
+"kana": "らいねん にほん に いく よてい です",
+"fr": "Je prévois d'aller au Japon l'année prochaine."
+},
+"w655": {
+"jp": "毎晩ラジオを聞きます。",
+"kana": "まいばん ラジオ を ききます",
+"fr": "J'écoute la radio tous les soirs."
+},
+"w656": {
+"jp": "このラジオカセットは古いです。",
+"kana": "この ラジオカセット は ふるい です",
+"fr": "Ce radiocassette est vieux."
+},
+"w658": {
+"jp": "私のクラスに留学生がいます。",
+"kana": "わたし の クラス に りゅうがくせい が います",
+"fr": "Il y a un étudiant étranger dans ma classe."
+},
+"w659": {
+"jp": "両親は田舎に住んでいます。",
+"kana": "りょうしん は いなか に すんで います",
+"fr": "Mes parents habitent à la campagne."
+},
+"w660": {
+"jp": "母は料理が上手です。",
+"kana": "はは は りょうり が じょうず です",
+"fr": "Ma mère cuisine très bien."
+},
+"w662": {
+"jp": "零度より寒いです。",
+"kana": "れいど より さむい です",
+"fr": "Il fait plus froid que zéro degré."
+},
+"w663": {
+"jp": "冷蔵庫に牛乳があります。",
+"kana": "れいぞうこ に ぎゅうにゅう が あります",
+"fr": "Il y a du lait dans le réfrigérateur."
+},
+"w664": {
+"jp": "父は古いレコードを持っています。",
+"kana": "ちち は ふるい レコード を もって います",
+"fr": "Mon père a de vieux disques."
+},
+"w667": {
+"jp": "廊下は走らないでください。",
+"kana": "ろうか は はしらないで ください",
+"fr": "Ne courez pas dans le couloir, s'il vous plaît."
+},
+"w668": {
+"jp": "六時に晩ご飯を食べます。",
+"kana": "ろくじ に ばんごはん を たべます",
+"fr": "Je dîne à six heures."
+},
+"w669": {
+"jp": "白いワイシャツを買いました。",
+"kana": "しろい ワイシャツ を かいました",
+"fr": "J'ai acheté une chemise blanche."
+},
+"w677": {
+"jp": "天気が悪いので、出かけません。",
+"kana": "てんき が わるい ので でかけません",
+"fr": "Comme il fait mauvais, je ne sors pas."
+}
+}

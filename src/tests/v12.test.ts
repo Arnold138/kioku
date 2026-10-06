@@ -62,15 +62,15 @@ describe('décks vidéo (phrases à réviser librement)', () => {
       expect(it.fr.length).toBeGreaterThan(0)
       expect(it.romaji.length).toBeGreaterThan(0)
     }
-    expect(DECKS.filter((d) => d.optIn).map((d) => d.id)).toEqual(['vid1', 'vid2'])
+    expect(DECKS.filter((d) => d.optIn).map((d) => d.id)).toEqual(['vid1', 'vid2', 'vid3'])
     expect(isOptIn('vid1')).toBe(true)
     expect(isOptIn('N5')).toBe(false)
   })
   it('elles ne changent ni les nouvelles cartes du jour ni les phrases d\'échauffement', () => {
     const st = emptyState()
     const q = buildQueue(st, baseItems, ALL, NOW)
-    expect([...q.fresh, ...q.freshProd].some((k) => /^v[12]-/.test(k))).toBe(false)
-    expect(pickWarmup(st, baseItems, 2, NOW).some((k) => /^v[12]-/.test(k))).toBe(false)
+    expect([...q.fresh, ...q.freshProd].some((k) => /^v[123]-/.test(k))).toBe(false)
+    expect(pickWarmup(st, baseItems, 2, NOW).some((k) => /^v[123]-/.test(k))).toBe(false)
   })
   it('on peut les réviser librement quand on choisit le deck', () => {
     const st = emptyState()

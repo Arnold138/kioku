@@ -1,9 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { parseCardId, POS_LABEL, type Item } from '../lib/deck'
 import { RATING_LABELS, dayNumber, newCard, previewLabels, type Rating } from '../lib/scheduler'
-import { dayTotal, streaks, levelFromXp, totalXp } from '../lib/state'
+import { dayTotal, streaks, levelFromXp, totalXp, computeProgress } from '../lib/state'
+import { estimateLevel } from '../lib/level'
+import { countDue } from '../lib/queue'
+import { aidLevel, type Aid } from '../lib/aid'
+import { contextFor } from '../lib/context'
+import { LEECH_AT } from '../lib/insights'
 import { dayKey } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
 import { checkTranslation, checkTyped, type TranslationResult, type TypedResult } from '../lib/typing'
@@ -17,25 +22,72 @@ function sizeClass(jp: string, sentence: boolean) {
   return ''
 }
 
-function Reading({ it, long }: { it: Item; long: boolean }) {
+function Reading({ it, long, kana = true, romaji = true }: { it: Item; long: boolean; kana?: boolean; romaji?: boolean }) {
   return (
     <>
-      {it.kana && it.kana !== it.jp && <div className={'kana-line jp' + (long ? ' long' : '')}>{it.kana}</div>}
-      <div className={'romaji-line' + (long ? ' long' : '')}>{it.romaji}</div>
+      {kana && it.kana && it.kana !== it.jp && <div className={'kana-line jp' + (long ? ' long' : '')}>{it.kana}</div>}
+      {romaji && <div className={'romaji-line' + (long ? ' long' : '')}>{it.romaji}</div>}
     </>
   )
 }
 
-function Speak({ text }: { text: string }) {
+/** Phrases réelles qui utilisent le mot + astuce personnelle. Affiché au verso. */
+function Extras({ it, cardKey, ctx, lapses }: { it: Item; cardKey: string; ctx: Item[]; lapses: number }) {
+  const memo = useStore((st) => st.state.cards[cardKey]?.m)
+  const setMemo = useStore((st) => st.setMemo)
+  const [edit, setEdit] = useState(false)
+  const [v, setV] = useState('')
+  const leech = lapses >= LEECH_AT
+  const canMemo = it.kind !== 'sentence'
+  return (
+    <div className="extras" onClick={(e) => e.stopPropagation()}>
+      {leech && <span className="chip warn">🧲 Mot difficile · oublié {lapses} fois</span>}
+      {ctx.length > 0 && (
+        <div className="ctx">
+          <div className="ctx-label">En contexte</div>
+          {ctx.map((c) => (
+            <div key={c.id} className="ctx-row">
+              <div className="jp ctx-jp">{c.jp}</div>
+              <div className="ctx-fr">{c.fr}</div>
+              <Speak text={c.kana || c.jp} inline />
+            </div>
+          ))}
+        </div>
+      )}
+      {canMemo &&
+        (edit ? (
+          <form
+            className="memo-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setMemo(cardKey, v)
+              setEdit(false)
+            }}
+          >
+            <input autoFocus value={v} maxLength={240} onChange={(e) => setV(e.target.value)} placeholder="Une image, un jeu de mots, un indice…" aria-label="Astuce" />
+            <button className="btn" type="submit">OK</button>
+          </form>
+        ) : memo ? (
+          <button className="memo" onClick={() => { setV(memo); setEdit(true) }}>💡 {memo}</button>
+        ) : (
+          <button className={'memo add' + (leech ? ' strong' : '')} onClick={() => { setV(''); setEdit(true) }}>
+            {leech ? '＋ Ajouter une astuce pour t\'en souvenir' : '＋ Astuce'}
+          </button>
+        ))}
+    </div>
+  )
+}
+
+function Speak({ text, inline }: { text: string; inline?: boolean }) {
   if (!canSpeak()) return null
   return (
-    <button className="icon-btn speak" aria-label="Écouter" onClick={(e) => { e.stopPropagation(); speak(text) }}>
+    <button className={'icon-btn' + (inline ? ' speak-inline' : ' speak')} aria-label="Écouter" onClick={(e) => { e.stopPropagation(); speak(text) }}>
       {Icon.speaker()}
     </button>
   )
 }
 
-function Front({ it, dir, reading, typing }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean }) {
+function Front({ it, dir, reading, typing, aid }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean; aid: Aid }) {
   const [shown, setShown] = useState(false)
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
@@ -48,15 +100,22 @@ function Front({ it, dir, reading, typing }: { it: Item; dir: 'r' | 'p'; reading
       </div>
     )
   }
-  const showReading = reading === 'always' || (reading === 'tap' && shown)
+  // Aide à la lecture : tout / sans rōmaji / sans rien (selon la solidité de la carte), un tap affiche tout.
+  const mode: Aid = shown ? 'full' : reading === 'always' ? aid : reading === 'tap' ? 'none' : 'none'
+  const fadedHelp = reading === 'always' && aid !== 'full'
   return (
     <div className="face front">
       <span className="chip kind">{it.kind === 'sentence' ? 'Phrase' : it.lvl}</span>
       <Speak text={it.kana || it.jp} />
       <div className={'word-jp jp ' + sizeClass(it.jp, it.kind === 'sentence')}>{it.jp}</div>
-      {showReading ? (
+      {mode === 'full' ? (
         <Reading it={it} long={long} />
-      ) : reading === 'tap' ? (
+      ) : mode === 'kana' ? (
+        <>
+          <Reading it={it} long={long} romaji={false} />
+          <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir le rōmaji</button>
+        </>
+      ) : reading === 'tap' || fadedHelp ? (
         <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir la lecture</button>
       ) : null}
       {it.kind === 'sentence' && <div className="hint">Que veut dire cette phrase ?</div>}
@@ -64,7 +123,7 @@ function Front({ it, dir, reading, typing }: { it: Item; dir: 'r' | 'p'; reading
   )
 }
 
-function Back({ it, dir, typed, tr }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null }) {
+function Back({ it, dir, typed, tr, extras }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null; extras: JSX.Element }) {
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
     return (
@@ -80,6 +139,7 @@ function Back({ it, dir, typed, tr }: { it: Item; dir: 'r' | 'p'; typed: TypedRe
         <Reading it={it} long={long} />
         <div className="divider" />
         <div className="hint">{it.fr}</div>
+        {extras}
       </div>
     )
   }
@@ -102,12 +162,13 @@ function Back({ it, dir, typed, tr }: { it: Item; dir: 'r' | 'p'; typed: TypedRe
         <span className="chip">{it.lvl}</span>
         {it.note && <span className="chip accent">{it.note}</span>}
       </div>
+      {extras}
     </div>
   )
 }
 
 export function Study() {
-  const { session: s, byId, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings } = useStore()
+  const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings } = useStore()
   const now = Date.now()
   const today = dayNumber(now)
 
@@ -119,6 +180,45 @@ export function Study() {
   const item = parsed ? byId.get(parsed.itemId) : undefined
   const card = cardKey ? state.cards[cardKey] ?? newCard(now) : null
   const labels = useMemo(() => (card ? previewLabels(card, now, today) : null), [cardKey, s?.revealed]) // eslint-disable-line
+
+  const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
+  const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
+  const lapses = card?.l ?? 0
+
+  // Gestes (iPhone) : une fois la carte retournée, glisser à droite = Bien, à gauche = Oublié.
+  const [dx, setDx] = useState(0)
+  const swipe = useRef<{ x: number; y: number; active: boolean } | null>(null)
+  const swipeOn = !!s && state.settings.swipe && s.revealed && !!s.current && !s.finished
+  const onDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (!swipeOn || (e.target as HTMLElement).closest('input,textarea,button,form')) return
+    swipe.current = { x: e.clientX, y: e.clientY, active: false }
+  }
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    const g = swipe.current
+    if (!g) return
+    const mx = e.clientX - g.x
+    const my = e.clientY - g.y
+    if (!g.active) {
+      if (Math.abs(my) > 14 && Math.abs(my) > Math.abs(mx)) {
+        swipe.current = null
+        return
+      }
+      if (Math.abs(mx) > 14 && Math.abs(mx) > Math.abs(my) * 1.4) {
+        g.active = true
+        e.currentTarget.setPointerCapture(e.pointerId)
+      } else return
+    }
+    setDx(Math.max(-220, Math.min(220, mx)))
+  }
+  const onUp = () => {
+    const g = swipe.current
+    swipe.current = null
+    const moved = dx
+    setDx(0)
+    if (!g?.active || !swipeOn) return
+    if (moved > 105) rate(4)
+    else if (moved < -105) rate(1)
+  }
 
   // la saisie repart de zéro à chaque carte
   useEffect(() => {
@@ -171,6 +271,10 @@ export function Study() {
     const mins = Math.max(1, Math.round((now - s.start) / 60000))
     const lv = levelFromXp(totalXp(state))
     const met = dayTotal(state, day).n >= state.settings.goal
+    const deferred = s.filter.free || s.practice ? 0 : countDue(state, items, s.filter, now).deferred
+    const prog = computeProgress(state, items)
+    const est = estimateLevel(prog.wordsKnownR)
+    const toNext = est.next ? Math.max(0, est.next.at - prog.wordsKnownR) : 0
     return (
       <motion.div className="study" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="study-top">
@@ -217,10 +321,26 @@ export function Study() {
                 <div className="stat"><b>{acc}%</b><span>retenues</span></div>
                 <div className="stat"><b>+{s.xp}</b><span>XP</span></div>
               </div>
-              <p className="muted small" style={{ margin: '6px 0 0' }}>Niveau {lv.level} · {mins} min</p>
-              {s.newSeen > 0 && <p className="muted small" style={{ margin: 0 }}>{s.newSeen} nouvelle{s.newSeen > 1 ? 's' : ''} carte{s.newSeen > 1 ? 's' : ''} découverte{s.newSeen > 1 ? 's' : ''}</p>}
-              <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
-              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra + 10, { typeTr: s.typeTr })}>Encore 10 cartes</button>
+              <div className="sum-prog">
+                <div className="row spread small"><b>Niveau {lv.level}</b><span className="muted tnum">{lv.next - totalXp(state)} XP avant le niveau {lv.level + 1}</span></div>
+                <div className="bar thin"><i style={{ width: `${Math.round(lv.pct * 100)}%` }} /></div>
+                {est.next && (
+                  <div className="row spread small" style={{ marginTop: 10 }}>
+                    <b>{est.milestone.label}</b>
+                    <span className="muted tnum">encore {toNext} mot{toNext > 1 ? 's' : ''} pour « {est.next.label} »</span>
+                  </div>
+                )}
+                {est.next && <div className="bar thin"><i style={{ width: `${Math.round(est.pct * 100)}%` }} /></div>}
+              </div>
+              <p className="muted small" style={{ margin: 0 }}>
+                {mins} min{s.newSeen > 0 ? ` · ${s.newSeen} nouvelle${s.newSeen > 1 ? 's' : ''} carte${s.newSeen > 1 ? 's' : ''} découverte${s.newSeen > 1 ? 's' : ''}` : ''}
+                {deferred > 0 ? ` · ${deferred} révision${deferred > 1 ? 's' : ''} reportée${deferred > 1 ? 's' : ''} à demain` : ''}
+              </p>
+              <button className="btn block" style={{ marginTop: 10 }} onClick={endSession}>Terminer</button>
+              {deferred > 0 && (
+                <button className="btn plain block" onClick={() => startSession({ ...s.filter, moreReviews: 10 }, s.extra, { typeTr: s.typeTr })}>Encore 10 révisions</button>
+              )}
+              <button className="btn plain block" onClick={() => startSession(s.filter, s.extra + 10, { typeTr: s.typeTr })}>{deferred > 0 ? 'Découvrir 10 nouvelles cartes' : 'Encore 10 cartes'}</button>
             </>
           )}
         </div>
@@ -258,7 +378,21 @@ export function Study() {
         )}
       </div>
 
-      <div className="stage" onClick={() => !s.revealed && reveal()}>
+      <div
+        className={'stage' + (swipeOn ? ' swipeable' : '')}
+        onClick={() => !s.revealed && reveal()}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerCancel={onUp}
+      >
+        {swipeOn && (
+          <>
+            <div className="swipe-tag left" style={{ opacity: Math.min(1, Math.max(0, -dx - 20) / 85) }}>😣 Oublié</div>
+            <div className="swipe-tag right" style={{ opacity: Math.min(1, Math.max(0, dx - 20) / 85) }}>Bien 🙂</div>
+          </>
+        )}
+        <div className="swipe-wrap" style={dx ? { transform: `translateX(${dx * 0.6}px) rotate(${dx / 40}deg)`, transition: 'none' } : undefined}>
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={cardKey}
@@ -268,10 +402,11 @@ export function Study() {
             exit={{ x: -70, opacity: 0, transition: { duration: 0.18 } }}
             transition={{ rotateY: { type: 'spring', stiffness: 220, damping: 24 }, x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
           >
-            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} />
-            <Back it={item} dir={parsed!.dir} typed={typed} tr={tr} />
+            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} aid={aid} />
+            <Back it={item} dir={parsed!.dir} typed={typed} tr={tr} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
           </motion.div>
         </AnimatePresence>
+        </div>
       </div>
 
       <div className="study-bottom">
@@ -333,6 +468,8 @@ export function Study() {
         ) : !s.revealed ? (
           <button className="btn show-btn" onClick={reveal}>Afficher la réponse</button>
         ) : (
+          <>
+          {swipeOn && s.answered < 2 && !s.practice && <div className="swipe-hint">↔ Glisse la carte : à droite « Bien », à gauche « Oublié »</div>}
           <div className="rate-grid">
             {([1, 2, 3, 4, 5] as Rating[]).map((r) => (
               <button key={r} className={`rate r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)}>
@@ -342,6 +479,7 @@ export function Study() {
               </button>
             ))}
           </div>
+          </>
         )}
       </div>
     </motion.div>

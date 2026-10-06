@@ -17,6 +17,7 @@ export interface CardState {
   l: number // nombre d'oublis (lapses)
   li: number // intervalle prévu après réapprentissage
   t: number // date de dernière modification (ms)
+  m?: string // astuce personnelle (moyen mnémotechnique). Ajouté en v1.3 — optionnel, voyage avec la carte
 }
 
 export const LEARN_STEPS = [1, 10] // minutes

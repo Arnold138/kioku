@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useStore, getBackup } from '../lib/store'
 import { Segmented, Stepper, Toggle } from './ui'
-import { getStoredConfig, hasEnvConfig, reconnect, saveConfig, signIn, signOut, signUp, syncNow } from '../lib/sync'
+import { fetchRemoteSnapshot, getStoredConfig, hasEnvConfig, listRemoteSnapshots, reconnect, saveConfig, signIn, signOut, signUp, syncNow, type RemoteSnap } from '../lib/sync'
+import { getLocal, listLocal, saveLocal, type SnapMeta } from '../lib/snapshots'
 
 function Row({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
@@ -80,6 +81,84 @@ function SyncCard() {
   )
 }
 
+const KIND_LABEL: Record<SnapMeta['kind'], string> = { auto: 'Automatique', manuel: 'Manuelle', 'avant-restauration': 'Avant une restauration' }
+const fmtDate = (t: number) => new Date(t).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+
+/** Historique : points de restauration locaux (toujours) + copies hebdomadaires du cloud (si la table existe). */
+function Snapshots() {
+  const { state, restoreSnapshot } = useStore()
+  const [local, setLocal] = useState<SnapMeta[]>([])
+  const [remote, setRemote] = useState<RemoteSnap[] | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [note, setNote] = useState('')
+  const sync = useStore((st) => st.sync)
+
+  const refresh = useCallback(async () => {
+    setLocal(await listLocal())
+    setRemote(await listRemoteSnapshots())
+  }, [])
+  useEffect(() => {
+    void refresh()
+  }, [refresh, sync.status])
+
+  const create = async () => {
+    setBusy(true)
+    const ok = await saveLocal(state, 'manuel')
+    setNote(ok ? 'Point de restauration créé ✓' : 'Impossible de créer le point (stockage indisponible).')
+    await refresh()
+    setBusy(false)
+  }
+  const doRestore = async (json: string | null, label: string) => {
+    if (!json) return setNote('Copie introuvable.')
+    if (!confirm(`Revenir à la copie du ${label} ? Tes cartes reprendront l'état de cette copie. Un point « avant restauration » est créé juste avant, pour pouvoir annuler.`)) return
+    setBusy(true)
+    await saveLocal(state, 'avant-restauration')
+    const ok = restoreSnapshot(json)
+    setNote(ok ? `Restauré : ${label} ✓` : 'Copie illisible, rien n\'a été modifié.')
+    await refresh()
+    setBusy(false)
+  }
+
+  return (
+    <div className="list">
+      <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 6 }}>
+        <div style={{ fontWeight: 600 }}>Points de restauration</div>
+        <div className="muted small">Une copie automatique par semaine, gardée sur cet appareil. Tu peux en créer une avant un gros changement.</div>
+      </div>
+      {local.map((sn) => (
+        <div key={sn.id} className="list-row" style={{ gap: 10 }}>
+          <div className="grow">
+            <div style={{ fontWeight: 600 }}>{fmtDate(sn.t)}</div>
+            <div className="muted small tnum">{KIND_LABEL[sn.kind]} · {sn.cards} cartes vues · {sn.reviews} révisions</div>
+          </div>
+          <button className="btn plain" disabled={busy} style={{ padding: '8px 14px', fontSize: 14 }} onClick={async () => doRestore((await getLocal(sn.id))?.data ?? null, fmtDate(sn.t))}>Restaurer</button>
+        </div>
+      ))}
+      {remote && remote.length > 0 && (
+        <>
+          <div className="list-row"><div className="muted small caps">Dans ton compte cloud</div></div>
+          {remote.map((r) => (
+            <div key={r.taken_on} className="list-row" style={{ gap: 10 }}>
+              <div className="grow">
+                <div style={{ fontWeight: 600 }}>Semaine du {new Date(r.taken_on).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                <div className="muted small tnum">{r.cards} cartes vues</div>
+              </div>
+              <button className="btn plain" disabled={busy} style={{ padding: '8px 14px', fontSize: 14 }} onClick={async () => doRestore(await fetchRemoteSnapshot(r.taken_on), r.taken_on)}>Restaurer</button>
+            </div>
+          ))}
+        </>
+      )}
+      <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+        <button className="btn ghost" disabled={busy} onClick={() => void create()}>＋ Créer un point de restauration</button>
+        {sync.email && remote === null && (
+          <div className="muted small">Pour garder aussi l'historique dans ton compte cloud, exécute une fois le fichier <b>supabase/snapshots.sql</b> dans Supabase (facultatif).</div>
+        )}
+        {note && <div className="ok small">{note}</div>}
+      </div>
+    </div>
+  )
+}
+
 export function Settings() {
   const { state, updateSettings, exportJson, importJson, resetAll } = useStore()
   const s = state.settings
@@ -146,6 +225,8 @@ export function Settings() {
       <div>
         <div className="section-title">Affichage</div>
         <div className="list">
+          <Row title="Retirer l'aide peu à peu" sub="Sur les cartes solides, le rōmaji (≥ 21 j) puis le kana (≥ 60 j) disparaissent ; un tap les affiche"><Toggle on={s.fade} onChange={(v) => updateSettings({ fade: v })} /></Row>
+          <Row title="Gestes sur la carte" sub="Glisse la carte retournée : à droite « Bien », à gauche « Oublié »"><Toggle on={s.swipe} onChange={(v) => updateSettings({ swipe: v })} /></Row>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>
               <div style={{ fontWeight: 600 }}>Lecture sur le recto</div>
@@ -167,10 +248,15 @@ export function Settings() {
       </div>
 
       <div>
+        <div className="section-title">Historique des sauvegardes</div>
+        <Snapshots />
+      </div>
+
+      <div>
         <div className="section-title">Données</div>
         <div className="list">
           <button className="list-row tap" onClick={doExport}><span className="grow" style={{ fontWeight: 600 }}>Exporter une sauvegarde (.json)</span></button>
-          {hasBackup && <button className="list-row tap" onClick={doBackup}><span className="grow"><div style={{ fontWeight: 600 }}>Télécharger la copie de sécurité</div><div className="muted small">Faite automatiquement avant la mise à jour 1.1</div></span></button>}
+          {hasBackup && <button className="list-row tap" onClick={doBackup}><span className="grow"><div style={{ fontWeight: 600 }}>Télécharger la copie de sécurité</div><div className="muted small">Faite automatiquement avant la dernière mise à jour</div></span></button>}
           <button className="list-row tap" onClick={() => fileRef.current?.click()}><span className="grow" style={{ fontWeight: 600 }}>Importer une sauvegarde</span></button>
           <button className="list-row tap" onClick={() => { if (confirm('Tout effacer sur cet appareil ? (Ta sauvegarde cloud reste, elle se resynchronisera.)')) resetAll() }}><span className="grow" style={{ fontWeight: 600, color: 'var(--red)' }}>Réinitialiser cet appareil</span></button>
         </div>

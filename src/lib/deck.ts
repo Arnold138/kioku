@@ -57,6 +57,7 @@ export const DECKS: DeckInfo[] = [
   { id: 'phrases', name: 'Phrases', sub: 'À traduire dans la tête', emoji: '💬', hue: 280, sentences: true },
   { id: 'vid1', name: 'Vidéo · Shopping', sub: 'Ken, balade à Taipei', emoji: '🛍️', hue: 340, sentences: true, optIn: true },
   { id: 'vid2', name: 'Vidéo · Loisirs', sub: 'Conversation avec Ayano', emoji: '🎧', hue: 195, sentences: true, optIn: true },
+  { id: 'vid3', name: 'Vidéo · Seto', sub: 'Ken, balade dans sa ville natale', emoji: '🐱', hue: 20, sentences: true, optIn: true },
   { id: 'perso', name: 'Mes cartes', sub: 'Vidéos, animés, notes', emoji: '⭐', hue: 35, sentences: true }
 ]
 export const deckInfo = (id: string): DeckInfo | undefined => DECKS.find((d) => d.id === id)
@@ -106,9 +107,14 @@ const BASE_ITEMS: Item[] = [
   }))
 ]
 
-// Phrases tirées des deux vidéos : dans l'ordre de la vidéo.
+// Phrases tirées des vidéos : dans l'ordre de la vidéo (v1 = Shopping, v2 = Loisirs, v3 = Seto).
+const VIDEOS: Record<string, { deck: string; lvl: Level; note: string; offset: number }> = {
+  v1: { deck: 'vid1', lvl: 'N4', note: 'Vidéo Shopping', offset: 0 },
+  v2: { deck: 'vid2', lvl: 'N3', note: 'Vidéo Loisirs', offset: 1000 },
+  v3: { deck: 'vid3', lvl: 'N4', note: 'Vidéo Seto', offset: 2000 }
+}
 const VIDEO_ITEMS: Item[] = (videoJson as RawVideo[]).map<Item>((v) => {
-  const first = v.id.startsWith('v1')
+  const meta = VIDEOS[v.id.split('-')[0]]
   const n = Number(v.id.split('-')[1])
   return {
     id: v.id,
@@ -118,10 +124,10 @@ const VIDEO_ITEMS: Item[] = (videoJson as RawVideo[]).map<Item>((v) => {
     romaji: toRomaji(v.kana),
     fr: v.fr,
     pos: 'phrase',
-    lvl: first ? 'N4' : 'N3',
-    deck: first ? 'vid1' : 'vid2',
-    order: 400000 + (first ? 0 : 1000) + n,
-    note: first ? 'Vidéo Shopping' : 'Vidéo Loisirs'
+    lvl: meta.lvl,
+    deck: meta.deck,
+    order: 400000 + meta.offset + n,
+    note: meta.note
   }
 })
 BASE_ITEMS.push(...VIDEO_ITEMS)

@@ -11,7 +11,9 @@ import { Bar, Icon } from './ui'
 import { FreeStudy } from './FreeStudy'
 import { DecksSheet } from './Decks'
 import { Exams } from './Exams'
+import { Listening } from './Listening'
 
+const QUICK = 10 // séance « 2 minutes » : 10 cartes
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } }
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 260, damping: 26 } } }
 
@@ -20,6 +22,7 @@ export function Home({ onAdd }: { onAdd: () => void }) {
   const [freeOpen, setFreeOpen] = useState(false)
   const [decksOpen, setDecksOpen] = useState(false)
   const [examsOpen, setExamsOpen] = useState(false)
+  const [listenOpen, setListenOpen] = useState(false)
   const now = Date.now()
   const day = dayKey(dayNumber(now))
   const due = useMemo(() => countDue(state, items, ALL, now), [state, items]) // eslint-disable-line
@@ -104,15 +107,28 @@ export function Home({ onAdd }: { onAdd: () => void }) {
           </p>
         )}
         {due.total > 0 ? (
-          <motion.button whileTap={{ scale: 0.97 }} className="btn white block" style={{ marginTop: 16 }} onClick={() => startSession(ALL, 0, { warm })}>
-            Commencer
-          </motion.button>
+          <>
+            <motion.button whileTap={{ scale: 0.97 }} className="btn white block" style={{ marginTop: 16 }} onClick={() => startSession(ALL, 0, { warm })}>
+              Commencer
+            </motion.button>
+            <div className="hero-actions">
+              <motion.button whileTap={{ scale: 0.97 }} className="btn glass" onClick={() => startSession({ ...ALL, cap: QUICK }, 0)}>⚡ 2 minutes</motion.button>
+              {due.deferred > 0 && (
+                <motion.button whileTap={{ scale: 0.97 }} className="btn glass" onClick={() => startSession({ ...ALL, moreReviews: 10 }, 0)}>＋ 10 révisions</motion.button>
+              )}
+            </div>
+          </>
         ) : (
           <>
-            <p style={{ margin: '12px 0 0', opacity: 0.9 }}>Tout est à jour pour aujourd'hui ✨</p>
-            <motion.button whileTap={{ scale: 0.97 }} className="btn white block" style={{ marginTop: 12 }} onClick={() => startSession(ALL, 10)}>
-              10 cartes de plus
-            </motion.button>
+            <p style={{ margin: '12px 0 0', opacity: 0.9 }}>{due.deferred > 0 ? 'Quota du jour atteint ✨' : 'Tout est à jour pour aujourd\'hui ✨'}</p>
+            <div className="hero-actions">
+              {due.deferred > 0 && (
+                <motion.button whileTap={{ scale: 0.97 }} className="btn white" onClick={() => startSession({ ...ALL, moreReviews: 10 }, 0)}>Encore 10 révisions</motion.button>
+              )}
+              <motion.button whileTap={{ scale: 0.97 }} className={'btn ' + (due.deferred > 0 ? 'glass' : 'white')} onClick={() => startSession(ALL, 10)}>
+                10 nouvelles cartes
+              </motion.button>
+            </div>
           </>
         )}
       </motion.div>
@@ -124,6 +140,14 @@ export function Home({ onAdd }: { onAdd: () => void }) {
           <div className="grow">
             <div style={{ fontWeight: 700 }}>Réviser librement</div>
             <div className="muted small">Mots, thèmes, phrases des vidéos…</div>
+          </div>
+          <span className="chev">›</span>
+        </button>
+        <button className="list-row tap" onClick={() => setListenOpen(true)}>
+          <div className="row-ico" style={{ background: 'hsl(205 90% 91%)' }}>🎧</div>
+          <div className="grow">
+            <div style={{ fontWeight: 700 }}>Écoute</div>
+            <div className="muted small">Comprendre à l'oreille · dictée</div>
           </div>
           <span className="chev">›</span>
         </button>
@@ -153,6 +177,7 @@ export function Home({ onAdd }: { onAdd: () => void }) {
       </motion.div>
 
       <FreeStudy open={freeOpen} onClose={() => setFreeOpen(false)} />
+      <Listening open={listenOpen} onClose={() => setListenOpen(false)} />
       <Exams open={examsOpen} onClose={() => setExamsOpen(false)} />
       <DecksSheet open={decksOpen} onClose={() => setDecksOpen(false)} />
     </motion.div>

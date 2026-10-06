@@ -1,13 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { ACHIEVEMENTS } from '../lib/achievements'
 import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, streaks, totalReviews, totalXp } from '../lib/state'
 import { dayKey, dayNumber } from '../lib/scheduler'
-import { estimateLevel, MILESTONES } from '../lib/level'
-import { Bar } from './ui'
-
-const DECK_LABELS: Array<[string, string]> = [['N5', 'N5 — essentiels'], ['N4', 'N4 — courants'], ['N3', 'N3 — fréquents']]
+import { Roadmap } from './Roadmap'
+import { Leeches } from './Leeches'
+import { forecast, leeches } from '../lib/insights'
 
 export function Progress() {
   const { state, items } = useStore()
@@ -18,10 +17,12 @@ export function Progress() {
   const lv = levelFromXp(xp)
   const title = levelTitle(lv.level)
   const st = streaks(state, now)
-  const estR = estimateLevel(prog.wordsKnownR)
-  const estP = estimateLevel(prog.wordsKnownP)
   const ret = retentionRate(state, 30, now)
   const reviews = totalReviews(state)
+  const [leechOpen, setLeechOpen] = useState(false)
+  const fc = useMemo(() => forecast(state, now, 7), [state]) // eslint-disable-line
+  const maxFc = Math.max(10, ...fc.map((d) => d.n))
+  const leechCount = useMemo(() => leeches(state, items).length, [state, items])
   const minutes = Object.keys(state.daily).reduce((a, d) => a + Math.round(dayTotal(state, d).sec / 60), 0)
 
   // 14 derniers jours
@@ -73,57 +74,48 @@ export function Progress() {
       <div className="kpis">
         <div className="kpi"><b>🔥 {st.current}</b><span>jours de suite (record {st.best})</span></div>
         <div className="kpi"><b>{prog.wordsKnownR}</b><span>mots retenus</span></div>
-        <div className="kpi"><b>{reviews}</b><span>cartes révisées</span></div>
+        <div className="kpi"><b>{reviews}</b><span>{reviews > 1 ? "cartes révisées" : "carte révisée"}</span></div>
         <div className="kpi"><b>{minutes}<small style={{ fontSize: 15 }}> min</small></b><span>de pratique au total</span></div>
         <div className="kpi"><b>{ret === null ? '—' : Math.round(ret * 100) + '%'}</b><span>de réussite (30 j)</span></div>
       </div>
 
-      <div className="card">
-        <div className="muted small" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em' }}>Niveau estimé en direct</div>
-        <div className="row" style={{ gap: 12, marginTop: 10, alignItems: 'stretch' }}>
-          <div className="grow" style={{ background: 'var(--surface-2)', borderRadius: 16, padding: 12 }}>
-            <div className="muted small">Ce que je reconnais</div>
-            <div style={{ fontWeight: 800, fontSize: 19 }}>{estR.milestone.label}</div>
-            <div className="muted small">{estR.milestone.cefr} · {prog.wordsKnownR} mots</div>
-          </div>
-          <div className="grow" style={{ background: 'var(--surface-2)', borderRadius: 16, padding: 12 }}>
-            <div className="muted small">Ce que je sais produire</div>
-            <div style={{ fontWeight: 800, fontSize: 19 }}>{estP.milestone.label}</div>
-            <div className="muted small">{estP.milestone.cefr} · {prog.wordsKnownP} mots</div>
-          </div>
-        </div>
-        <div style={{ margin: '14px 0 6px' }}><Bar pct={estR.pct} /></div>
-        <div className="row spread small muted">
-          <span>{estR.milestone.label}</span><span>{estR.next ? estR.next.label : '—'}</span>
-        </div>
-        <div className="row" style={{ gap: 4, marginTop: 12 }}>
-          {MILESTONES.slice(1).map((m) => (
-            <div key={m.id} style={{ flex: 1, height: 6, borderRadius: 3, background: prog.wordsKnownR >= m.at ? 'var(--accent)' : 'var(--surface-2)' }} title={m.label} />
-          ))}
-        </div>
-        <p className="muted small" style={{ margin: '12px 0 0' }}>
-          Estimation indicative basée sur les mots que tu retiens vraiment (intervalle ≥ 3 jours). Le JLPT teste aussi la grammaire, les kanji et l'écoute.
-        </p>
-      </div>
+      <Roadmap state={state} items={items} />
 
       <div className="card">
-        <div style={{ fontWeight: 700, marginBottom: 12 }}>Couverture du vocabulaire</div>
-        <div className="stack" style={{ gap: 14 }}>
-          {DECK_LABELS.map(([id, label]) => {
-            const k = prog.known[id]
-            if (!k) return null
-            return (
-              <div key={id}>
-                <div className="row spread small" style={{ marginBottom: 6 }}>
-                  <b>{label}</b>
-                  <span className="muted tnum">{k.r}/{k.total} cartes reconnues · {k.p} produites</span>
-                </div>
-                <Bar pct={k.r / k.total} thin />
-              </div>
-            )
-          })}
+        <div className="row spread" style={{ alignItems: 'baseline', marginBottom: 12 }}>
+          <b>Révisions à venir</b>
+          <span className="muted small tnum">{fc.reduce((a, d) => a + d.n, 0)} sur 7 jours</span>
         </div>
+        <div className="fc-bars">
+          {fc.map((d, i) => (
+            <div key={d.dn} className="fc-col">
+              <b className="tnum">{d.n}</b>
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: `${Math.max(4, (d.n / maxFc) * 60)}px` }}
+                transition={{ type: 'spring', stiffness: 90, damping: 16 }}
+                style={{ width: '100%', borderRadius: 6, background: i === 0 ? 'linear-gradient(180deg,var(--accent-2),var(--accent))' : 'color-mix(in srgb, var(--accent) 38%, var(--surface-2))' }}
+              />
+              <small>{d.label}</small>
+            </div>
+          ))}
+        </div>
+        {state.settings.reviewsPerDay > 0 && fc[0].n > state.settings.reviewsPerDay && (
+          <p className="muted small" style={{ margin: '12px 0 0' }}>
+            Aujourd'hui, {fc[0].n} cartes sont dues : ton quota est de {state.settings.reviewsPerDay} par jour, le reste glisse sur les jours suivants (les plus difficiles d'abord).
+          </p>
+        )}
       </div>
+
+      <button className="card leech-card tap" onClick={() => setLeechOpen(true)}>
+        <div className="row-ico" style={{ background: 'hsl(35 95% 90%)' }}>🧲</div>
+        <div className="grow" style={{ textAlign: 'left' }}>
+          <div style={{ fontWeight: 700 }}>Mots difficiles</div>
+          <div className="muted small">{leechCount ? `${leechCount} mot${leechCount > 1 ? 's' : ''} souvent oublié${leechCount > 1 ? 's' : ''} · ajoute une astuce` : 'Aucun pour le moment'}</div>
+        </div>
+        <span className="chev">›</span>
+      </button>
+      <Leeches open={leechOpen} onClose={() => setLeechOpen(false)} />
 
       <div className="card">
         <div style={{ fontWeight: 700, marginBottom: 12 }}>14 derniers jours</div>

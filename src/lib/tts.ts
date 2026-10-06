@@ -14,12 +14,12 @@ if (typeof speechSynthesis !== 'undefined') {
 export const canSpeak = () => typeof speechSynthesis !== 'undefined'
 
 /** Lit un texte japonais à voix haute (on privilégie les kana pour éviter les erreurs de lecture des kanji). */
-export function speak(text: string) {
+export function speak(text: string, rate = 0.85) {
   if (!canSpeak() || !text) return
   speechSynthesis.cancel()
   const u = new SpeechSynthesisUtterance(text.replace(/[\s。、！？]/g, (m) => (/\s/.test(m) ? '' : m)))
   u.lang = 'ja-JP'
-  u.rate = 0.85
+  u.rate = rate
   if (voice) u.voice = voice
   speechSynthesis.speak(u)
 }

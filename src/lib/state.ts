@@ -18,6 +18,10 @@ export interface Settings {
   typing: boolean
   /** Maximum de révisions (cartes déjà apprises) proposées par jour ; 0 = illimité. Ajouté en v1.3 — absent des anciennes sauvegardes. */
   reviewsPerDay: number
+  /** Retire peu à peu l'aide à la lecture (rōmaji, puis kana) sur les cartes solides. Ajouté en v1.3. */
+  fade: boolean
+  /** Gestes : glisser la carte à droite = Bien, à gauche = Oublié. Ajouté en v1.3. */
+  swipe: boolean
   _t: number
 }
 
@@ -52,6 +56,8 @@ export const DEFAULT_SETTINGS: Settings = {
   preSentences: 0,
   typing: false,
   reviewsPerDay: 30,
+  fade: true,
+  swipe: true,
   _t: 0
 }
 

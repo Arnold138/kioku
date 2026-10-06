@@ -2,7 +2,8 @@
 // une seule ligne JSON par utilisateur. L'app reste 100 % utilisable hors ligne.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { useStore } from './store'
-import { mergeStates, sanitize } from './state'
+import { mergeStates, sanitize, type AppState } from './state'
+import { seenCards, weekId } from './snapshots'
 
 const LS_CFG = 'kioku:supabase'
 let client: SupabaseClient | null = null
@@ -74,6 +75,7 @@ export async function syncNow(): Promise<void> {
       .upsert({ user_id: user.id, data: merged, updated_at: new Date().toISOString() })
     if (upErr) throw upErr
     setSync({ status: 'ok', email: user.email ?? undefined, last: Date.now() })
+    void pushWeeklySnapshot(sb, user.id, merged)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     setSync({ status: 'error', email: user.email ?? undefined, message: msg })
@@ -141,3 +143,57 @@ export async function reconnect() {
 }
 
 export { mergeStates }
+
+
+// ───────── Historique cloud (optionnel) ─────────
+// Une copie par semaine dans la table `kioku_snapshots` (voir supabase/snapshots.sql). Si la table n'existe pas encore,
+// tout est ignoré en silence : l'app et la synchro normale ne sont pas affectées.
+const LS_REMOTE_WEEK = 'kioku:snap-remote-week'
+const KEEP_REMOTE = 8
+
+export interface RemoteSnap {
+  taken_on: string
+  cards: number
+}
+
+export async function pushWeeklySnapshot(sb: SupabaseClient, userId: string, state: AppState): Promise<void> {
+  try {
+    if (seenCards(state) === 0) return
+    const wk = weekId(Date.now())
+    if (localStorage.getItem(LS_REMOTE_WEEK) === wk) return
+    const { error } = await sb.from('kioku_snapshots').upsert({ user_id: userId, taken_on: wk, data: state }, { onConflict: 'user_id,taken_on' })
+    if (error) return // table absente ou refus : on n'insiste pas
+    localStorage.setItem(LS_REMOTE_WEEK, wk)
+    const { data } = await sb.from('kioku_snapshots').select('taken_on').eq('user_id', userId).order('taken_on', { ascending: false })
+    const old = (data ?? []).slice(KEEP_REMOTE).map((r) => r.taken_on as string)
+    if (old.length) await sb.from('kioku_snapshots').delete().eq('user_id', userId).in('taken_on', old)
+  } catch {
+    /* ignoré */
+  }
+}
+
+export async function listRemoteSnapshots(): Promise<RemoteSnap[] | null> {
+  const sb = getClient()
+  if (!sb) return null
+  try {
+    const { data: sess } = await sb.auth.getSession()
+    if (!sess.session) return null
+    const { data, error } = await sb.from('kioku_snapshots').select('taken_on, data').order('taken_on', { ascending: false })
+    if (error || !data) return null
+    return data.map((r) => ({ taken_on: r.taken_on as string, cards: seenCards(sanitize(r.data)) }))
+  } catch {
+    return null
+  }
+}
+
+export async function fetchRemoteSnapshot(takenOn: string): Promise<string | null> {
+  const sb = getClient()
+  if (!sb) return null
+  try {
+    const { data, error } = await sb.from('kioku_snapshots').select('data').eq('taken_on', takenOn).maybeSingle()
+    if (error || !data) return null
+    return JSON.stringify(data.data)
+  } catch {
+    return null
+  }
+}

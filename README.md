@@ -4,6 +4,20 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.3
+
+- **Quota de révisions par jour** (Réglages, 30 par défaut) : les cartes les plus difficiles passent en premier, le reste est reporté à demain. **« Encore 10 révisions »** et **« ⚡ 2 minutes »** (10 cartes) sur l'accueil.
+- **Ton niveau, bien visible** : écran *Progrès* avec une feuille de route (ce que tu as atteint, ce qu'il reste à atteindre pour N5 → N3), la couverture par thème, les cartes difficiles et les **prévisions des 7 prochains jours**.
+- **L'aide à la lecture s'efface** quand un mot est bien appris : le rōmaji disparaît à 21 jours d'intervalle, le kana à 60 jours (réglable dans Réglages, jamais enregistré dans la sauvegarde).
+- **Mots difficiles (leeches)** : après 4 oublis, un mot est signalé ; tu peux lui écrire une **astuce mémo** et le travailler dans une séance dédiée.
+- **Écoute** : *écoute → sens* et *dictée*, avec la voix du téléphone.
+- **Mots en contexte** : chaque mot montre jusqu'à deux phrases. Les phrases de vidéos (japonais natif) passent d'abord, puis 364 phrases d'exemple écrites pour les mots N5 qui n'en avaient pas (`src/data/examples.json`).
+- **Nouveau deck « Vidéo · Seto »** (235 phrases de la vidéo de Ken) — optionnel, à choisir dans *Réviser librement*.
+- **Gestes** : glisser la carte vers la droite (je savais) ou la gauche (à revoir), désactivable.
+- **Écran de fin de séance** plus clair, avec la progression des niveaux.
+- **Sauvegardes** : copie automatique hebdomadaire sur l'appareil (et dans Supabase si tu exécutes `supabase/snapshots.sql`), avec **restauration** depuis Réglages.
+- **Sécurité** : même format (`kioku:v1`, `v: 1`), seulement des champs optionnels ajoutés ; une copie `kioku:backup:avant-v1.3` est faite à la première ouverture.
+
 ## Nouveautés de la version 1.2
 
 - **Réviser librement, réparé sur iPhone** : la feuille ne dépasse plus de l'écran (la hauteur s'adapte à la barre Safari), le corps défile jusqu'en bas, le bouton **Commencer** reste toujours visible et la croix **✕** permet de fermer à tout moment.

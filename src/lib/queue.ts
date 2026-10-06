@@ -14,6 +14,9 @@ export interface Filter {
   scope?: Scope // défaut : normal
   free?: boolean // séance libre : ignore la limite quotidienne de nouvelles cartes
   limit?: number // nombre max de cartes (séance libre)
+  moreReviews?: number // révisions supplémentaires au-delà du quota du jour (« Encore 10 révisions »)
+  cap?: number // nombre max de cartes pour toute la séance (séance de 2 minutes)
+  ids?: string[] // ne garder que ces éléments (ex. mots difficiles)
 }
 export const ALL: Filter = { deck: 'all', pos: 'all' }
 
@@ -33,6 +36,7 @@ export function posGroup(pos: string): PosGroup {
 }
 
 export function passes(it: Item, f: Filter): boolean {
+  if (f.ids && !f.ids.includes(it.id)) return false
   if (f.deck !== 'all' && it.deck !== f.deck) return false
   if (f.theme) {
     if (it.kind !== 'word' || !inTheme(it.id, f.theme)) return false
@@ -97,7 +101,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   let kept = review
   const quota = state.settings.reviewsPerDay
   if (!f.free && scope !== 'practice' && quota > 0) {
-    const left = Math.max(0, quota - (dt.rv ?? 0))
+    const left = Math.max(0, quota - (dt.rv ?? 0)) + (f.moreReviews ?? 0)
     if (review.length > left) {
       kept = [...review].sort((a, b) => b[2].l - a[2].l || a[2].e - b[2].e || a[0] - b[0]).slice(0, left)
     }
