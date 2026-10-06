@@ -122,6 +122,13 @@ export function Settings() {
         <div className="section-title" style={{ marginTop: 0 }}>Objectifs</div>
         <div className="list">
           <Row title="Nouvelles cartes / jour" sub="Mots et phrases découverts chaque jour"><Stepper value={s.newPerDay} min={0} max={60} step={5} onChange={(v) => updateSettings({ newPerDay: v })} /></Row>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Révisions max / jour</div>
+              <div className="muted small">Les cartes en trop sont reportées au lendemain : les plus difficiles passent en premier</div>
+            </div>
+            <Segmented value={String(s.reviewsPerDay)} onChange={(v) => updateSettings({ reviewsPerDay: Number(v) })} options={[['10', '10'], ['20', '20'], ['30', '30'], ['50', '50'], ['100', '100'], ['0', 'Illimité']]} />
+          </div>
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
           <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}

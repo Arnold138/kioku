@@ -170,14 +170,15 @@ export const useStore = create<Store>((set, get) => {
   }
 
   const addToDay = (state: AppState, dev: string, day: string, delta: Partial<DayStat>): AppState['daily'] => {
-    const cur = state.daily[day]?.[dev] ?? { n: 0, nw: 0, np: 0, ok: 0, xp: 0, sec: 0 }
+    const cur = state.daily[day]?.[dev] ?? { n: 0, nw: 0, np: 0, ok: 0, xp: 0, sec: 0, rv: 0 }
     const upd: DayStat = {
       n: cur.n + (delta.n ?? 0),
       nw: cur.nw + (delta.nw ?? 0),
       np: cur.np + (delta.np ?? 0),
       ok: cur.ok + (delta.ok ?? 0),
       xp: cur.xp + (delta.xp ?? 0),
-      sec: cur.sec + (delta.sec ?? 0)
+      sec: cur.sec + (delta.sec ?? 0),
+      rv: (cur.rv ?? 0) + (delta.rv ?? 0)
     }
     return { ...state.daily, [day]: { ...(state.daily[day] ?? {}), [dev]: upd } }
   }
@@ -397,6 +398,7 @@ export const useStore = create<Store>((set, get) => {
         ok: r >= 2 ? 1 : 0,
         nw: wasNew && dir === 'r' ? 1 : 0,
         np: wasNew && dir === 'p' ? 1 : 0,
+        rv: card.s === 'review' ? 1 : 0, // compte pour le quota de révisions du jour
         xp,
         sec
       })

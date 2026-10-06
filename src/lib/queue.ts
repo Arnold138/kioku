@@ -1,7 +1,7 @@
 import { isOptIn, type Item } from './deck'
 import type { AppState } from './state'
 import { dayTotal } from './state'
-import { dayKey, dayNumber, isDue } from './scheduler'
+import { dayKey, dayNumber, isDue, type CardState } from './scheduler'
 import { inTheme } from './themes'
 
 export type PosGroup = 'all' | 'verbs' | 'adjs' | 'nouns' | 'others'
@@ -52,6 +52,8 @@ export interface QueueBuild {
   freshProd: string[]
   newLeft: number
   prodLeft: number
+  /** Révisions dues mais reportées à un autre jour à cause du quota quotidien. */
+  deferred: number
 }
 
 /** Construit les files du jour. Les identifiants sont des « card ids » : `w12:r`, `w12:p`. */
@@ -65,7 +67,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   const prodLeft = !state.settings.production ? 0 : f.free ? cap : Math.max(0, state.settings.prodPerDay + Math.floor(extraNew / 2) - dt.np)
 
   const learning: Array<[number, string]> = []
-  const review: Array<[number, string]> = []
+  const review: Array<[number, string, CardState]> = []
   const fresh: string[] = []
   const freshProd: string[] = []
 
@@ -77,7 +79,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
       if (scope === 'new') break
       if (!c || c.s === 'new') continue
       if (!isDue(c, now, today)) continue
-      if (c.s === 'review') review.push([c.d, key])
+      if (c.s === 'review') review.push([c.d, key, c])
       else if (c.d <= now + 20 * 60_000) learning.push([c.d, key])
     }
     if (!r || r.s === 'new') {
@@ -90,10 +92,21 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   }
   // Apprentissage : ce qui est dû d'abord ; révisions : les plus en retard d'abord
   learning.sort((a, b) => a[0] - b[0])
-  review.sort((a, b) => a[0] - b[0])
+  // Quota quotidien de révisions (0 = illimité). Ne concerne ni l'apprentissage en cours, ni les séances libres.
+  // Priorité : les cartes les plus difficiles (plus d'oublis, facilité basse), puis les plus en retard.
+  let kept = review
+  const quota = state.settings.reviewsPerDay
+  if (!f.free && scope !== 'practice' && quota > 0) {
+    const left = Math.max(0, quota - (dt.rv ?? 0))
+    if (review.length > left) {
+      kept = [...review].sort((a, b) => b[2].l - a[2].l || a[2].e - b[2].e || a[0] - b[0]).slice(0, left)
+    }
+  }
+  kept.sort((a, b) => a[0] - b[0])
   return {
     learning: learning.map((x) => x[1]),
-    review: review.map((x) => x[1]),
+    review: kept.map((x) => x[1]),
+    deferred: review.length - kept.length,
     fresh,
     freshProd,
     newLeft,
@@ -165,6 +178,7 @@ export function countDue(state: AppState, items: Item[], f: Filter, now: number,
     learning: q.learning.length,
     review: q.review.length,
     fresh: q.fresh.length + q.freshProd.length,
+    deferred: q.deferred,
     total: q.learning.length + q.review.length + q.fresh.length + q.freshProd.length
   }
 }

@@ -16,6 +16,8 @@ export interface Settings {
   preSentences: 0 | 1 | 2
   /** Saisie au clavier sur les cartes de production (FR → JP). Ajouté en v1.1. */
   typing: boolean
+  /** Maximum de révisions (cartes déjà apprises) proposées par jour ; 0 = illimité. Ajouté en v1.3 — absent des anciennes sauvegardes. */
+  reviewsPerDay: number
   _t: number
 }
 
@@ -27,6 +29,7 @@ export interface DayStat {
   ok: number // réponses ≥ Difficile (mémorisées)
   xp: number
   sec: number // secondes passées
+  rv?: number // révisions de cartes déjà apprises (compte pour le quota du jour). Ajouté en v1.3 — optionnel
 }
 
 export interface AppState {
@@ -48,6 +51,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'auto',
   preSentences: 0,
   typing: false,
+  reviewsPerDay: 30,
   _t: 0
 }
 
@@ -87,7 +91,8 @@ export function mergeStates(a: AppState, b: AppState): AppState {
               np: Math.max(cur.np, st.np),
               ok: Math.max(cur.ok, st.ok),
               xp: Math.max(cur.xp, st.xp),
-              sec: Math.max(cur.sec, st.sec)
+              sec: Math.max(cur.sec, st.sec),
+              ...(cur.rv !== undefined || st.rv !== undefined ? { rv: Math.max(cur.rv ?? 0, st.rv ?? 0) } : {})
             }
           : { ...st }
       }
@@ -126,6 +131,7 @@ export function dayTotal(state: AppState, day: string): DayStat {
     t.ok += d.ok
     t.xp += d.xp
     t.sec += d.sec
+    t.rv = (t.rv ?? 0) + (d.rv ?? 0)
   }
   return t
 }

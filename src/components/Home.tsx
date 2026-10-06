@@ -98,6 +98,11 @@ export function Home({ onAdd }: { onAdd: () => void }) {
             <span className="chip">🔁 {due.review + due.learning} à revoir</span>
           </div>
         </div>
+        {due.deferred > 0 && (
+          <p className="small" style={{ margin: '10px 0 0', opacity: 0.85 }}>
+            {due.deferred} révision{due.deferred > 1 ? 's' : ''} reportée{due.deferred > 1 ? 's' : ''} à demain (quota du jour)
+          </p>
+        )}
         {due.total > 0 ? (
           <motion.button whileTap={{ scale: 0.97 }} className="btn white block" style={{ marginTop: 16 }} onClick={() => startSession(ALL, 0, { warm })}>
             Commencer
