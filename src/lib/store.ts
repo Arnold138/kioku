@@ -27,8 +27,9 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.4'
+export const APP_VERSION = '1.5'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
+const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -71,9 +72,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP3)) safeSet(LS_BACKUP3, raw)
   // v1.4 : une 4e copie (les trois premières restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP4)) safeSet(LS_BACKUP4, raw)
+  // v1.5 : une 5e copie (les quatre premières restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP5)) safeSet(LS_BACKUP5, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -135,6 +138,26 @@ export interface Session {
   warm: string[]
   /** réponses écrites : on tape la traduction française avant de retourner la carte */
   typeTr: boolean
+  /** Manches : cartes des manches suivantes (la manche en cours est dans `queue`). Ajouté en v1.5. */
+  later: string[]
+  /** numéro de la manche en cours (à partir de 1) et nombre total de manches */
+  round: number
+  rounds: number
+  /** pause entre deux manches : bilan, puis « Continuer » ou « Arrêter » */
+  pause: boolean
+  /** compteurs au début de la manche en cours (pour le bilan de manche) */
+  roundFrom: { answered: number; forgot: number; missed: number }
+}
+
+/**
+ * Découpe une séance en manches d'environ `chunk` cartes, de tailles égales.
+ * Une séance courte (jusqu'à une manche et demie) reste en un seul morceau.
+ */
+export function splitRounds(queue: string[], chunk: number): { first: string[]; later: string[]; rounds: number } {
+  if (!chunk || chunk <= 0 || queue.length <= chunk + Math.floor(chunk / 2)) return { first: queue, later: [], rounds: 1 }
+  const rounds = Math.max(2, Math.round(queue.length / chunk))
+  const size = Math.ceil(queue.length / rounds)
+  return { first: queue.slice(0, size), later: queue.slice(size), rounds }
 }
 
 interface Store {
@@ -157,6 +180,10 @@ interface Store {
   editCustom: (id: string, c: { jp: string; kana: string; fr: string; note?: string }) => void
   deleteCustom: (id: string) => void
   startSession: (f?: Filter, extra?: number, opts?: { warm?: number; typeTr?: boolean }) => void
+  /** Pause entre deux manches : passe à la manche suivante. */
+  continueRound: () => void
+  /** Pause entre deux manches : arrête la séance (les cartes restantes attendent la prochaine séance). */
+  stopRounds: () => void
   reveal: () => void
   rate: (r: Rating) => void
   markKnown: () => void
@@ -253,6 +280,8 @@ export const useStore = create<Store>((set, get) => {
       id = sorted[0].id
       learn = sorted.slice(1)
     }
+    // fin de manche : petite pause avant la suivante (les cartes ratées de la manche sont déjà revues, cf. « learn ahead »)
+    if (!id && s.later.length) return { ...s, queue, learn, current: null, revealed: false, pause: true }
     if (!id) return { ...s, current: null, finished: true }
     return { ...s, queue, learn, current: id, revealed: false, shownAt: now }
   }
@@ -306,8 +335,8 @@ export const useStore = create<Store>((set, get) => {
     /** Astuce personnelle sur une carte déjà vue : voyage avec la carte (même format de sauvegarde). */
     setMemo: (cardKey, text) => {
       const st = get().state
-      const c = st.cards[cardKey]
-      if (!c) return
+      // carte encore jamais notée : on la crée (elle reste « nouvelle ») pour que l'astuce soit gardée
+      const c = st.cards[cardKey] ?? newCard(Date.now())
       const m = text.trim().slice(0, 240)
       if ((c.m ?? '') === m) return
       const next: CardState = { ...c, t: Date.now() }
@@ -359,14 +388,21 @@ export const useStore = create<Store>((set, get) => {
         if (f.free && f.limit != null) queue = queue.slice(0, f.limit + extra)
         if (f.cap != null) queue = queue.slice(0, f.cap)
       }
+      const total = queue.length
+      const split = splitRounds(queue, state.settings.chunk ?? 10)
       const s: Session = {
         filter: f,
         extra,
-        queue,
+        queue: split.first,
+        later: split.later,
+        round: 1,
+        rounds: split.rounds,
+        pause: false,
+        roundFrom: { answered: 0, forgot: 0, missed: 0 },
         learn: [],
         current: null,
         revealed: false,
-        total: queue.length,
+        total,
         done: 0,
         answered: 0,
         forgot: 0,
@@ -383,6 +419,31 @@ export const useStore = create<Store>((set, get) => {
         seen: []
       }
       set({ session: pickNext(s, now) })
+    },
+
+    continueRound: () => {
+      const s = get().session
+      if (!s || !s.pause) return
+      const now = Date.now()
+      const left = Math.max(1, s.rounds - s.round)
+      const size = Math.ceil(s.later.length / left)
+      const ns: Session = {
+        ...s,
+        queue: [...s.queue, ...s.later.slice(0, size)],
+        later: s.later.slice(size),
+        round: s.round + 1,
+        pause: false,
+        roundFrom: { answered: s.answered, forgot: s.forgot, missed: s.missed.length },
+        undo: null
+      }
+      set({ session: pickNext(ns, now) })
+    },
+
+    stopRounds: () => {
+      const s = get().session
+      if (!s || !s.pause) return
+      set({ session: { ...s, pause: false, current: null, finished: true } })
+      finishSession()
     },
 
     reveal: () => {
@@ -523,6 +584,7 @@ export const useStore = create<Store>((set, get) => {
             current: u.cardKey,
             revealed: false,
             finished: false,
+            pause: false,
             answered: Math.max(0, s.answered - 1),
             forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
             xp: Math.max(0, s.xp - u.xp),
@@ -547,6 +609,7 @@ export const useStore = create<Store>((set, get) => {
           current: u.cardKey,
           revealed: false,
           finished: false,
+          pause: false,
           answered: Math.max(0, s.answered - 1),
           forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
           xp: Math.max(0, s.xp - u.xp),
