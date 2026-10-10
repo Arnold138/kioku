@@ -15,6 +15,8 @@ import { dayKey } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
 import { checkTranslation, checkTyped, type TranslationResult, type TypedResult } from '../lib/typing'
 import { Icon } from './ui'
+import { ComboBadge } from './Rewards'
+import { cardComboBonus } from '../lib/rewards'
 
 const RATE_EMOJI: Record<Rating, string> = { 1: '😣', 2: '😕', 3: '🤔', 4: '🙂', 5: '😎' }
 
@@ -435,6 +437,7 @@ export function Study() {
                 <div className="stat"><b>{acc}%</b><span>retenues</span></div>
                 <div className="stat"><b>+{s.xp}</b><span>XP</span></div>
               </div>
+              {(s.bestCombo ?? 0) >= 5 && <p className="combo-line">🔥 Meilleur combo : <b className="tnum">{s.bestCombo}</b> bonnes réponses d'affilée</p>}
               <Missed keys={s.missed} onRetry={() => startSession({ ...ALL, scope: 'practice', keys: s.missed }, 0)} />
               <Natural session={s} />
               <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
@@ -466,6 +469,7 @@ export function Study() {
                 <div className="stat"><b>{acc}%</b><span>retenues</span></div>
                 <div className="stat"><b>+{s.xp}</b><span>XP</span></div>
               </div>
+              {(s.bestCombo ?? 0) >= 5 && <p className="combo-line">🔥 Meilleur combo : <b className="tnum">{s.bestCombo}</b> bonnes réponses d'affilée</p>}
               <div className="sum-prog">
                 <div className="row spread small"><b>Niveau {lv.level}</b><span className="muted tnum">{lv.next - totalXp(state)} XP avant le niveau {lv.level + 1}</span></div>
                 <div className="bar thin"><i style={{ width: `${Math.round(lv.pct * 100)}%` }} /></div>
@@ -518,6 +522,7 @@ export function Study() {
         {s.rounds > 1 && <span className="chip accent tnum">Manche {s.round}/{s.rounds}</span>}
         <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
         {lapses > 0 && <span className={'chip tnum ' + (lapses >= 3 ? 'warn' : 'miss-chip')}>🔥 raté {lapses} fois</span>}
+        <ComboBadge combo={s.combo ?? 0} extra={cardComboBonus((s.combo ?? 0) + 1) ? `+${cardComboBonus((s.combo ?? 0) + 1)} XP` : undefined} />
         {parsed!.dir === 'p' && !s.revealed && (
           <button className="known-btn" onClick={() => updateSettings({ typing: !state.settings.typing })}>
             {state.settings.typing ? '✋ Je réponds dans ma tête' : '⌨️ Écrire la réponse'}

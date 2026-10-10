@@ -1,7 +1,7 @@
 {
   "name": "kioku",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Kioku 記憶 — flashcards japonais avec répétition espacée, progression et synchronisation cloud",
   "type": "module",
   "scripts": {

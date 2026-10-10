@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useStore } from '../lib/store'
-import { ACHIEVEMENTS } from '../lib/achievements'
+import { ACHIEVEMENTS, FAMILIES, TIERS, type Tier } from '../lib/achievements'
 import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, streaks, totalReviews, totalXp } from '../lib/state'
 import { dayKey, dayNumber, misses } from '../lib/scheduler'
 import { Roadmap } from './Roadmap'
@@ -48,6 +48,8 @@ export function Progress() {
   })
 
   const unlocked = ACHIEVEMENTS.filter((a) => state.ach[a.id])
+  const tierCount = (t: Tier) => unlocked.filter((a) => a.tier === t).length
+  const [famOpen, setFamOpen] = useState<string | null>(null)
 
   return (
     <div className="stack">
@@ -161,18 +163,46 @@ export function Progress() {
 
       <div>
         <div className="section-title" style={{ marginTop: 6 }}>Trophées · {unlocked.length}/{ACHIEVEMENTS.length}</div>
-        <div className="trophies">
-          {ACHIEVEMENTS.map((a) => {
-            const got = state.ach[a.id]
-            return (
-              <motion.div key={a.id} className={'trophy' + (got ? '' : ' locked')} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-                <div className="e">{got ? a.emoji : '🔒'}</div>
-                <b>{a.name}</b>
-                <span>{a.desc}</span>
-              </motion.div>
-            )
-          })}
+        <div className="tier-sum">
+          {(Object.keys(TIERS) as Tier[]).map((t) => (
+            <div key={t} className={'tier-pill ' + t}>
+              <span>{TIERS[t].medal}</span>
+              <b className="tnum">{tierCount(t)}</b>
+              <small>{TIERS[t].label}</small>
+            </div>
+          ))}
         </div>
+        {FAMILIES.map((f) => {
+          const list = ACHIEVEMENTS.filter((a) => a.family === f.id)
+          const got = list.filter((a) => state.ach[a.id]).length
+          const open = famOpen === f.id || (famOpen === null && f.id === 'listen')
+          return (
+            <div key={f.id} className="fam">
+              <button className="fam-head" onClick={() => setFamOpen(open ? '' : f.id)}>
+                <b>{f.name}</b>
+                <span className="muted small tnum">{got}/{list.length}</span>
+                <div className="fam-bar"><i style={{ width: `${(got / list.length) * 100}%` }} /></div>
+                <span className={'chev' + (open ? ' open' : '')}>›</span>
+              </button>
+              {open && (
+                <div className="trophies">
+                  {list.map((a) => {
+                    const has = !!state.ach[a.id]
+                    const hidden = a.secret && !has
+                    return (
+                      <motion.div key={a.id} className={'trophy ' + a.tier + (has ? '' : ' locked')} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                        <div className="e">{has ? a.emoji : hidden ? '❔' : '🔒'}</div>
+                        <b>{hidden ? 'Secret' : a.name}</b>
+                        <span>{hidden ? 'À découvrir…' : a.desc}</span>
+                        <em className="tier-tag">{TIERS[a.tier].medal} +{TIERS[a.tier].xp}</em>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

@@ -18,7 +18,8 @@ import { type CardState, type Rating, answer, answerPractice, dayKey, dayNumber,
 import { isNaturalId } from './natural'
 import { type CustomCard, type Item, buildCatalog, parseCardId } from './deck'
 import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } from './queue'
-import { ACHIEVEMENTS, buildStats, newlyUnlocked, type Achievement } from './achievements'
+import { ACHIEVEMENTS, TIERS, buildStats, newlyUnlocked, type Achievement } from './achievements'
+import { ALL_CHALLENGES_BONUS, cardComboBonus, challengeProgress, comboKey, comboStepsReached, listenKey, listenReward, rewardStats, type ListenMode, type ListenReward } from './rewards'
 import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
@@ -27,9 +28,10 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.5'
+export const APP_VERSION = '1.6'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
+const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -74,9 +76,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP4)) safeSet(LS_BACKUP4, raw)
   // v1.5 : une 5e copie (les quatre premières restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP5)) safeSet(LS_BACKUP5, raw)
+  // v1.6 : une 6e copie (les cinq premières restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP6)) safeSet(LS_BACKUP6, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -109,6 +113,8 @@ interface UndoInfo {
   requeued?: boolean // la carte a été remise en fin de file
   newMissed?: boolean // ce raté a ajouté la carte à la liste des ratés de la séance
   newSeen?: boolean // ce mot a été ajouté à la liste des mots vus
+  prevCombo?: number // combo avant cette réponse (v1.6)
+  prevBestCombo?: number
 }
 
 export interface Session {
@@ -147,6 +153,9 @@ export interface Session {
   pause: boolean
   /** compteurs au début de la manche en cours (pour le bilan de manche) */
   roundFrom: { answered: number; forgot: number; missed: number }
+  /** Combo : bonnes réponses d'affilée (un « Oublié » le remet à zéro) et meilleur combo de la séance. Ajouté en v1.6. */
+  combo: number
+  bestCombo: number
 }
 
 /**
@@ -190,7 +199,8 @@ interface Store {
   undo: () => void
   endSession: () => void
   recordExam: (r: { lvl: ExamLevel; mode: ExamMode; ok: number; total: number }) => number
-  recordListen: (r: { mode: 'sens' | 'dictee'; ok: number; total: number }) => number
+  /** Écoute terminée : `results` = juste/faux pour chaque question. Renvoie le détail de l'XP gagné. */
+  recordListen: (r: { mode: ListenMode; results: boolean[] }) => ListenReward
   /** Note une phrase naturelle de fin de séance : « Compris » ou « À revoir » (entre dans le planning comme une vraie carte, + XP). */
   rateSentence: (itemId: string, ok: boolean) => void
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
@@ -199,6 +209,8 @@ interface Store {
   importJson: (json: string) => boolean
   resetAll: () => void
   dismissToast: (id: number) => void
+  /** Vérifie défis du jour et trophées sans action (à l'ouverture, une fois la synchro faite). Ajouté en v1.6. */
+  refreshRewards: () => void
 }
 
 let toastId = 1
@@ -236,6 +248,7 @@ export const useStore = create<Store>((set, get) => {
   const checkAchievements = (perfect = false): void => {
     const { state, items, device } = get()
     const now = Date.now()
+    const before = levelFromXp(totalXp(state)).level
     const level = levelFromXp(totalXp(state)).level
     const st = streaks(state, now)
     const prog = computeProgress(state, items)
@@ -248,19 +261,82 @@ export const useStore = create<Store>((set, get) => {
         bestStreak: st.best,
         perfectSessions: perfect ? 1 : 0,
         hour: new Date(now).getHours(),
+        now,
         ...examStats(state.ach)
       },
-      prog
+      prog,
+      rewardStats(state, now)
     )
     const unlocked: Achievement[] = newlyUnlocked(state, stats)
     if (!unlocked.length) return
     const ach = { ...state.ach }
     unlocked.forEach((a) => (ach[a.id] = now))
-    const bonus = unlocked.length * 15
+    // XP selon le rang du trophée (bronze 20 · argent 40 · or 80 · platine 150)
+    const bonus = unlocked.reduce((n, a) => n + TIERS[a.tier].xp, 0)
     const daily = addToDay({ ...state, ach }, device, today(), { xp: bonus })
     commit({ ach, daily })
-    unlocked.forEach((a) => pushToast({ kind: 'ach', title: 'Trophée débloqué', text: `${a.name} — ${a.desc}`, emoji: a.emoji }))
+    // les plus prestigieux d'abord (seuls les 4 derniers toasts restent affichés)
+    const order: Achievement['tier'][] = ['bronze', 'silver', 'gold', 'platinum']
+    const shown = [...unlocked].sort((a, b) => order.indexOf(a.tier) - order.indexOf(b.tier))
+    if (shown.length > 4) pushToast({ kind: 'ach', title: `${shown.length} trophées débloqués !`, text: `+${bonus} XP · retrouve-les dans Progrès`, emoji: '🏆' })
+    shown.slice(-3).forEach((a) =>
+      pushToast({ kind: 'ach', title: `${a.secret ? 'Trophée secret' : 'Trophée'} ${TIERS[a.tier].label.toLowerCase()} ${TIERS[a.tier].medal}`, text: `${a.name} — ${a.desc} · +${TIERS[a.tier].xp} XP`, emoji: a.emoji })
+    )
     set((s) => ({ confettiTick: s.confettiTick + 1 }))
+    const after = levelFromXp(totalXp(get().state)).level
+    if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+  }
+
+  /** Défis du jour : crédite l'XP des défis tout juste réussis (une seule fois par défi et par jour). */
+  const checkChallenges = (): void => {
+    const { state, device } = get()
+    const now = Date.now()
+    const day = today()
+    const list = challengeProgress(state, day)
+    const fresh = list.filter((c) => c.done && !c.claimed)
+    if (!fresh.length) return
+    const before = levelFromXp(totalXp(state)).level
+    const ach = { ...state.ach }
+    let xp = 0
+    fresh.forEach((c) => {
+      ach[`q:${day}:${c.id}`] = now
+      xp += c.xp
+    })
+    const allDone = list.every((c) => c.done) && !ach[`q:${day}:all`]
+    if (allDone) {
+      ach[`q:${day}:all`] = now
+      xp += ALL_CHALLENGES_BONUS
+    }
+    commit({ ach, daily: addToDay({ ...state, ach }, device, day, { xp }) })
+    fresh.forEach((c) => pushToast({ kind: 'goal', title: 'Défi du jour réussi !', text: `${c.label} · +${c.xp} XP`, emoji: c.emoji }))
+    if (allDone) pushToast({ kind: 'goal', title: 'Les 3 défis du jour ✓', text: `Journée parfaite · +${ALL_CHALLENGES_BONUS} XP bonus`, emoji: '🌈' })
+    set((s) => ({ confettiTick: s.confettiTick + 1 }))
+    const after = levelFromXp(totalXp(get().state)).level
+    if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+  }
+
+  /** Après chaque action qui rapporte : défis du jour, puis trophées. */
+  const afterAction = (perfect = false) => {
+    checkChallenges()
+    checkAchievements(perfect)
+  }
+
+  /** Enregistre les paliers de combo franchis (clés « cb: », synchronisées). */
+  const recordCombo = (before: number, after: number) => {
+    const steps = comboStepsReached(before, after)
+    if (!steps.length) return
+    const { state } = get()
+    const now = Date.now()
+    const ach = { ...state.ach }
+    let changed = false
+    steps.forEach((n) => {
+      const k = comboKey(today(), n)
+      if (!ach[k]) {
+        ach[k] = now
+        changed = true
+      }
+    })
+    if (changed) commit({ ach })
   }
 
   const pickNext = (s: Session, now: number): Session => {
@@ -300,7 +376,7 @@ export const useStore = create<Store>((set, get) => {
         pushToast({ kind: 'level', title: `Niveau ${after} !`, text: 'Bravo, ta progression continue.', emoji: '🎉' })
       }
     }
-    checkAchievements(perfect)
+    afterAction(perfect)
     if (session.answered >= 5) set((s) => ({ confettiTick: s.confettiTick + 1 }))
   }
 
@@ -416,7 +492,9 @@ export const useStore = create<Store>((set, get) => {
         warm,
         typeTr: !!opts?.typeTr,
         missed: [],
-        seen: []
+        seen: [],
+        combo: 0,
+        bestCombo: 0
       }
       set({ session: pickNext(s, now) })
     },
@@ -469,7 +547,10 @@ export const useStore = create<Store>((set, get) => {
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
-      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0)
+      // combo : chaque carte retenue (≥ Difficile) le fait monter, un « Oublié » le remet à zéro
+      const prevCombo = s.combo ?? 0
+      const combo = r >= 2 ? prevCombo + 1 : 0
+      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0) + (r >= 2 ? cardComboBonus(combo) : 0)
       const sec = Math.min(60, Math.round((now - s.shownAt) / 1000))
       const prevDay = state.daily[day]?.[device]
       const daily = addToDay(state, device, day, {
@@ -508,10 +589,13 @@ export const useStore = create<Store>((set, get) => {
         newSeen: s.newSeen + (wasNew ? 1 : 0),
         missed: newMissed ? [...s.missed, key] : s.missed,
         seen: newSeen ? [...s.seen, itemId] : s.seen,
-        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen }
+        combo,
+        bestCombo: Math.max(s.bestCombo ?? 0, combo),
+        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen, prevCombo, prevBestCombo: s.bestCombo ?? 0 }
       }
       ns = pickNext(ns, now)
       set({ session: ns })
+      recordCombo(prevCombo, combo)
 
       // objectif quotidien atteint ?
       const after = get().state
@@ -534,8 +618,8 @@ export const useStore = create<Store>((set, get) => {
         pushToast({ kind: 'level', title: `Niveau ${afterLevel} !`, text: levelLabel(afterLevel), emoji: '🎉' })
         set((x) => ({ confettiTick: x.confettiTick + 1 }))
       }
-      checkAchievements()
       if (get().session?.finished) finishSession()
+      else afterAction()
     },
 
     markKnown: () => {
@@ -592,6 +676,8 @@ export const useStore = create<Store>((set, get) => {
             done: Math.max(0, s.done - (u.requeued ? 0 : 1)),
             missed,
             seen,
+            combo: u.prevCombo ?? 0,
+            bestCombo: u.prevBestCombo ?? s.bestCombo,
             undo: null,
             shownAt: now
           }
@@ -617,6 +703,8 @@ export const useStore = create<Store>((set, get) => {
           done: Math.max(0, s.done - (s.learn.some((l) => l.id === u.cardKey) ? 0 : 1)),
           missed,
           seen,
+          combo: u.prevCombo ?? 0,
+          bestCombo: u.prevBestCombo ?? s.bestCombo,
           undo: null,
           shownAt: now
         }
@@ -637,23 +725,24 @@ export const useStore = create<Store>((set, get) => {
       const after = levelFromXp(totalXp(get().state)).level
       if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
       if (pct >= 0.7) set((x) => ({ confettiTick: x.confettiTick + 1 }))
-      checkAchievements()
+      afterAction()
       return xp
     },
 
-    /** Exercice d'écoute terminé : XP bonus (aucun effet sur le planning des cartes) + historique dans `ach` (clé « l:… »). */
+    /** Exercice d'écoute terminé : XP (réponses + combo + bonus 10/10), sans effet sur le planning des cartes. Historique dans `ach` (clé « l:… »). */
     recordListen: (r) => {
       const { state, device } = get()
       const now = Date.now()
-      const pct = r.total ? r.ok / r.total : 0
-      const xp = Math.round(6 + 14 * pct)
+      const reward = listenReward(r.mode, r.results)
       const before = levelFromXp(totalXp(state)).level
-      const ach = { ...state.ach, [`l:${r.mode === 'sens' ? 's' : 'd'}:${r.ok}:${r.total}:${now}`]: now }
-      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp }) })
+      const ach = { ...state.ach, [listenKey(r.mode, reward.ok, reward.total, now)]: now }
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp: reward.total_xp }) })
+      recordCombo(0, reward.bestCombo)
       const after = levelFromXp(totalXp(get().state)).level
       if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
-      if (pct >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
-      return xp
+      if (reward.total && reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
+      afterAction()
+      return reward
     },
 
     rateSentence: (itemId, ok) => {
@@ -671,7 +760,7 @@ export const useStore = create<Store>((set, get) => {
       commit({ cards: { ...state.cards, [key]: out.card }, daily })
       const after = levelFromXp(totalXp(get().state)).level
       if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
-      checkAchievements()
+      afterAction()
     },
 
     restoreSnapshot: (json) => {
@@ -718,7 +807,11 @@ export const useStore = create<Store>((set, get) => {
       set({ state: fresh, items: cat.items, byId: cat.byId, session: null })
     },
 
-    dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }))
+    dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+
+    refreshRewards: () => {
+      if (get().ready) afterAction()
+    }
   }
 })
 

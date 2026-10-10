@@ -6,6 +6,9 @@ import { isKnown } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
 import { checkTyped } from '../lib/typing'
 import { Sheet } from './ui'
+import type { ListenMode, ListenReward } from '../lib/rewards'
+import { Challenges, ComboBadge, RewardBreakdown, XpPop, listenAnswerXp } from './Rewards'
+import { listenMult, LISTEN_XP_PER } from '../lib/rewards'
 
 type Mode = 'sens' | 'dictee'
 type Src = 'words' | 'sentences'
@@ -55,7 +58,11 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
   const [draft, setDraft] = useState('')
   const [dictOk, setDictOk] = useState<boolean | null>(null)
   const [score, setScore] = useState(0)
-  const [xp, setXp] = useState<number | null>(null)
+  const [results, setResults] = useState<boolean[]>([])
+  const [combo, setCombo] = useState(0)
+  const [pop, setPop] = useState({ id: 0, xp: 0 })
+  const [reward, setReward] = useState<ListenReward | null>(null)
+  const lmode: ListenMode = mode === 'dictee' ? 'd' : src === 'sentences' ? 'p' : 's'
   const savedRef = useRef(false)
 
   const reset = () => {
@@ -65,7 +72,10 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
     setDraft('')
     setDictOk(null)
     setScore(0)
-    setXp(null)
+    setResults([])
+    setCombo(0)
+    setPop({ id: 0, xp: 0 })
+    setReward(null)
     savedRef.current = false
   }
   useEffect(() => {
@@ -84,7 +94,7 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
   useEffect(() => {
     if (done && qs && !savedRef.current) {
       savedRef.current = true
-      setXp(recordListen({ mode, ok: score, total: qs.length }))
+      setReward(recordListen({ mode: lmode, results }))
     }
   }, [done]) // eslint-disable-line
 
@@ -100,16 +110,29 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
     setDraft('')
     setDictOk(null)
   }
+  /** Note une réponse : score, combo et petit « +XP » en direct. */
+  const mark = (ok: boolean) => {
+    setResults((r) => [...r, ok])
+    if (ok) {
+      const c = combo + 1
+      setScore((s) => s + 1)
+      setCombo(c)
+      setPop((p) => ({ id: p.id + 1, xp: listenAnswerXp(lmode, c) }))
+    } else {
+      setCombo(0)
+      setPop((p) => ({ id: p.id + 1, xp: 0 }))
+    }
+  }
   const choose = (c: string) => {
     if (answered || !q) return
     setPicked(c)
-    if (c === q.answer) setScore((s) => s + 1)
+    mark(c === q.answer)
   }
   const check = () => {
     if (answered || !q || !draft.trim()) return
     const ok = checkTyped(q.item, draft).ok
     setDictOk(ok)
-    if (ok) setScore((s) => s + 1)
+    mark(ok)
   }
 
   const ready = useMemo(() => canSpeak(), [])
@@ -119,7 +142,7 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
       <div className="stack" style={{ gap: 16 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Écoute 🎧</h2>
-          <p className="muted small" style={{ margin: '4px 0 0' }}>Entraîne ton oreille : tu entends, tu comprends. Tu gagnes de l'XP ; ça ne change pas ton planning de révision.</p>
+          <p className="muted small" style={{ margin: '4px 0 0' }}>Entraîne ton oreille : tu entends, tu comprends. Ça ne change pas ton planning de révision.</p>
         </div>
 
         {!ready && <div className="typed-result bad" style={{ alignItems: 'flex-start' }}>La voix japonaise n'est pas disponible sur cet appareil.</div>}
@@ -146,13 +169,25 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
                 </div>
               </div>
             )}
+            <div className="listen-gain">
+              <span>⚡ <b>{LISTEN_XP_PER[lmode]} XP</b> par bonne réponse</span>
+              <span>🔥 combo jusqu'à <b>×1,6</b></span>
+              <span>💯 <b>+50 XP</b> si 10/10</span>
+            </div>
             <button className="btn block" disabled={!ready} style={!ready ? { opacity: 0.45 } : undefined} onClick={start}>Commencer · {ROUND} questions</button>
           </>
         )}
 
         {qs && !done && q && (
           <div className="stack" style={{ gap: 14 }}>
-            <div className="row spread small muted"><span>Question {i + 1} / {qs.length}</span><span className="tnum">{score} juste{score > 1 ? 's' : ''}</span></div>
+            <div className="row spread small muted" style={{ alignItems: 'center', minHeight: 28 }}>
+              <span>Question {i + 1} / {qs.length}</span>
+              <span className="row" style={{ gap: 8, position: 'relative' }}>
+                <ComboBadge combo={combo} mult={listenMult(combo)} />
+                <span className="tnum">{score} juste{score > 1 ? 's' : ''}</span>
+                <XpPop id={pop.id} xp={pop.xp} />
+              </span>
+            </div>
             <div className="bar thin"><i style={{ width: `${(i / qs.length) * 100}%` }} /></div>
             <div className="listen-box">
               <button className="listen-play" onClick={() => speak(q.item.kana || q.item.jp)} aria-label="Réécouter">▶</button>
@@ -192,11 +227,25 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
         )}
 
         {qs && done && (
-          <div className="summary" style={{ paddingTop: 8 }}>
-            <div className="emoji">{score >= 8 ? '🎧' : '👂'}</div>
-            <h2 style={{ margin: 0, fontSize: 28 }}>{score} / {qs.length}</h2>
-            <p className="muted" style={{ margin: 0 }}>{score >= 8 ? 'Ton oreille progresse bien.' : 'Continue : réécouter, c\'est comme ça qu\'on s\'habitue.'}{xp ? ` · +${xp} XP` : ''}</p>
-            <button className="btn block" style={{ marginTop: 10 }} onClick={start}>Rejouer</button>
+          <div className="summary listen-end" style={{ paddingTop: 8 }}>
+            <motion.div className="emoji" initial={{ scale: 0, rotate: -25 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 12 }}>
+              {score === qs.length ? '🏆' : score >= 8 ? '🎧' : score >= 5 ? '👂' : '🌱'}
+            </motion.div>
+            {score === qs.length && (
+              <motion.div className="perfect-tag" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.15, type: 'spring', stiffness: 300, damping: 14 }}>PARFAIT</motion.div>
+            )}
+            <motion.h2 style={{ margin: 0, fontSize: 30 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>{score} / {qs.length}</motion.h2>
+            <p className="muted" style={{ margin: 0 }}>
+              {score === qs.length ? 'Sans faute, ton oreille est affûtée !' : score >= 8 ? 'Ton oreille progresse bien.' : 'Continue : réécouter, c\'est comme ça qu\'on s\'habitue.'}
+            </p>
+            <div className="dots">
+              {results.map((ok, k) => (
+                <motion.i key={k} className={ok ? 'ok' : 'ko'} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.05 * k }} />
+              ))}
+            </div>
+            {reward && <RewardBreakdown reward={reward} mode={lmode} />}
+            <div style={{ width: '100%', textAlign: 'left' }}><Challenges compact /></div>
+            <button className="btn block" style={{ marginTop: 6 }} onClick={start}>Rejouer</button>
             <button className="btn plain block" onClick={reset}>Changer d'exercice</button>
           </div>
         )}

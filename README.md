@@ -4,6 +4,15 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.6 — Récompenses
+
+- **Écoute revalorisée** : 15 XP par bonne réponse (mots), 18 (phrases), 20 (dictée), **combo jusqu'à ×1,6**, **+50 XP** pour un 10/10. Une écoute parfaite rapporte ≈ 260 à 330 XP (contre 20 avant).
+- **Combo en direct** : bonnes réponses d'affilée, en écoute comme en cartes (XP bonus sur les cartes à partir de 5 d'affilée). Un « Oublié » le remet à zéro.
+- **Défis du jour** : 3 missions par jour (cartes · écoute · bonus), les mêmes sur tous tes appareils, +75 XP si les 3 sont réussies.
+- **97 trophées** classés en **bronze, argent, or, platine** (20 à 150 XP), rangés par famille, dont **8 trophées secrets**.
+- **Bilan d'écoute animé** : détail de l'XP (réponses, combo, sans-faute) qui défile, et tes défis du jour juste en dessous.
+- Sauvegarde et synchro inchangées : tout l'historique passe par les trophées (`ach`), comme les examens. Une copie de sécurité « avant v1.6 » est gardée au premier lancement.
+
 ## Nouveautés de la version 1.5
 
 - **Séances en manches** : au lieu de tout d'un coup, la séance est coupée en manches de 10 cartes (réglable : 5, 10, 15, 20 ou tout). Les cartes ratées reviennent dans la manche jusqu'à ce que tu les saches, puis une pause avec un petit bilan : « Continuer » ou « Arrêter pour l'instant » (le reste t'attend à la prochaine séance).

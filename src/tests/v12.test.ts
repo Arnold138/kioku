@@ -341,8 +341,11 @@ describe('exam : historique et trophées (stockés dans `ach`, compatibles avec 
     expect(examHistory(viaOld.ach).length).toBe(2)
   })
   it('7 nouveaux trophées d\'examen', () => {
-    expect(ACHIEVEMENTS.length).toBe(34)
-    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(34)
+    // v1.6 : beaucoup plus de trophées, mais les 34 d'origine gardent leur identifiant (ils restent débloqués)
+    const ids = new Set(ACHIEVEMENTS.map((a) => a.id))
+    expect(ids.size).toBe(ACHIEVEMENTS.length)
+    for (const id of ['first', 'r50', 'r250', 'r1000', 'r5000', 'k10', 'k50', 'k150', 'k500', 'k1000', 'k2000', 's3', 's7', 's14', 's30', 's100', 'l5', 'l10', 'l20', 'sent10', 'sent50', 'mature25', 'perfect', 'custom1', 'custom20', 'ex1', 'exN5', 'exN4', 'exN3', 'exN2', 'exN1', 'exPerfect', 'early', 'night'])
+      expect(ids.has(id)).toBe(true)
   })
 })
 

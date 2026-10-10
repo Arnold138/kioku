@@ -14,6 +14,7 @@ import { Exams } from './Exams'
 import { Listening } from './Listening'
 import { Weak } from './Weak'
 import { weakCards } from '../lib/insights'
+import { Challenges } from './Rewards'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } }
@@ -148,6 +149,11 @@ export function Home({ onAdd }: { onAdd: () => void }) {
             </div>
           </>
         )}
+      </motion.div>
+
+      {/* 3 bis · Défis du jour */}
+      <motion.div variants={item}>
+        <Challenges />
       </motion.div>
 
       {/* 4 · Trois lignes, une flèche : réviser librement · examens · mes decks */}

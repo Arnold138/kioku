@@ -66,7 +66,15 @@ export default function App() {
     void startSync()
     // copie hebdomadaire de sécurité (après le chargement de la progression)
     const t = setTimeout(() => void autoSnapshot(useStore.getState().state), 4000)
-    return () => clearTimeout(t)
+    // v1.6 : défis du jour et trophées déjà gagnés, vérifiés une fois la synchro terminée (jamais pendant)
+    const r = setTimeout(() => {
+      const st = useStore.getState()
+      if (st.sync.status !== 'syncing') st.refreshRewards()
+    }, 6000)
+    return () => {
+      clearTimeout(t)
+      clearTimeout(r)
+    }
   }, [init])
 
   useEffect(() => {
