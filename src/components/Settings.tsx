@@ -210,6 +210,13 @@ export function Settings() {
           </div>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>
+              <div style={{ fontWeight: 600 }}>Cartes par manche</div>
+              <div className="muted small">La séance est coupée en petites manches : les ratés reviennent dans la manche, puis une pause pour continuer ou arrêter</div>
+            </div>
+            <Segmented value={String(s.chunk ?? 10)} onChange={(v) => updateSettings({ chunk: Number(v) })} options={[['5', '5'], ['10', '10'], ['15', '15'], ['20', '20'], ['0', 'Tout']]} />
+          </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
               <div style={{ fontWeight: 600 }}>Phrases naturelles / jour</div>
               <div className="muted small">Des phrases de tes vidéos (japonais parlé) glissées dans « À étudier », avec des mots que tu connais déjà</div>
             </div>

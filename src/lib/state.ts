@@ -24,6 +24,8 @@ export interface Settings {
   swipe: boolean
   /** Phrases naturelles (tirées des vidéos) glissées chaque jour dans « À étudier » (0 = aucune). Ajouté en v1.4. */
   naturalPerDay: number
+  /** Taille d'une manche : la séance est découpée en petites manches avec une pause entre chaque (0 = tout d'un coup). Ajouté en v1.5. */
+  chunk: number
   _t: number
 }
 
@@ -62,6 +64,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fade: true,
   swipe: true,
   naturalPerDay: 2,
+  chunk: 10,
   _t: 0
 }
 

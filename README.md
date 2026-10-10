@@ -4,6 +4,13 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.5
+
+- **Séances en manches** : au lieu de tout d'un coup, la séance est coupée en manches de 10 cartes (réglable : 5, 10, 15, 20 ou tout). Les cartes ratées reviennent dans la manche jusqu'à ce que tu les saches, puis une pause avec un petit bilan : « Continuer » ou « Arrêter pour l'instant » (le reste t'attend à la prochaine séance).
+- **Astuce visible dès le recto** : un bouton « 💡 Indice » affiche ton astuce avant de retourner la carte, si tu bloques.
+- **Correction** : une astuce ajoutée sur une carte encore jamais notée n'était pas gardée. C'est réglé.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), un seul réglage ajouté ; une copie `kioku:backup:avant-v1.5` est faite à la première ouverture.
+
 ## Nouveautés de la version 1.4
 
 - **Compteur de ratés** : chaque carte affiche « 🔥 raté N fois » (avant et après l'avoir retournée), y compris les ratés faits pendant l'apprentissage. Le total est dans *Progrès* et dans la fiche de chaque carte.

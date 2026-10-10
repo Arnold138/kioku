@@ -89,7 +89,18 @@ function Speak({ text, inline }: { text: string; inline?: boolean }) {
   )
 }
 
-function Front({ it, dir, reading, typing, aid }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean; aid: Aid }) {
+/** Ton astuce, cachée derrière un bouton sur le recto : tu essaies d'abord seul, puis tu la regardes si tu bloques. */
+function Hint({ memo }: { memo?: string }) {
+  const [open, setOpen] = useState(false)
+  if (!memo) return null
+  return open ? (
+    <div className="hint-memo" onClick={(e) => e.stopPropagation()}>💡 {memo}</div>
+  ) : (
+    <button className="reading-hidden hint-btn" onClick={(e) => { e.stopPropagation(); setOpen(true) }}>💡 Indice</button>
+  )
+}
+
+function Front({ it, dir, reading, typing, aid, memo }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean; aid: Aid; memo?: string }) {
   const [shown, setShown] = useState(false)
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
@@ -99,6 +110,7 @@ function Front({ it, dir, reading, typing, aid }: { it: Item; dir: 'r' | 'p'; re
         <div className={'meaning' + (it.fr.length > 22 ? ' long' : '')}>{it.fr}</div>
         {it.kind === 'word' && <span className="chip">{POS_LABEL[it.pos] ?? it.pos}</span>}
         <div className="hint">{typing ? 'Écris la réponse en rōmaji ou en kana' : 'Pense à la réponse, puis retourne la carte'}</div>
+        <Hint memo={memo} />
       </div>
     )
   }
@@ -121,6 +133,7 @@ function Front({ it, dir, reading, typing, aid }: { it: Item; dir: 'r' | 'p'; re
         <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir la lecture</button>
       ) : null}
       {it.kind === 'sentence' && <div className="hint">Que veut dire cette phrase ?</div>}
+      <Hint memo={memo} />
     </div>
   )
 }
@@ -242,7 +255,7 @@ function Natural({ session }: { session: NonNullable<ReturnType<typeof useStore.
 }
 
 export function Study() {
-  const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings } = useStore()
+  const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings, continueRound, stopRounds } = useStore()
   const now = Date.now()
   const today = dayNumber(now)
 
@@ -323,6 +336,14 @@ export function Study() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
       const st = useStore.getState().session
       if (!st || st.finished) return
+      if (st.pause) {
+        // pause entre deux manches : Entrée = continuer, Échap = arrêter
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault()
+          continueRound()
+        } else if (e.key === 'Escape') stopRounds()
+        return
+      }
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault()
         if (!st.revealed) reveal()
@@ -332,10 +353,56 @@ export function Study() {
     }
     window.addEventListener('keydown', h)
     return () => window.removeEventListener('keydown', h)
-  }, [reveal, rate, undo, endSession])
+  }, [reveal, rate, undo, endSession, continueRound, stopRounds])
 
   if (!s) return null
   const pct = s.total ? Math.min(1, s.done / s.total) : 1
+
+  // ── Pause entre deux manches
+  if (s.pause) {
+    const n = s.answered - s.roundFrom.answered
+    const f = s.forgot - s.roundFrom.forgot
+    const acc = n ? Math.round(((n - f) / n) * 100) : 0
+    const missedHere = s.missed.slice(s.roundFrom.missed)
+    const left = s.later.length
+    return (
+      <motion.div className="study" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="study-top">
+          <button className="icon-btn" onClick={stopRounds} aria-label="Arrêter">{Icon.close()}</button>
+          <div className="study-progress"><motion.i animate={{ width: `${pct * 100}%` }} /></div>
+          <button className="icon-btn" onClick={undo} disabled={!s.undo} aria-label="Annuler">{Icon.undo()}</button>
+        </div>
+        <div className="summary">
+          <motion.div className="emoji" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>{acc >= 80 ? '✅' : '💪'}</motion.div>
+          <h2 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em' }}>Manche {s.round}/{s.rounds} terminée</h2>
+          <p className="muted" style={{ margin: 0, maxWidth: 320 }}>
+            {f > 0 ? 'Les cartes ratées sont revenues jusqu\'à ce que tu les saches. Souffle deux secondes.' : 'Aucun raté sur cette manche, bravo !'}
+          </p>
+          <div className="stat-grid">
+            <div className="stat"><b>{n}</b><span>réponses</span></div>
+            <div className="stat"><b>{acc}%</b><span>retenues</span></div>
+            <div className="stat"><b>+{s.xp}</b><span>XP</span></div>
+          </div>
+          {missedHere.length > 0 && (
+            <div className="nat">
+              <div className="nat-title">🔁 Petit rappel</div>
+              <div className="missed-list" style={{ boxShadow: 'none', padding: '4px 0 0' }}>
+                {missedHere.slice(0, 5).map((k) => {
+                  const it = byId.get(parseCardId(k).itemId)
+                  return it ? (
+                    <div key={k} className="missed-row"><span><b className="jp">{it.jp}</b> <span className="muted">{it.fr}</span></span></div>
+                  ) : null
+                })}
+              </div>
+            </div>
+          )}
+          <button className="btn block" style={{ marginTop: 10 }} onClick={continueRound}>Continuer · manche {s.round + 1}</button>
+          <button className="btn plain block" onClick={stopRounds}>Arrêter pour l'instant</button>
+          <p className="muted small" style={{ margin: 0 }}>Encore {left} carte{left > 1 ? 's' : ''}. Si tu arrêtes, elles t'attendront à la prochaine séance.</p>
+        </div>
+      </motion.div>
+    )
+  }
 
   // ── Fin de séance
   if (s.finished || !cardKey || !item) {
@@ -415,6 +482,7 @@ export function Study() {
               <p className="muted small" style={{ margin: 0 }}>
                 {mins} min{s.newSeen > 0 ? ` · ${s.newSeen} nouvelle${s.newSeen > 1 ? 's' : ''} carte${s.newSeen > 1 ? 's' : ''} découverte${s.newSeen > 1 ? 's' : ''}` : ''}
                 {deferred > 0 ? ` · ${deferred} révision${deferred > 1 ? 's' : ''} reportée${deferred > 1 ? 's' : ''} à demain` : ''}
+                {s.later.length > 0 ? ` · ${s.later.length} carte${s.later.length > 1 ? 's' : ''} gardée${s.later.length > 1 ? 's' : ''} pour ta prochaine séance` : ''}
               </p>
               <button className="btn block" style={{ marginTop: 10 }} onClick={endSession}>Terminer</button>
               {deferred > 0 && (
@@ -447,6 +515,7 @@ export function Study() {
       <div className="study-meta">
         {s.warm.includes(cardKey!) && <span className="chip accent">📝 Échauffement</span>}
         <span className={'chip ' + (isNew || s.practice ? 'accent' : '')}>{stageLabel}</span>
+        {s.rounds > 1 && <span className="chip accent tnum">Manche {s.round}/{s.rounds}</span>}
         <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
         {lapses > 0 && <span className={'chip tnum ' + (lapses >= 3 ? 'warn' : 'miss-chip')}>🔥 raté {lapses} fois</span>}
         {parsed!.dir === 'p' && !s.revealed && (
@@ -483,7 +552,7 @@ export function Study() {
             exit={{ x: -70, opacity: 0, transition: { duration: 0.18 } }}
             transition={{ rotateY: { type: 'spring', stiffness: 220, damping: 24 }, x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
           >
-            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} aid={aid} />
+            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
             <Back it={item} dir={parsed!.dir} typed={typed} tr={tr} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
           </motion.div>
         </AnimatePresence>
