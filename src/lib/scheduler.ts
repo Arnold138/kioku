@@ -3,6 +3,7 @@
 // Étapes d'apprentissage : 1 min → 10 min → (jour 1)
 // Révisions : intervalle × facilité (ease), comme Anki.
 // Oubli : la carte repart en réapprentissage (10 min), puis revient à 25 % de son ancien intervalle.
+// Difficile = demi-raté (vague souvenir, mot pas trouvé) : réapprentissage (10 min), puis 50 % de l'ancien intervalle.
 
 export type Rating = 1 | 2 | 3 | 4 | 5 // Oublié · Difficile · Hésitant · Bien · Facile
 export type Stage = 'new' | 'learning' | 'review' | 'relearning'
@@ -35,6 +36,15 @@ export const MAX_INTERVAL = 3650
 export const GRADUATE_INTERVAL = 1
 export const EASY_INTERVAL = 4
 export const LAPSE_FACTOR = 0.25
+export const HARD_LAPSE_FACTOR = 0.5 // « Difficile » en révision : demi-raté, l'intervalle est divisé par 2
+/** Part d'une carte « Difficile » comptée comme retenue dans les pourcentages (35 %). */
+export const HARD_CREDIT = 0.35
+
+/** Pourcentage de cartes retenues : « Oublié » = 0, « Difficile » = 35 %, le reste = 100 %. */
+export function accuracyPct(answered: number, forgot: number, hard = 0): number {
+  if (!answered) return 0
+  return Math.max(0, Math.round(((answered - forgot - hard * (1 - HARD_CREDIT)) / answered) * 100))
+}
 export const MATURE_DAYS = 21
 
 export const RATING_LABELS: Record<Rating, string> = {
@@ -68,9 +78,6 @@ function reviewInterval(c: CardState, rating: Rating): number {
   const prev = Math.max(c.i, 1)
   let ivl: number
   switch (rating) {
-    case 2:
-      ivl = prev * 1.2
-      break
     case 3:
       ivl = prev * (1 + (c.e - 1) * 0.5)
       break
@@ -94,7 +101,8 @@ export interface Outcome {
 
 /** Suivi des ratés (additif, n'influence pas le planning) : total, série de réussites, date du dernier raté. */
 export function track(prev: CardState, next: CardState, rating: Rating, now: number): CardState {
-  if (rating === 1) return { ...next, f: misses(prev) + 1, w: 0, mt: now }
+  // « Oublié » et « Difficile » comptent tous les deux comme un raté (points faibles)
+  if (rating <= 2) return { ...next, f: misses(prev) + 1, w: 0, mt: now }
   if (rating >= 3 && (prev.w !== undefined || prev.f !== undefined || prev.l >= 3)) return { ...next, w: (prev.w ?? 0) + 1 }
   return next
 }
@@ -105,11 +113,11 @@ export function answer(card: CardState, rating: Rating, now: number, today: numb
   return { ...o, card: track(card, o.card, rating, now) }
 }
 
-/** Entraînement libre : un raté compte comme une vraie révision (la carte revient bientôt) ; une réussite
+/** Entraînement libre : un raté (Oublié ou Difficile) compte comme une vraie révision (la carte revient bientôt) ; une réussite
  *  est comptée (XP, série) mais ne repousse pas la date de révision d'une carte qui n'est pas encore due. */
 export function answerPractice(card: CardState, rating: Rating, now: number, today: number): Outcome {
   if (card.s === 'new') return { card } // jamais vue : l'entraînement ne l'introduit pas (c'est le rôle de « Découvrir »)
-  if (rating === 1 || card.s !== 'review') return answer(card, rating, now, today)
+  if (rating <= 2 || card.s !== 'review') return answer(card, rating, now, today)
   const kept: CardState = track(card, { ...card, r: card.r + 1, t: now }, rating, now)
   return { card: kept, nextDays: card.s === 'review' ? Math.max(0, card.d - today) : undefined }
 }
@@ -155,10 +163,11 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number)
 
   // Carte en révision
   c.r += 1
-  if (rating === 1) {
-    c.l += 1
-    c.e = clampEase(c.e + easeDelta[1])
-    c.li = Math.max(1, Math.round(c.i * LAPSE_FACTOR))
+  if (rating <= 2) {
+    // Oublié : vrai oubli · Difficile : demi-raté (vague souvenir) — dans les deux cas la carte est réapprise
+    if (rating === 1) c.l += 1
+    c.e = clampEase(c.e + easeDelta[rating])
+    c.li = Math.max(1, Math.round(c.i * (rating === 1 ? LAPSE_FACTOR : HARD_LAPSE_FACTOR)))
     c.s = 'relearning'
     c.st = 0
     c.d = now + RELEARN_STEPS[0] * MIN
