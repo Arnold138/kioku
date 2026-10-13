@@ -4,6 +4,16 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.8 — Onglet « Révision »
+
+- L'onglet **Aujourd'hui** s'appelle maintenant **Révision**.
+- Nouvel ordre : **Objectif du jour + Défis du jour** dans un seul bloc tout en haut, puis **À étudier**, puis **Mon niveau**.
+- Il ne reste que deux lignes : **Réviser librement** et **Examens**. **Écoute** et **Mes decks** sont dans *Réviser librement*, chacun dans sa page avec un retour « ‹ Réviser librement ».
+- **Ajout rapide** passe dans l'onglet **Cartes** : bouton **＋** à côté du titre *Bibliothèque*.
+- **Progrès** : le temps de pratique s'affiche en heures (« 12 h 30 », ou « 45 min » sous 1 h).
+- **iPhone** : marge du haut agrandie et plus d'effet de rebond en haut de page.
+- Aucune modification des données ni de la synchro : seulement l'interface.
+
 ## Nouveautés de la version 1.7 — « Difficile » = vague souvenir
 
 - **Difficile** veut maintenant dire : *tu n'avais pas le mot, mais tu en avais un vague souvenir*. **Oublié** reste : *ça ne te dit rien du tout*.

@@ -15,7 +15,7 @@ import { autoSnapshot } from './lib/snapshots'
 
 type Tab = 'home' | 'library' | 'progress' | 'settings'
 const TABS: Array<{ id: Tab; label: string; icon: (a?: boolean) => JSX.Element }> = [
-  { id: 'home', label: 'Aujourd\'hui', icon: Icon.home },
+  { id: 'home', label: 'Révision', icon: Icon.home },
   { id: 'library', label: 'Cartes', icon: Icon.cards },
   { id: 'progress', label: 'Progrès', icon: Icon.chart },
   { id: 'settings', label: 'Réglages', icon: Icon.gear }
@@ -114,8 +114,8 @@ export default function App() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
         >
-          {tab === 'home' && <Home onAdd={() => openAdd()} />}
-          {tab === 'library' && <Library onEdit={(id) => openAdd(id)} />}
+          {tab === 'home' && <Home />}
+          {tab === 'library' && <Library onAdd={() => openAdd()} onEdit={(id) => openAdd(id)} />}
           {tab === 'progress' && <Progress />}
           {tab === 'settings' && <Settings />}
         </motion.div>

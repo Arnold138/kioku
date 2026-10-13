@@ -16,7 +16,7 @@ function status(c: CardState | undefined): 'new' | 'learning' | 'known' | 'matur
 }
 const STATUS_LABEL = { new: 'Nouvelle', learning: 'En apprentissage', known: 'Retenue', mature: 'Solide (> 21 jours)' }
 
-export function Library({ onEdit }: { onEdit: (id: string) => void }) {
+export function Library({ onAdd, onEdit }: { onAdd: () => void; onEdit: (id: string) => void }) {
   const { items, state } = useStore()
   const [q, setQ] = useState('')
   const [deck, setDeck] = useState('all')
@@ -45,7 +45,10 @@ export function Library({ onEdit }: { onEdit: (id: string) => void }) {
   return (
     <div className="stack">
       <div>
-        <h1 className="large-title">Bibliothèque</h1>
+        <div className="title-row">
+          <h1 className="large-title">Bibliothèque</h1>
+          <button className="add-btn" onClick={onAdd} aria-label="Ajouter un mot" title="Ajouter un mot">{Icon.plus()}</button>
+        </div>
         <p className="subtitle">{items.length} cartes · touche un mot pour le détail</p>
       </div>
       <div className="search">
@@ -67,7 +70,7 @@ export function Library({ onEdit }: { onEdit: (id: string) => void }) {
       </div>
 
       {list.length === 0 ? (
-        <div className="empty">Aucun résultat. Essaie un autre mot, ou ajoute-le avec « Ajout rapide ».</div>
+        <div className="empty">Aucun résultat. Essaie un autre mot, ou ajoute-le avec le ＋ en haut.</div>
       ) : (
         <div className="list">
           {list.slice(0, limit).map((it) => {
