@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { ALL_CHALLENGES_BONUS, LISTEN_XP_PER, challengeProgress, listenMult, type ListenMode, type ListenReward } from '../lib/rewards'
@@ -102,7 +102,7 @@ export function RewardBreakdown({ reward, mode }: { reward: ListenReward; mode: 
 }
 
 /** Défis du jour : trois petites missions, toujours les mêmes pour une date donnée. */
-export function Challenges({ compact }: { compact?: boolean }) {
+export function Challenges({ compact, header }: { compact?: boolean; header?: ReactNode }) {
   const { state } = useStore()
   const day = dayKey(dayNumber(Date.now()))
   const list = challengeProgress(state, day)
@@ -110,6 +110,7 @@ export function Challenges({ compact }: { compact?: boolean }) {
   const all = !!state.ach[`q:${day}:all`]
   return (
     <div className={'card challenges' + (compact ? ' compact' : '')}>
+      {header}
       <div className="row spread" style={{ alignItems: 'baseline', marginBottom: 10 }}>
         <b>Défis du jour</b>
         <span className={'chip tnum ' + (all ? 'accent' : '')}>{all ? '🌈 Journée parfaite' : `${doneN}/3 · +${ALL_CHALLENGES_BONUS} XP si 3/3`}</span>

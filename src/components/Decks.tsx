@@ -4,12 +4,12 @@ import { DECKS } from '../lib/deck'
 import { countDue } from '../lib/queue'
 import { Bar, Sheet } from './ui'
 
-/** « Mes decks » : la liste des paquets, ouverte depuis une seule ligne de l'accueil. */
-export function DecksSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+/** « Mes decks » : la liste des paquets, ouverte depuis Réviser librement. */
+export function DecksSheet({ open, onClose, back, onStarted }: { open: boolean; onClose: () => void; back?: { label: string; onBack: () => void }; onStarted?: () => void }) {
   const { state, items, startSession } = useStore()
   const now = Date.now()
   return (
-    <Sheet open={open} onClose={onClose}>
+    <Sheet open={open} onClose={onClose} back={back}>
       <div className="stack" style={{ gap: 14 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Mes decks</h2>
@@ -32,6 +32,7 @@ export function DecksSheet({ open, onClose }: { open: boolean; onClose: () => vo
                 className="list-row tap"
                 onClick={() => {
                   onClose()
+                  onStarted?.()
                   startSession(f)
                 }}
               >

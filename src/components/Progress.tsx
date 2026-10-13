@@ -27,6 +27,8 @@ export function Progress() {
   const totalMisses = useMemo(() => Object.values(state.cards).reduce((n, c) => n + misses(c), 0), [state.cards])
   const topWeak = [...groups.themes, ...groups.types].sort((a, b) => b.cards.length - a.cards.length).slice(0, 4)
   const minutes = Object.keys(state.daily).reduce((a, d) => a + Math.round(dayTotal(state, d).sec / 60), 0)
+  const hh = Math.floor(minutes / 60)
+  const mm = minutes % 60
 
   // 14 derniers jours
   const last14 = Array.from({ length: 14 }, (_, i) => {
@@ -80,7 +82,16 @@ export function Progress() {
         <div className="kpi"><b>🔥 {st.current}</b><span>jours de suite (record {st.best})</span></div>
         <div className="kpi"><b>{prog.wordsKnownR}</b><span>mots retenus</span></div>
         <div className="kpi"><b>{reviews}</b><span>{reviews > 1 ? "cartes révisées" : "carte révisée"}</span></div>
-        <div className="kpi"><b>{minutes}<small style={{ fontSize: 15 }}> min</small></b><span>de pratique au total</span></div>
+        <div className="kpi">
+          <b className="tnum">
+            {hh > 0 ? (
+              <>{hh}<small style={{ fontSize: 15 }}> h </small>{mm > 0 ? String(mm).padStart(2, '0') : ''}</>
+            ) : (
+              <>{mm}<small style={{ fontSize: 15 }}> min</small></>
+            )}
+          </b>
+          <span>de pratique au total</span>
+        </div>
         <div className="kpi"><b>{totalMisses}</b><span>ratés au total</span></div>
         <div className="kpi"><b>{ret === null ? '—' : Math.round(ret * 100) + '%'}</b><span>de réussite (30 j)</span></div>
       </div>

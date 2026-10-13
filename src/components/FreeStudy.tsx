@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../lib/store'
 import { DECKS, deckInfo } from '../lib/deck'
-import { POS_GROUPS, buildPractice, buildQueue, type Filter, type PosGroup, type Scope } from '../lib/queue'
+import { POS_GROUPS, buildPractice, buildQueue, countDue, type Filter, type PosGroup, type Scope } from '../lib/queue'
 import { THEMES } from '../lib/themes'
 import { Sheet } from './ui'
+import { Listening } from './Listening'
+import { DecksSheet } from './Decks'
 
 const LS = 'kioku:free'
 interface Prefs {
@@ -33,6 +35,16 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
   const { state, items, startSession } = useStore()
   const [p, setP] = useState<Prefs>(loadPrefs)
   const set = (patch: Partial<Prefs>) => setP((cur) => ({ ...cur, ...patch }))
+  // Écoute et Mes decks : pages dédiées qui s'ouvrent par-dessus, avec un retour vers Réviser librement
+  const [sub, setSub] = useState<'listen' | 'decks' | null>(null)
+  useEffect(() => {
+    if (!open) setSub(null)
+  }, [open])
+  const back = { label: 'Réviser librement', onBack: () => setSub(null) }
+  const closeAll = () => {
+    setSub(null)
+    onClose()
+  }
 
   useEffect(() => {
     try {
@@ -60,6 +72,16 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
       practice: buildPractice(state, items, base).length
     }
   }, [open, state, items, base])
+
+  const decksShown = DECKS.filter((d) => d.id !== 'perso' || items.some((i) => i.deck === 'perso'))
+  const decksDue = useMemo(() => {
+    if (!open) return 0
+    const now = Date.now()
+    return decksShown.reduce((n, d) => {
+      const c = countDue(state, items, { deck: d.id, pos: 'all' }, now)
+      return n + c.review + c.learning
+    }, 0)
+  }, [open, state, items]) // eslint-disable-line
 
   const cap = (n: number) => (p.limit ? Math.min(p.limit, n) : n)
   const total = p.scope === 'normal' ? cap(counts.due + counts.fresh) : p.scope === 'new' ? cap(counts.news) : cap(counts.practice)
@@ -89,6 +111,25 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Réviser librement</h2>
           <p className="muted small" style={{ margin: '4px 0 0' }}>Choisis ce que tu veux travailler, à n'importe quel niveau. Les limites du jour ne s'appliquent pas ici.</p>
+        </div>
+
+        <div className="list">
+          <button className="list-row tap" onClick={() => setSub('listen')}>
+            <div className="row-ico" style={{ background: 'hsl(205 90% 91%)' }}>🎧</div>
+            <div className="grow">
+              <div style={{ fontWeight: 700 }}>Écoute</div>
+              <div className="muted small">Comprendre à l'oreille · dictée</div>
+            </div>
+            <span className="chev">›</span>
+          </button>
+          <button className="list-row tap" onClick={() => setSub('decks')}>
+            <div className="row-ico" style={{ background: 'hsl(175 70% 90%)' }}>📚</div>
+            <div className="grow">
+              <div style={{ fontWeight: 700 }}>Mes decks</div>
+              <div className="muted small">{decksShown.length} decks{decksDue ? ` · ${decksDue} à revoir` : ''}</div>
+            </div>
+            <span className="chev">›</span>
+          </button>
         </div>
 
         <div>
@@ -160,6 +201,8 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
           </div>
         </div>
       </div>
+      <Listening open={open && sub === 'listen'} onClose={closeAll} back={back} />
+      <DecksSheet open={open && sub === 'decks'} onClose={closeAll} back={back} onStarted={closeAll} />
     </Sheet>
   )
 }

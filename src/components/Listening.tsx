@@ -48,7 +48,7 @@ function pickQuestions(items: Item[], cards: ReturnType<typeof useStore.getState
   })
 }
 
-export function Listening({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function Listening({ open, onClose, back }: { open: boolean; onClose: () => void; back?: { label: string; onBack: () => void } }) {
   const { items, state, recordListen } = useStore()
   const [mode, setMode] = useState<Mode>('sens')
   const [src, setSrc] = useState<Src>('words')
@@ -138,7 +138,7 @@ export function Listening({ open, onClose }: { open: boolean; onClose: () => voi
   const ready = useMemo(() => canSpeak(), [])
 
   return (
-    <Sheet open={open} onClose={onClose}>
+    <Sheet open={open} onClose={onClose} back={back}>
       <div className="stack" style={{ gap: 16 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em' }}>Écoute 🎧</h2>

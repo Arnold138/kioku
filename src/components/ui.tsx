@@ -147,23 +147,39 @@ export function useScrollLock(active: boolean) {
   }, [active])
 }
 
+const sheetStack: object[] = []
+
 /**
  * Feuille modale. Structure pensée pour iPhone :
  *  - la feuille elle-même ne défile pas (seul le corps défile) ;
  *  - l'en-tête (poignée + ✕) et le pied (bouton d'action) restent toujours visibles ;
  *  - la page derrière est verrouillée tant que la feuille est ouverte.
  */
-export function Sheet({ open, onClose, children, footer }: { open: boolean; onClose: () => void; children: ReactNode; footer?: ReactNode }) {
+export function Sheet({ open, onClose, children, footer, back }: { open: boolean; onClose: () => void; children: ReactNode; footer?: ReactNode; back?: { label: string; onBack: () => void } }) {
   const y = useMotionValue(0)
   const drag = useRef<{ y0: number; last: number; lastT: number; v: number } | null>(null)
   useVisibleHeight(open)
   useScrollLock(open)
+  const handlers = useRef({ onClose, back })
+  handlers.current = { onClose, back }
   useEffect(() => {
     if (!open) return
-    const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    // Feuilles empilées (ex. Écoute ouverte depuis Réviser librement) : Échap ne ferme que celle du dessus.
+    const me = {}
+    sheetStack.push(me)
+    const h = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || sheetStack[sheetStack.length - 1] !== me) return
+      const { back: b, onClose: c } = handlers.current
+      if (b) b.onBack()
+      else c()
+    }
     window.addEventListener('keydown', h)
-    return () => window.removeEventListener('keydown', h)
-  }, [open, onClose])
+    return () => {
+      window.removeEventListener('keydown', h)
+      const i = sheetStack.indexOf(me)
+      if (i >= 0) sheetStack.splice(i, 1)
+    }
+  }, [open])
 
   // Glisser vers le bas pour fermer : uniquement depuis la poignée. La feuille n'a volontairement PAS de `drag` framer :
   // il impose `touch-action` sur toute la feuille et peut bloquer le défilement tactile (iPhone).
@@ -195,7 +211,7 @@ export function Sheet({ open, onClose, children, footer }: { open: boolean; onCl
         <>
           <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
           <motion.div
-            className="sheet"
+            className={'sheet' + (back ? ' page' : '')}
             role="dialog"
             aria-modal="true"
             style={{ y }}
@@ -208,6 +224,9 @@ export function Sheet({ open, onClose, children, footer }: { open: boolean; onCl
               <div className="grab-zone" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
                 <div className="grab" />
               </div>
+              {back && (
+                <button className="sheet-back" onClick={back.onBack}>‹ {back.label}</button>
+              )}
               <button className="sheet-x" onClick={onClose} aria-label="Fermer">✕</button>
             </div>
             <div className={'sheet-body' + (footer ? '' : ' no-foot')}>{children}</div>
