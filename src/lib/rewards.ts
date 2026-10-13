@@ -10,7 +10,7 @@
  */
 import type { AppState } from './state'
 import { dayTotal } from './state'
-import { dayKey, dayNumber } from './scheduler'
+import { HARD_CREDIT, dayKey, dayNumber } from './scheduler'
 import { examHistory } from './exam'
 
 // ───────────────────────── Écoute ─────────────────────────
@@ -131,7 +131,7 @@ export function todayStats(state: AppState, day: string): TodayStats {
   const sameDay = (t: number) => dayKey(dayNumber(t)) === day
   return {
     n: d.n,
-    ok: d.ok,
+    ok: Math.floor(d.ok + (d.hd ?? 0) * HARD_CREDIT), // « Difficile » ne compte que pour 35 %
     nw: d.nw + d.np,
     xp: d.xp,
     sec: d.sec,

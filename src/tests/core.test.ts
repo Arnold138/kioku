@@ -45,7 +45,6 @@ describe('scheduler', () => {
   it('révision : Bien multiplie par la facilité, Oublié déclenche le réapprentissage', () => {
     const c = { ...newCard(now), s: 'review' as const, i: 10, d: today, e: START_EASE, r: 5 }
     expect(answer(c, 4, now, today).nextDays).toBe(25)
-    expect(answer(c, 2, now, today).nextDays).toBe(12)
     expect(answer(c, 5, now, today).nextDays).toBe(33)
     const f = answer(c, 1, now, today)
     expect(f.card.s).toBe('relearning')
@@ -56,11 +55,12 @@ describe('scheduler', () => {
     expect(back.card.s).toBe('review')
     expect(back.card.i).toBe(3)
   })
-  it('les 5 intervalles sont croissants', () => {
+  it('les intervalles des réussites sont croissants', () => {
     const c = { ...newCard(now), s: 'review' as const, i: 20, d: today, r: 3 }
-    const days = ([2, 3, 4, 5] as const).map((r) => answer(c, r, now, today).nextDays!)
+    const days = ([3, 4, 5] as const).map((r) => answer(c, r, now, today).nextDays!)
     expect([...days].sort((a, b) => a - b)).toEqual(days)
     expect(previewLabels(c, now, today)[1]).toBe('10 min')
+    expect(previewLabels(c, now, today)[2]).toBe('10 min')
   })
   it('la facilité ne descend jamais sous 1,3', () => {
     let c: CardState = { ...newCard(now), s: 'review', i: 5, d: today }

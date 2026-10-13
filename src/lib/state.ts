@@ -1,5 +1,5 @@
 import type { CardState } from './scheduler'
-import { dayKey, dayNumber, isKnown, isMature } from './scheduler'
+import { HARD_CREDIT, dayKey, dayNumber, isKnown, isMature } from './scheduler'
 import type { CustomCard, Item } from './deck'
 import { parseCardId } from './deck'
 
@@ -34,7 +34,8 @@ export interface DayStat {
   n: number // cartes répondues
   nw: number // nouvelles cartes de reconnaissance introduites
   np: number // nouvelles cartes de production introduites
-  ok: number // réponses ≥ Difficile (mémorisées)
+  ok: number // réponses ≥ Hésitant (retenues). Avant la v1.7, « Difficile » y était aussi compté
+  hd?: number // réponses « Difficile » (demi-raté, comptent pour 35 %). Ajouté en v1.7 — optionnel
   xp: number
   sec: number // secondes passées
   rv?: number // révisions de cartes déjà apprises (compte pour le quota du jour). Ajouté en v1.3 — optionnel
@@ -106,7 +107,8 @@ export function mergeStates(a: AppState, b: AppState): AppState {
               xp: Math.max(cur.xp, st.xp),
               sec: Math.max(cur.sec, st.sec),
               ...(cur.rv !== undefined || st.rv !== undefined ? { rv: Math.max(cur.rv ?? 0, st.rv ?? 0) } : {}),
-              ...(cur.nv !== undefined || st.nv !== undefined ? { nv: Math.max(cur.nv ?? 0, st.nv ?? 0) } : {})
+              ...(cur.nv !== undefined || st.nv !== undefined ? { nv: Math.max(cur.nv ?? 0, st.nv ?? 0) } : {}),
+              ...(cur.hd !== undefined || st.hd !== undefined ? { hd: Math.max(cur.hd ?? 0, st.hd ?? 0) } : {})
             }
           : { ...st }
       }
@@ -147,6 +149,7 @@ export function dayTotal(state: AppState, day: string): DayStat {
     t.sec += d.sec
     t.rv = (t.rv ?? 0) + (d.rv ?? 0)
     t.nv = (t.nv ?? 0) + (d.nv ?? 0)
+    t.hd = (t.hd ?? 0) + (d.hd ?? 0)
   }
   return t
 }
@@ -272,7 +275,7 @@ export function retentionRate(state: AppState, lastDays = 30, now = Date.now()):
   for (let i = 0; i < lastDays; i++) {
     const d = dayTotal(state, dayKey(today - i))
     n += d.n
-    ok += d.ok
+    ok += d.ok + (d.hd ?? 0) * HARD_CREDIT
   }
   return n >= 10 ? ok / n : null
 }

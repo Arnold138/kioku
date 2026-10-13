@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { parseCardId, POS_LABEL, type Item } from '../lib/deck'
-import { RATING_LABELS, dayNumber, misses, newCard, previewLabels, type Rating } from '../lib/scheduler'
+import { RATING_LABELS, accuracyPct, dayNumber, misses, newCard, previewLabels, type Rating } from '../lib/scheduler'
 import { dayTotal, streaks, levelFromXp, totalXp, computeProgress } from '../lib/state'
 import { estimateLevel } from '../lib/level'
 import { countDue } from '../lib/queue'
@@ -364,7 +364,7 @@ export function Study() {
   if (s.pause) {
     const n = s.answered - s.roundFrom.answered
     const f = s.forgot - s.roundFrom.forgot
-    const acc = n ? Math.round(((n - f) / n) * 100) : 0
+    const acc = accuracyPct(n, f, (s.hard ?? 0) - (s.roundFrom.hard ?? 0))
     const missedHere = s.missed.slice(s.roundFrom.missed)
     const left = s.later.length
     return (
@@ -410,7 +410,7 @@ export function Study() {
   if (s.finished || !cardKey || !item) {
     const day = dayKey(today)
     const st = streaks(state, now)
-    const acc = s.answered ? Math.round(((s.answered - s.forgot) / s.answered) * 100) : 0
+    const acc = accuracyPct(s.answered, s.forgot, s.hard ?? 0)
     const mins = Math.max(1, Math.round((now - s.start) / 60000))
     const lv = levelFromXp(totalXp(state))
     const met = dayTotal(state, day).n >= state.settings.goal
@@ -430,7 +430,7 @@ export function Study() {
               <motion.div className="emoji" initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>🏋️</motion.div>
               <h2 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.02em' }}>Entraînement terminé</h2>
               <p className="muted" style={{ margin: 0, maxWidth: 320 }}>
-                {s.forgot > 0 ? 'Les cartes ratées sont retenues dans tes points faibles et reviendront bientôt.' : 'Aucun raté : bravo !'}
+                {s.missed.length > 0 ? 'Les cartes ratées sont retenues dans tes points faibles et reviendront bientôt.' : 'Aucun raté : bravo !'}
               </p>
               <div className="stat-grid">
                 <div className="stat"><b>{s.answered}</b><span>réponses</span></div>

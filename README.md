@@ -4,6 +4,14 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.7 — « Difficile » = vague souvenir
+
+- **Difficile** veut maintenant dire : *tu n'avais pas le mot, mais tu en avais un vague souvenir*. **Oublié** reste : *ça ne te dit rien du tout*.
+- En révision, une carte « Difficile » **revient dans la séance** (10 min), puis repart à **50 % de son intervalle** (« Oublié » : 25 %).
+- Elle compte comme un **raté** dans les points faibles, et pour **35 %** dans le pourcentage de cartes retenues.
+- Le **combo** n'est pas cassé, mais ne monte pas.
+- Les statistiques des jours passés ne sont pas recalculées. Une copie de sécurité « avant v1.7 » est gardée au premier lancement.
+
 ## Nouveautés de la version 1.6 — Récompenses
 
 - **Écoute revalorisée** : 15 XP par bonne réponse (mots), 18 (phrases), 20 (dictée), **combo jusqu'à ×1,6**, **+50 XP** pour un 10/10. Une écoute parfaite rapporte ≈ 260 à 330 XP (contre 20 avant).
@@ -79,10 +87,10 @@ Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**.
 |---|---|
 | Nouvelle carte | étapes **1 min → 10 min**, puis 1 jour (« Facile » : 4 jours directement) |
 | Révision | nouvel intervalle = ancien × **facilité** (2,5 au départ) |
-| Difficile | × 1,2 · facilité −0,15 |
 | Hésitant | × (1 + (facilité − 1) / 2) · facilité −0,05 |
 | Bien | × facilité |
 | Facile | × facilité × 1,3 · facilité +0,15 |
+| Difficile | demi-raté : réapprentissage (10 min), facilité −0,15, retour à 50 % de l'ancien intervalle |
 | Oublié | réapprentissage (10 min), facilité −0,20, retour à 25 % de l'ancien intervalle |
 
 Le « jour » change à 4 h du matin (comme Anki). Raccourcis clavier sur PC : `Espace` retourne, `1`–`5` notent, `Z` annule.

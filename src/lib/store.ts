@@ -28,10 +28,11 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.6'
+export const APP_VERSION = '1.7'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
+const LS_BACKUP7 = 'kioku:backup:avant-v1.7'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -78,9 +79,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP5)) safeSet(LS_BACKUP5, raw)
   // v1.6 : une 6e copie (les cinq premières restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP6)) safeSet(LS_BACKUP6, raw)
+  // v1.7 : une 7e copie (les six premières restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP7)) safeSet(LS_BACKUP7, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -108,6 +111,7 @@ interface UndoInfo {
   xp: number
   wasNew: boolean
   forgot: boolean
+  hard?: boolean // réponse « Difficile » (v1.7)
   shownAt: number
   practice?: boolean // séance d'entraînement (les cartes non dues ne bougent pas, sauf si on les rate)
   requeued?: boolean // la carte a été remise en fin de file
@@ -128,6 +132,8 @@ export interface Session {
   done: number
   answered: number
   forgot: number
+  /** réponses « Difficile » (demi-raté, comptent pour 35 % dans le pourcentage). Ajouté en v1.7. */
+  hard?: number
   xp: number
   start: number
   shownAt: number
@@ -152,8 +158,8 @@ export interface Session {
   /** pause entre deux manches : bilan, puis « Continuer » ou « Arrêter » */
   pause: boolean
   /** compteurs au début de la manche en cours (pour le bilan de manche) */
-  roundFrom: { answered: number; forgot: number; missed: number }
-  /** Combo : bonnes réponses d'affilée (un « Oublié » le remet à zéro) et meilleur combo de la séance. Ajouté en v1.6. */
+  roundFrom: { answered: number; forgot: number; missed: number; hard?: number }
+  /** Combo : bonnes réponses d'affilée (un « Oublié » le remet à zéro, « Difficile » le fige) et meilleur combo de la séance. Ajouté en v1.6. */
   combo: number
   bestCombo: number
 }
@@ -237,7 +243,8 @@ export const useStore = create<Store>((set, get) => {
       xp: cur.xp + (delta.xp ?? 0),
       sec: cur.sec + (delta.sec ?? 0),
       rv: (cur.rv ?? 0) + (delta.rv ?? 0),
-      nv: (cur.nv ?? 0) + (delta.nv ?? 0)
+      nv: (cur.nv ?? 0) + (delta.nv ?? 0),
+      ...(cur.hd !== undefined || delta.hd ? { hd: (cur.hd ?? 0) + (delta.hd ?? 0) } : {})
     }
     return { ...state.daily, [day]: { ...(state.daily[day] ?? {}), [dev]: upd } }
   }
@@ -365,7 +372,7 @@ export const useStore = create<Store>((set, get) => {
   const finishSession = () => {
     const { session, state, device } = get()
     if (!session) return
-    const perfect = session.answered >= 10 && session.forgot === 0
+    const perfect = session.answered >= 10 && session.forgot === 0 && !session.hard
     if (session.answered >= 5) {
       const before = levelFromXp(totalXp(state)).level
       const daily = addToDay(state, device, today(), { xp: XP_SESSION })
@@ -474,7 +481,7 @@ export const useStore = create<Store>((set, get) => {
         round: 1,
         rounds: split.rounds,
         pause: false,
-        roundFrom: { answered: 0, forgot: 0, missed: 0 },
+        roundFrom: { answered: 0, forgot: 0, missed: 0, hard: 0 },
         learn: [],
         current: null,
         revealed: false,
@@ -482,6 +489,7 @@ export const useStore = create<Store>((set, get) => {
         done: 0,
         answered: 0,
         forgot: 0,
+        hard: 0,
         xp: 0,
         start: now,
         shownAt: now,
@@ -511,7 +519,7 @@ export const useStore = create<Store>((set, get) => {
         later: s.later.slice(size),
         round: s.round + 1,
         pause: false,
-        roundFrom: { answered: s.answered, forgot: s.forgot, missed: s.missed.length },
+        roundFrom: { answered: s.answered, forgot: s.forgot, missed: s.missed.length, hard: s.hard ?? 0 },
         undo: null
       }
       set({ session: pickNext(ns, now) })
@@ -547,15 +555,16 @@ export const useStore = create<Store>((set, get) => {
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
-      // combo : chaque carte retenue (≥ Difficile) le fait monter, un « Oublié » le remet à zéro
+      // combo : chaque carte retenue (≥ Hésitant) le fait monter, « Difficile » le fige, « Oublié » le remet à zéro
       const prevCombo = s.combo ?? 0
-      const combo = r >= 2 ? prevCombo + 1 : 0
-      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0) + (r >= 2 ? cardComboBonus(combo) : 0)
+      const combo = r >= 3 ? prevCombo + 1 : r === 2 ? prevCombo : 0
+      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0) + (r >= 3 ? cardComboBonus(combo) : 0)
       const sec = Math.min(60, Math.round((now - s.shownAt) / 1000))
       const prevDay = state.daily[day]?.[device]
       const daily = addToDay(state, device, day, {
         n: 1,
-        ok: r >= 2 ? 1 : 0,
+        ok: r >= 3 ? 1 : 0,
+        hd: r === 2 ? 1 : 0, // « Difficile » : demi-raté, compté à part (35 %)
         nw: wasNew && dir === 'r' && !natural ? 1 : 0,
         np: wasNew && dir === 'p' ? 1 : 0,
         nv: wasNew && natural ? 1 : 0, // phrases naturelles : comptées à part (elles ne prennent pas la place des mots du jour)
@@ -576,7 +585,7 @@ export const useStore = create<Store>((set, get) => {
         else doneInc = 1
       } else if (out.nextMinutes !== undefined) learn = [...s.learn, { id: key, due: now + out.nextMinutes * 60_000 }]
       else doneInc = 1
-      const newMissed = r === 1 && !s.missed.includes(key)
+      const newMissed = r <= 2 && !s.missed.includes(key) // Difficile compte aussi comme un raté
       const newSeen = itemId.startsWith('w') && !s.seen.includes(itemId)
       let ns: Session = {
         ...s,
@@ -585,13 +594,14 @@ export const useStore = create<Store>((set, get) => {
         done: s.done + doneInc,
         answered: s.answered + 1,
         forgot: s.forgot + (r === 1 ? 1 : 0),
+        hard: (s.hard ?? 0) + (r === 2 ? 1 : 0),
         xp: s.xp + xp,
         newSeen: s.newSeen + (wasNew ? 1 : 0),
         missed: newMissed ? [...s.missed, key] : s.missed,
         seen: newSeen ? [...s.seen, itemId] : s.seen,
         combo,
         bestCombo: Math.max(s.bestCombo ?? 0, combo),
-        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen, prevCombo, prevBestCombo: s.bestCombo ?? 0 }
+        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, hard: r === 2, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen, prevCombo, prevBestCombo: s.bestCombo ?? 0 }
       }
       ns = pickNext(ns, now)
       set({ session: ns })
@@ -671,6 +681,7 @@ export const useStore = create<Store>((set, get) => {
             pause: false,
             answered: Math.max(0, s.answered - 1),
             forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
+            hard: Math.max(0, (s.hard ?? 0) - (u.hard ? 1 : 0)),
             xp: Math.max(0, s.xp - u.xp),
             newSeen: Math.max(0, s.newSeen - (u.wasNew ? 1 : 0)),
             done: Math.max(0, s.done - (u.requeued ? 0 : 1)),
@@ -698,6 +709,7 @@ export const useStore = create<Store>((set, get) => {
           pause: false,
           answered: Math.max(0, s.answered - 1),
           forgot: Math.max(0, s.forgot - (u.forgot ? 1 : 0)),
+            hard: Math.max(0, (s.hard ?? 0) - (u.hard ? 1 : 0)),
           xp: Math.max(0, s.xp - u.xp),
           newSeen: Math.max(0, s.newSeen - (u.wasNew ? 1 : 0)),
           done: Math.max(0, s.done - (s.learn.some((l) => l.id === u.cardKey) ? 0 : 1)),
