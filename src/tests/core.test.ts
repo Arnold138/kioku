@@ -32,15 +32,19 @@ describe('romaji', () => {
 describe('scheduler', () => {
   const now = Date.UTC(2026, 8, 29, 12)
   const today = dayNumber(now, 0)
-  it('nouvelle carte : Bien → étape 10 min → puis 1 jour', () => {
-    let o = answer(newCard(now), 4, now, today)
+  it('nouvelle carte : Hésitant → 10 min → Bien → 10 min → Bien → 1 jour', () => {
+    let o = answer(newCard(now), 3, now, today)
     expect(o.nextMinutes).toBe(10)
     o = answer(o.card, 4, now + 600_000, today)
+    expect(o.nextMinutes).toBe(10)
+    o = answer(o.card, 4, now + 1_200_000, today)
     expect(o.nextDays).toBe(1)
     expect(o.card.s).toBe('review')
   })
-  it('Facile sur nouvelle carte → 4 jours', () => {
-    expect(answer(newCard(now), 5, now, today).nextDays).toBe(4)
+  it('v1.9 : nouvelle carte reconnue du premier coup → retenue (Bien 3 j, Facile 7 j)', () => {
+    expect(answer(newCard(now), 4, now, today).nextDays).toBe(3)
+    expect(answer(newCard(now), 5, now, today).nextDays).toBe(7)
+    expect(isKnown(answer(newCard(now), 4, now, today).card)).toBe(true)
   })
   it('révision : Bien multiplie par la facilité, Oublié déclenche le réapprentissage', () => {
     const c = { ...newCard(now), s: 'review' as const, i: 10, d: today, e: START_EASE, r: 5 }

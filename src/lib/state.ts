@@ -1,5 +1,5 @@
 import type { CardState } from './scheduler'
-import { HARD_CREDIT, dayKey, dayNumber, isKnown, isMature } from './scheduler'
+import { HARD_CREDIT, catchUpKnown, dayKey, dayNumber, isKnown, isMature } from './scheduler'
 import type { CustomCard, Item } from './deck'
 import { parseCardId } from './deck'
 
@@ -118,6 +118,31 @@ export function mergeStates(a: AppState, b: AppState): AppState {
   for (const [id, t] of Object.entries(b.ach)) ach[id] = ach[id] ? Math.min(ach[id], t) : t
   const settings = b.settings._t > a.settings._t ? b.settings : a.settings
   return { v: 1, cards, custom, daily, ach, settings: { ...DEFAULT_SETTINGS, ...settings } }
+}
+
+// ───────── v1.9 : rattrapage des cartes reconnues sans jamais être ratées ─────────
+/** Repère (dans `ach`, synchronisé) du premier lancement de la v1.9 : seules les cartes répondues avant sont rattrapées. */
+export const CATCHUP_KEY = 'm:v19'
+
+/** Fait passer en « retenues » les cartes déjà réussies sans raté qui ne l'étaient pas encore (une seule fois par carte).
+ *  Les cartes répondues après la mise à jour suivent le nouveau planning et ne sont pas touchées. */
+export function applyCatchUp(state: AppState, now: number): { state: AppState; changed: number } {
+  const since = state.ach[CATCHUP_KEY] ?? now
+  let changed = 0
+  const cards = { ...state.cards }
+  for (const [key, c] of Object.entries(state.cards)) {
+    if (c.t > since) continue
+    const next = catchUpKnown(c)
+    if (next) {
+      cards[key] = next
+      changed++
+    }
+  }
+  if (!changed && state.ach[CATCHUP_KEY]) return { state, changed }
+  return {
+    state: { ...state, cards: changed ? cards : state.cards, ach: state.ach[CATCHUP_KEY] ? state.ach : { ...state.ach, [CATCHUP_KEY]: since } },
+    changed
+  }
 }
 
 /** Nettoie un état importé/reçu (robustesse). */

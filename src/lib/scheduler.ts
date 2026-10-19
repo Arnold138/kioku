@@ -4,6 +4,7 @@
 // Révisions : intervalle × facilité (ease), comme Anki.
 // Oubli : la carte repart en réapprentissage (10 min), puis revient à 25 % de son ancien intervalle.
 // Difficile = demi-raté (vague souvenir, mot pas trouvé) : réapprentissage (10 min), puis 50 % de l'ancien intervalle.
+// v1.9 : une nouvelle carte reconnue du premier coup est retenue tout de suite (Bien → 3 j, Facile → 7 j).
 
 export type Rating = 1 | 2 | 3 | 4 | 5 // Oublié · Difficile · Hésitant · Bien · Facile
 export type Stage = 'new' | 'learning' | 'review' | 'relearning'
@@ -35,6 +36,9 @@ export const MIN_EASE = 1.3
 export const MAX_INTERVAL = 3650
 export const GRADUATE_INTERVAL = 1
 export const EASY_INTERVAL = 4
+/** v1.9 : nouvelle carte reconnue du premier coup → retenue tout de suite (« Bien » 3 jours, « Facile » 7 jours). */
+export const FIRST_GOOD_INTERVAL = 3
+export const FIRST_EASY_INTERVAL = 7
 export const LAPSE_FACTOR = 0.25
 export const HARD_LAPSE_FACTOR = 0.5 // « Difficile » en révision : demi-raté, l'intervalle est divisé par 2
 /** Part d'une carte « Difficile » comptée comme retenue dans les pourcentages (35 %). */
@@ -146,6 +150,9 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number)
     }
     const lapseIvl = c.s === 'relearning' ? c.li : GRADUATE_INTERVAL
 
+    // v1.9 : reconnue du premier coup, sans hésiter → retenue directement, elle sort de la séance
+    if (card.s === 'new' && rating >= 4) return graduate(rating === 5 ? FIRST_EASY_INTERVAL : FIRST_GOOD_INTERVAL)
+
     switch (rating) {
       case 1:
         return stay(steps[0], 0)
@@ -207,3 +214,13 @@ export const isDue = (c: CardState, now: number, today: number): boolean => {
 export const isMature = (c: CardState) => c.s === 'review' && c.i >= MATURE_DAYS
 /** "Connue" : sortie de l'apprentissage et intervalle ≥ 3 jours. */
 export const isKnown = (c: CardState) => c.s === 'review' && c.i >= 3
+
+/** v1.9 — rattrapage : une carte déjà réussie sans jamais avoir été ratée, mais pas encore « retenue »
+ *  (encore en apprentissage, ou en révision à 1-2 jours), devient retenue (intervalle 3 jours depuis sa dernière réponse).
+ *  Déterministe et sans changer `t` : deux appareils donnent le même résultat, et une vraie réponse plus récente gagne toujours à la synchro. */
+export function catchUpKnown(c: CardState): CardState | null {
+  if (c.r < 1 || misses(c) > 0 || c.l > 0) return null
+  if (c.s !== 'learning' && !(c.s === 'review' && c.i < FIRST_GOOD_INTERVAL)) return null
+  const last = dayNumber(c.t)
+  return { ...c, s: 'review', st: 0, i: FIRST_GOOD_INTERVAL, d: last + FIRST_GOOD_INTERVAL }
+}
