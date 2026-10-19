@@ -123,11 +123,19 @@ export function mergeStates(a: AppState, b: AppState): AppState {
 // ───────── v1.9 : rattrapage des cartes reconnues sans jamais être ratées ─────────
 /** Repère (dans `ach`, synchronisé) du premier lancement de la v1.9 : seules les cartes répondues avant sont rattrapées. */
 export const CATCHUP_KEY = 'm:v19'
+/** v1.9.1 : 2e passage, pour les cartes réussies en révision mais restées à 1-2 jours (y compris celles ratées avant). */
+export const CATCHUP_KEY2 = 'm:v191'
 
 /** Fait passer en « retenues » les cartes déjà réussies sans raté qui ne l'étaient pas encore (une seule fois par carte).
  *  Les cartes répondues après la mise à jour suivent le nouveau planning et ne sont pas touchées. */
 export function applyCatchUp(state: AppState, now: number): { state: AppState; changed: number } {
-  const since = state.ach[CATCHUP_KEY] ?? now
+  const a = applyCatchUpOnce(state, now, CATCHUP_KEY)
+  const b = applyCatchUpOnce(a.state, now, CATCHUP_KEY2)
+  return { state: b.state, changed: a.changed + b.changed }
+}
+
+function applyCatchUpOnce(state: AppState, now: number, flag: string): { state: AppState; changed: number } {
+  const since = state.ach[flag] ?? now
   let changed = 0
   const cards = { ...state.cards }
   for (const [key, c] of Object.entries(state.cards)) {
@@ -138,9 +146,9 @@ export function applyCatchUp(state: AppState, now: number): { state: AppState; c
       changed++
     }
   }
-  if (!changed && state.ach[CATCHUP_KEY]) return { state, changed }
+  if (!changed && state.ach[flag]) return { state, changed }
   return {
-    state: { ...state, cards: changed ? cards : state.cards, ach: state.ach[CATCHUP_KEY] ? state.ach : { ...state.ach, [CATCHUP_KEY]: since } },
+    state: { ...state, cards: changed ? cards : state.cards, ach: state.ach[flag] ? state.ach : { ...state.ach, [flag]: since } },
     changed
   }
 }
