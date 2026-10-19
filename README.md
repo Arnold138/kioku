@@ -4,6 +4,13 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.9 — Cartes retenues + trophées intermédiaires
+
+- **Reconnue du premier coup = retenue** : une nouvelle carte notée **Bien** est retenue tout de suite et revient dans **3 jours** (**Facile** : 7 jours). Elle ne repasse plus par les étapes de 1 min / 10 min / 1 jour.
+- **Rattrapage** : les cartes déjà réussies sans **aucun raté** mais pas encore retenues (en apprentissage, ou à 1-2 jours) passent en **retenues** à l'ouverture (3 jours après leur dernière réponse). Une seule fois, sans toucher aux cartes ratées.
+- **49 trophées intermédiaires** : mots tous les 100 jusqu'à 1 000 puis tous les 250 · phrases · révisions tous les 500 jusqu'à 3 000 puis tous les 1 000 · cartes solides · séries · objectifs du jour.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`) ; une copie `kioku:backup:avant-v1.9` est faite à la première ouverture. Le rattrapage ne change pas la date de modification des cartes : une vraie réponse plus récente sur un autre appareil gagne toujours à la synchro.
+
 ## Nouveautés de la version 1.8 — Onglet « Révision »
 
 - L'onglet **Aujourd'hui** s'appelle maintenant **Révision**.

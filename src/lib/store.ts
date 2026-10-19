@@ -3,6 +3,7 @@ import {
   type AppState,
   type DayStat,
   DEFAULT_SETTINGS,
+  applyCatchUp,
   computeProgress,
   dayTotal,
   emptyState,
@@ -28,11 +29,12 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.7'
+export const APP_VERSION = '1.9'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
 const LS_BACKUP7 = 'kioku:backup:avant-v1.7'
+const LS_BACKUP9 = 'kioku:backup:avant-v1.9'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -81,9 +83,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP6)) safeSet(LS_BACKUP6, raw)
   // v1.7 : une 7e copie (les six premières restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP7)) safeSet(LS_BACKUP7, raw)
+  // v1.9 : une 8e copie, avant le rattrapage des cartes retenues (les précédentes restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP9)) safeSet(LS_BACKUP9, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -400,7 +404,7 @@ export const useStore = create<Store>((set, get) => {
 
     init: () => {
       snapshotBeforeUpdate()
-      const st = loadState()
+      const st = applyCatchUp(loadState(), Date.now()).state
       const cat = buildCatalog(st.custom)
       set({ state: st, items: cat.items, byId: cat.byId, device: deviceId(), ready: true })
     },
@@ -408,7 +412,7 @@ export const useStore = create<Store>((set, get) => {
     setSync: (s) => set({ sync: s }),
 
     applyRemote: (remote) => {
-      const merged = mergeStates(get().state, remote)
+      const merged = applyCatchUp(mergeStates(get().state, remote), Date.now()).state
       const cat = buildCatalog(merged.custom)
       set({ state: merged, items: cat.items, byId: cat.byId })
     },
