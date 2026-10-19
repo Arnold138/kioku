@@ -91,7 +91,9 @@ function reviewInterval(c: CardState, rating: Rating): number {
     default:
       ivl = prev * c.e * 1.3
   }
-  return Math.min(MAX_INTERVAL, Math.max(prev + 1, Math.round(ivl)))
+  // v1.9.1 : une révision réussie (Bien / Facile) rend la carte « retenue » (au moins 3 j, ou 7 j pour Facile)
+  const floor = rating === 4 ? FIRST_GOOD_INTERVAL : rating === 5 ? FIRST_EASY_INTERVAL : prev + 1
+  return Math.min(MAX_INTERVAL, Math.max(prev + 1, floor, Math.round(ivl)))
 }
 
 const easeDelta: Record<Rating, number> = { 1: -0.2, 2: -0.15, 3: -0.05, 4: 0, 5: 0.15 }
@@ -162,9 +164,10 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number)
         return stay(steps[step] === steps[0] && steps.length > 1 ? steps[1] : steps[step], step)
       case 4:
         if (step + 1 < steps.length) return stay(steps[step + 1], step + 1)
-        return graduate(lapseIvl)
+        // v1.9.1 : réussie en fin d'apprentissage → retenue (au moins 3 jours)
+        return graduate(Math.max(lapseIvl, FIRST_GOOD_INTERVAL))
       default:
-        return graduate(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL)
+        return graduate(Math.max(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL, FIRST_EASY_INTERVAL))
     }
   }
 
@@ -219,7 +222,10 @@ export const isKnown = (c: CardState) => c.s === 'review' && c.i >= 3
  *  (encore en apprentissage, ou en révision à 1-2 jours), devient retenue (intervalle 3 jours depuis sa dernière réponse).
  *  Déterministe et sans changer `t` : deux appareils donnent le même résultat, et une vraie réponse plus récente gagne toujours à la synchro. */
 export function catchUpKnown(c: CardState): CardState | null {
-  if (c.r < 1 || misses(c) > 0 || c.l > 0) return null
+  if (c.r < 1) return null
+  // v1.9.1 : une carte en révision à 1-2 jours vient d'être réussie (même si elle a été ratée avant) → retenue
+  if (c.s === 'review' && c.i < FIRST_GOOD_INTERVAL) return { ...c, st: 0, i: FIRST_GOOD_INTERVAL, d: dayNumber(c.t) + FIRST_GOOD_INTERVAL }
+  if (misses(c) > 0 || c.l > 0) return null
   if (c.s !== 'learning' && !(c.s === 'review' && c.i < FIRST_GOOD_INTERVAL)) return null
   const last = dayNumber(c.t)
   return { ...c, s: 'review', st: 0, i: FIRST_GOOD_INTERVAL, d: last + FIRST_GOOD_INTERVAL }

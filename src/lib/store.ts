@@ -29,12 +29,13 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.9'
+export const APP_VERSION = '1.9.1'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
 const LS_BACKUP7 = 'kioku:backup:avant-v1.7'
 const LS_BACKUP9 = 'kioku:backup:avant-v1.9'
+const LS_BACKUP91 = 'kioku:backup:avant-v1.9.1'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -85,9 +86,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP7)) safeSet(LS_BACKUP7, raw)
   // v1.9 : une 8e copie, avant le rattrapage des cartes retenues (les précédentes restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP9)) safeSet(LS_BACKUP9, raw)
+  // v1.9.1 : une 9e copie, avant le 2e rattrapage des cartes retenues
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP91)) safeSet(LS_BACKUP91, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { answer, catchUpKnown, dayNumber, isKnown, newCard, type CardState } from '../lib/scheduler'
+import { answer, catchUpKnown, FIRST_GOOD_INTERVAL, dayNumber, isKnown, newCard, type CardState } from '../lib/scheduler'
 import { CATCHUP_KEY, applyCatchUp, emptyState, mergeStates } from '../lib/state'
 import { ACHIEVEMENTS } from '../lib/achievements'
 
@@ -34,16 +34,21 @@ describe('v1.9 — rattrapage des cartes déjà réussies', () => {
     expect(a.t).toBe(learning.t)
     expect(isKnown(catchUpKnown(young)!)).toBe(true)
   })
-  it('une carte déjà ratée, nouvelle ou déjà retenue n\'est pas touchée', () => {
-    expect(catchUpKnown(missed)).toBeNull()
-    expect(catchUpKnown(lapsed)).toBeNull()
+  it('v1.9.1 : réussie en révision à 1-2 jours, même ratée avant → retenue', () => {
+    expect(isKnown(catchUpKnown(missed)!)).toBe(true)
+    expect(isKnown(catchUpKnown(lapsed)!)).toBe(true)
+  })
+  it('carte ratée encore en (ré)apprentissage, nouvelle ou déjà retenue : pas touchée', () => {
+    expect(catchUpKnown({ ...learning, f: 1 })).toBeNull()
+    expect(catchUpKnown({ ...young, s: 'relearning', l: 1 })).toBeNull()
     expect(catchUpKnown(newCard(now))).toBeNull()
     expect(catchUpKnown({ ...young, i: 5 })).toBeNull()
   })
   it('une seule fois : les cartes répondues après la mise à jour ne sont pas rattrapées', () => {
-    const st = { ...emptyState(), cards: { a: learning, b: missed } }
+    const st = { ...emptyState(), cards: { a: learning, b: missed, x: { ...learning, f: 1 } } }
     const first = applyCatchUp(st, now)
-    expect(first.changed).toBe(1)
+    expect(first.changed).toBe(2)
+    expect(first.state.cards.x.s).toBe('learning')
     expect(first.state.ach[CATCHUP_KEY]).toBe(now)
     expect(first.state.cards.a.s).toBe('review')
     // nouvelle carte répondue « Hésitant » après la mise à jour : reste en apprentissage
@@ -73,5 +78,20 @@ describe('v1.9 — trophées intermédiaires', () => {
   })
   it('paliers de révisions tous les 500 jusqu\'à 3 000', () => {
     for (let n = 500; n <= 3000; n += 500) expect(ACHIEVEMENTS.some((a) => a.id === 'r' + n)).toBe(true)
+  })
+})
+
+describe('v1.9.1 — toute révision réussie rend la carte retenue', () => {
+  it('révision à 1 jour avec une facilité basse : Bien → 3 jours, Facile → 7 jours', () => {
+    const c: CardState = { ...newCard(now), s: 'review', i: 1, d: today, e: 1.3, r: 6, l: 2 }
+    expect(answer(c, 4, now, today).nextDays).toBe(FIRST_GOOD_INTERVAL)
+    expect(answer(c, 5, now, today).nextDays).toBe(7)
+    expect(answer(c, 3, now, today).nextDays).toBe(2)
+  })
+  it('réapprentissage : Bien → retenue même si l\'ancien intervalle était court', () => {
+    const c: CardState = { ...newCard(now), s: 'relearning', st: 0, i: 2, li: 1, d: now, r: 4, l: 1 }
+    const o = answer(c, 4, now, today)
+    expect(o.card.s).toBe('review')
+    expect(isKnown(o.card)).toBe(true)
   })
 })
