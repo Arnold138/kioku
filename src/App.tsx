@@ -12,6 +12,7 @@ import { Settings } from './components/Settings'
 import { Study } from './components/Study'
 import { AddCard } from './components/AddCard'
 import { autoSnapshot } from './lib/snapshots'
+import { configureVoice } from './lib/tts'
 
 type Tab = 'home' | 'library' | 'progress' | 'settings'
 const TABS: Array<{ id: Tab; label: string; icon: (a?: boolean) => JSX.Element }> = [
@@ -93,6 +94,11 @@ export default function App() {
     setTimeout(() => confetti({ ...base, particleCount: 40, angle: 60, origin: { x: 0, y: 0.6 } }), 150)
     setTimeout(() => confetti({ ...base, particleCount: 40, angle: 120, origin: { x: 1, y: 0.6 } }), 150)
   }, [confettiTick])
+
+  // voix japonaise choisie dans les Réglages (v1.10)
+  useEffect(() => {
+    if (ready) configureVoice({ name: state.settings.voiceName, rate: state.settings.voiceRate })
+  }, [ready, state.settings.voiceName, state.settings.voiceRate])
 
   const dueTotal = useMemo(() => countDue(state, items, ALL, Date.now()).total, [state, items])
 

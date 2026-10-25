@@ -74,12 +74,13 @@ export function XpPop({ id, xp }: { id: number; xp: number }) {
 export const listenAnswerXp = (mode: ListenMode, streak: number) => Math.round(LISTEN_XP_PER[mode] * listenMult(streak))
 
 /** Bilan d'écoute animé : chaque ligne apparaît, puis le total défile. */
-export function RewardBreakdown({ reward, mode }: { reward: ListenReward; mode: ListenMode }) {
+/** Détail de l'XP d'une écoute — ou d'un exercice oral (v1.10 : `per` et `done` remplacent les valeurs de l'écoute). */
+export function RewardBreakdown({ reward, mode, per, done }: { reward: ListenReward; mode?: ListenMode; per?: number; done?: [string, string] }) {
   const rows: Array<[string, string, number]> = [
-    ['✅', `${reward.ok} bonne${reward.ok > 1 ? 's' : ''} réponse${reward.ok > 1 ? 's' : ''} × ${LISTEN_XP_PER[mode]}`, reward.answers],
+    ['✅', `${reward.ok} bonne${reward.ok > 1 ? 's' : ''} réponse${reward.ok > 1 ? 's' : ''} × ${per ?? LISTEN_XP_PER[mode ?? 's']}`, reward.answers],
     ['🔥', `Combo · meilleur ${reward.bestCombo} d'affilée`, reward.combo],
     ['💯', 'Sans faute', reward.perfect],
-    ['🎧', 'Écoute terminée', reward.base]
+    [done?.[0] ?? '🎧', done?.[1] ?? 'Écoute terminée', reward.base]
   ]
   const shown = rows.filter((r) => r[2] > 0)
   const delay = shown.length * 260 + 250

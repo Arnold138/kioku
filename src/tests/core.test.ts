@@ -41,20 +41,22 @@ describe('scheduler', () => {
     expect(o.nextDays).toBe(3)
     expect(o.card.s).toBe('review')
   })
-  it('v1.9 : nouvelle carte reconnue du premier coup → retenue (Bien 3 j, Facile 7 j)', () => {
+  it('v1.9 : nouvelle carte reconnue du premier coup → retenue (Bien 3 j, Facile au moins 7 j)', () => {
     expect(answer(newCard(now), 4, now, today).nextDays).toBe(3)
-    expect(answer(newCard(now), 5, now, today).nextDays).toBe(7)
+    // v1.10 (FSRS) : 7 jours est un minimum, FSRS-5 propose 16 jours pour « Facile » du premier coup
+    expect(answer(newCard(now), 5, now, today).nextDays).toBe(16)
     expect(isKnown(answer(newCard(now), 4, now, today).card)).toBe(true)
   })
-  it('révision : Bien multiplie par la facilité, Oublié déclenche le réapprentissage', () => {
+  it('révision (FSRS, reprise d\'une ancienne carte) : Bien ≈ × facilité, Oublié déclenche le réapprentissage', () => {
     const c = { ...newCard(now), s: 'review' as const, i: 10, d: today, e: START_EASE, r: 5 }
+    // la difficulté FSRS est déduite de la facilité : « Bien » garde le rythme de l'ancien planning (× 2,5)
     expect(answer(c, 4, now, today).nextDays).toBe(25)
-    expect(answer(c, 5, now, today).nextDays).toBe(33)
+    expect(answer(c, 5, now, today).nextDays).toBe(55)
     const f = answer(c, 1, now, today)
     expect(f.card.s).toBe('relearning')
     expect(f.card.l).toBe(1)
     expect(f.card.e).toBeCloseTo(2.3)
-    expect(f.card.li).toBe(3)
+    expect(f.card.li).toBe(2)
     const back = answer(f.card, 4, now + 600_000, today)
     expect(back.card.s).toBe('review')
     expect(back.card.i).toBe(3)

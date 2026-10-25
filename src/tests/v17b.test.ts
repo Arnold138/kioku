@@ -22,7 +22,7 @@ describe('« Difficile » = demi-raté (vague souvenir)', () => {
     expect(o.card.l).toBe(0) // pas un « oubli » au sens Anki
     const back = answer(o.card, 4, now + 600_000, today)
     expect(back.card.s).toBe('review')
-    expect(back.card.i).toBe(5)
+    expect(back.card.i).toBeGreaterThanOrEqual(5) // v1.10 : FSRS ajoute un petit bonus après le réapprentissage réussi
   })
 
   it('compte comme un raté dans les points faibles', () => {

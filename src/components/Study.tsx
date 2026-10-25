@@ -268,7 +268,7 @@ export function Study() {
   const parsed = cardKey ? parseCardId(cardKey) : null
   const item = parsed ? byId.get(parsed.itemId) : undefined
   const card = cardKey ? state.cards[cardKey] ?? newCard(now) : null
-  const labels = useMemo(() => (card ? previewLabels(card, now, today) : null), [cardKey, s?.revealed]) // eslint-disable-line
+  const labels = useMemo(() => (card ? previewLabels(card, now, today, state.settings.retention ?? 0.9) : null), [cardKey, s?.revealed]) // eslint-disable-line
 
   const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
   const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
@@ -324,11 +324,12 @@ export function Study() {
     }
   }, [s?.revealed]) // eslint-disable-line
 
-  // Lecture audio automatique
+  // Lecture audio automatique (v1.10) : au verso par défaut (réglable) ; « Lire aussi le recto » pour les cartes JP → FR
   useEffect(() => {
-    if (!item || !parsed || !state.settings.autoPlay) return
-    if (parsed.dir === 'r' && !s?.revealed) speak(item.kana || item.jp)
-    if (parsed.dir === 'p' && s?.revealed) speak(item.kana || item.jp)
+    if (!item || !parsed) return
+    if (s?.revealed) {
+      if (state.settings.speakBack ?? true) void speak(item.kana || item.jp)
+    } else if (parsed.dir === 'r' && state.settings.autoPlay) void speak(item.kana || item.jp)
   }, [cardKey, s?.revealed]) // eslint-disable-line
 
   // Raccourcis clavier (PC) : espace = retourner, 1-5 = noter, Z = annuler

@@ -22,6 +22,7 @@ import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } f
 import { ACHIEVEMENTS, TIERS, buildStats, newlyUnlocked, type Achievement } from './achievements'
 import { ALL_CHALLENGES_BONUS, cardComboBonus, challengeProgress, comboKey, comboStepsReached, listenKey, listenReward, rewardStats, type ListenMode, type ListenReward } from './rewards'
 import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
+import { oralKey, oralReward, type OralMode, type OralReward } from './oral'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
@@ -29,13 +30,14 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.9.1'
+export const APP_VERSION = '1.10.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
 const LS_BACKUP7 = 'kioku:backup:avant-v1.7'
 const LS_BACKUP9 = 'kioku:backup:avant-v1.9'
 const LS_BACKUP91 = 'kioku:backup:avant-v1.9.1'
+const LS_BACKUP10 = 'kioku:backup:avant-v1.10'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -88,9 +90,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP9)) safeSet(LS_BACKUP9, raw)
   // v1.9.1 : une 9e copie, avant le 2e rattrapage des cartes retenues
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP91)) safeSet(LS_BACKUP91, raw)
+  // v1.10 : une 10e copie, avant le passage à FSRS (les précédentes restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP10)) safeSet(LS_BACKUP10, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -214,6 +218,8 @@ interface Store {
   recordExam: (r: { lvl: ExamLevel; mode: ExamMode; ok: number; total: number }) => number
   /** Écoute terminée : `results` = juste/faux pour chaque question. Renvoie le détail de l'XP gagné. */
   recordListen: (r: { mode: ListenMode; results: boolean[] }) => ListenReward
+  /** Exercice oral terminé (shadowing ou production orale) : XP, sans effet sur le planning. Ajouté en v1.10. */
+  recordOral: (r: { mode: OralMode; results: boolean[]; sec?: number }) => OralReward
   /** Note une phrase naturelle de fin de séance : « Compris » ou « À revoir » (entre dans le planning comme une vraie carte, + XP). */
   rateSentence: (itemId: string, ok: boolean) => void
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
@@ -558,7 +564,8 @@ export const useStore = create<Store>((set, get) => {
       const { dir, itemId } = parseCardId(key)
       const natural = isNaturalId(itemId)
       // entraînement : un raté compte comme une vraie révision, une réussite ne repousse pas la date de révision
-      const out = s.practice ? answerPractice(card, r, now, dn) : answer(card, r, now, dn)
+      const ret = state.settings.retention ?? 0.9
+      const out = s.practice ? answerPractice(card, r, now, dn, ret) : answer(card, r, now, dn, ret)
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
@@ -764,6 +771,23 @@ export const useStore = create<Store>((set, get) => {
       return reward
     },
 
+    recordOral: (r) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const reward = oralReward(r.mode, r.results)
+      const before = levelFromXp(totalXp(state)).level
+      const ach = { ...state.ach, [oralKey(r.mode, reward.ok, reward.total, now)]: now }
+      // le temps passé à parler compte dans le temps de pratique (plafonné à 20 min par exercice)
+      const sec = Math.max(0, Math.min(1200, Math.round(r.sec ?? 0)))
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp: reward.total_xp, sec }) })
+      recordCombo(0, reward.bestCombo)
+      const after = levelFromXp(totalXp(get().state)).level
+      if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+      if (reward.total && reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
+      afterAction()
+      return reward
+    },
+
     rateSentence: (itemId, ok) => {
       const { state, device } = get()
       const now = Date.now()
@@ -772,7 +796,7 @@ export const useStore = create<Store>((set, get) => {
       const card = state.cards[key] ?? newCard(now)
       const wasNew = card.s === 'new'
       const r: Rating = ok ? 4 : 1
-      const out = answer(card, r, now, dn)
+      const out = answer(card, r, now, dn, state.settings.retention ?? 0.9)
       const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0)
       const before = levelFromXp(totalXp(state)).level
       const daily = addToDay(state, device, today(), { n: 1, ok: ok ? 1 : 0, nv: wasNew ? 1 : 0, xp })
