@@ -4,6 +4,19 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.10 — FSRS, voix japonaise et oral
+
+- **Nouvel algorithme de révision : FSRS** (celui d'Anki aujourd'hui). Chaque carte a une **mémoire** : combien de temps tu la retiens (stabilité) et à quel point elle te résiste (difficulté). Les cartes faciles s'espacent beaucoup plus vite, les cartes qui te résistent reviennent plus souvent : **moins de révisions inutiles**.
+- **Ton historique est repris** : la mémoire de chaque carte déjà apprise est calculée à partir de son intervalle et de sa facilité actuels. Rien n'est réécrit à l'ouverture : chaque carte passe à FSRS à sa prochaine révision.
+- Les règles d'avant restent : **Bien** = retenue (au moins 3 jours), **Facile** = au moins 7 jours (souvent plus : FSRS propose 16 jours pour un mot reconnu « Facile » du premier coup), **Difficile** = demi-raté (revient dans la séance, garde au moins la moitié de sa mémoire). **Oublié** fait repartir la carte plus court qu'avant : FSRS la reprogramme selon ce que tu en as vraiment retenu.
+- **Mémoire visée** (Réglages → Objectifs) : 85 %, 90 % (par défaut) ou 95 %. À 85 %, les révisions sont nettement plus espacées.
+- **Voix japonaise** : le mot est **lu automatiquement quand tu retournes la carte**, avec 🔊 pour réécouter. Nouvelle section *Réglages → Voix japonaise* : lecture au verso, lecture du recto, **vitesse** et **choix de la voix** (sur iPhone, les voix « améliorées » se téléchargent gratuitement).
+- **Oral 🗣️** (dans *Réviser librement*) :
+  - **Shadowing** : tu écoutes une phrase (ou un mot), tu **t'enregistres** en l'imitant, puis « **Modèle puis moi** » enchaîne les deux pour entendre la différence.
+  - **Production orale** : tu vois le sens en français, tu **dis le mot en japonais**, le téléphone vérifie (reconnaissance vocale). S'il se trompe, « En fait, je l'ai bien dit ».
+  - Comme l'écoute : **14 XP** (shadowing) ou **18 XP** (production) par réussite, combo jusqu'à ×1,6, +50 XP si 10/10. Ça ne change pas le planning des cartes.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), seulement des champs optionnels ajoutés (mémoire FSRS sur les cartes, réglages de voix) ; l'historique oral est rangé dans les trophées (`o:…`), comme l'écoute. Un appareil pas encore mis à jour continue de fonctionner : si une carte y est révisée, sa mémoire FSRS est recalculée ensuite. Copie `kioku:backup:avant-v1.10` à la première ouverture.
+
 ## Nouveautés de la version 1.9.1 — Toute révision réussie compte
 
 - **Bien** ou **Facile** en révision rend la carte **retenue**, même si elle avait été ratée avant : au moins **3 jours** (Facile : 7 jours). Avant, une carte ratée puis réussie repartait à 1-2 jours et ne comptait pas.
@@ -105,17 +118,18 @@ Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**.
 - Objectif quotidien, série de jours, XP, niveaux, 34 trophées, niveau estimé (N5 → N3 / A1 → B1), heatmap.
 - Mode clair / sombre automatique, export/import de sauvegarde JSON.
 
-### Comment fonctionne la révision (inspiré d'Anki)
+### Comment fonctionne la révision (FSRS, comme Anki)
 
-| Phase | Règle |
+Depuis la v1.10, chaque carte a une **stabilité** (le nombre de jours au bout duquel tu as encore 90 % de chances de t'en souvenir) et une **difficulté** (1 à 10). La carte revient le jour où tes chances de t'en souvenir tombent à ta **mémoire visée** (90 % par défaut).
+
+| Réponse | Effet |
 |---|---|
-| Nouvelle carte | étapes **1 min → 10 min**, puis 1 jour (« Facile » : 4 jours directement) |
-| Révision | nouvel intervalle = ancien × **facilité** (2,5 au départ) |
-| Hésitant | × (1 + (facilité − 1) / 2) · facilité −0,05 |
-| Bien | × facilité |
-| Facile | × facilité × 1,3 · facilité +0,15 |
-| Difficile | demi-raté : réapprentissage (10 min), facilité −0,15, retour à 50 % de l'ancien intervalle |
-| Oublié | réapprentissage (10 min), facilité −0,20, retour à 25 % de l'ancien intervalle |
+| Nouvelle carte | étapes **1 min → 10 min** ; reconnue du premier coup : **Bien** ≥ 3 jours, **Facile** ≥ 7 jours |
+| Hésitant | la stabilité augmente un peu, la carte devient plus difficile |
+| Bien | la stabilité augmente (plus la carte est facile et plus tu étais près de l'oublier, plus elle augmente) · au moins 3 jours |
+| Facile | grosse hausse de la stabilité, la carte devient plus facile · au moins 7 jours |
+| Difficile | demi-raté : réapprentissage (10 min), la carte garde au moins la moitié de sa stabilité |
+| Oublié | réapprentissage (10 min), la stabilité repart de ce que tu as retenu |
 
 Le « jour » change à 4 h du matin (comme Anki). Raccourcis clavier sur PC : `Espace` retourne, `1`–`5` notent, `Z` annule.
 
@@ -176,6 +190,9 @@ npm run build                # build de production dans dist/
 
 ```
 src/lib/scheduler.ts   moteur de répétition espacée (5 boutons)
+src/lib/fsrs.ts        formules FSRS-5 (stabilité, difficulté, intervalle)
+src/lib/oral.ts        oral : choix des cartes, vérification de la réponse orale, XP
+src/lib/mic.ts         micro : enregistrement et reconnaissance vocale
 src/lib/queue.ts       file du jour (limites, mélange nouvelles/révisions)
 src/lib/state.ts       état, fusion multi-appareils, XP, séries
 src/lib/sync.ts        synchronisation Supabase
@@ -193,6 +210,7 @@ Chaque appareil garde tout en local (fonctionne hors ligne) et envoie/récupère
 ## Sources et licences
 
 - Listes de vocabulaire JLPT N5/N4/N3 : projet ouvert *jamsinclair/open-anki-jlpt-decks*.
+- Algorithme FSRS-5 : projet ouvert *open-spaced-repetition* (paramètres par défaut).
 - Classement par fréquence : données de priorité du dictionnaire **JMdict** © EDRDG (CC BY-SA 4.0).
 - Traductions françaises et phrases : rédigées pour ce projet — **relis-les et corrige-les au fil de ta progression** (une carte perso peut toujours être ajoutée ou modifiée).
 - Les listes JLPT ne sont pas officielles (le JLPT ne publie pas de liste) : le niveau affiché est une estimation.

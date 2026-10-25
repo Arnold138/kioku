@@ -1,10 +1,12 @@
-// Moteur de répétition espacée inspiré d'Anki (SM-2 modifié) avec 5 niveaux de réponse.
+// Moteur de répétition espacée avec 5 niveaux de réponse.
 //
 // Étapes d'apprentissage : 1 min → 10 min → (jour 1)
-// Révisions : intervalle × facilité (ease), comme Anki.
-// Oubli : la carte repart en réapprentissage (10 min), puis revient à 25 % de son ancien intervalle.
-// Difficile = demi-raté (vague souvenir, mot pas trouvé) : réapprentissage (10 min), puis 50 % de l'ancien intervalle.
-// v1.9 : une nouvelle carte reconnue du premier coup est retenue tout de suite (Bien → 3 j, Facile → 7 j).
+// v1.10 : les intervalles viennent de FSRS-5 (voir fsrs.ts) au lieu de « intervalle × facilité » (SM-2).
+// Oubli : la carte repart en réapprentissage (10 min), puis revient selon sa nouvelle stabilité FSRS.
+// Difficile = demi-raté (vague souvenir, mot pas trouvé) : réapprentissage (10 min), garde au moins la moitié de sa stabilité.
+// v1.9 : une nouvelle carte reconnue du premier coup est retenue tout de suite (Bien → au moins 3 j, Facile → au moins 7 j).
+// La facilité (`e`) et l'intervalle (`i`) restent tenus à jour : un appareil resté sur une ancienne version continue de fonctionner.
+import { DEFAULT_RETENTION, type Grade, type Memory, intervalFor, memoryFromSm2, nextMemory } from './fsrs'
 
 export type Rating = 1 | 2 | 3 | 4 | 5 // Oublié · Difficile · Hésitant · Bien · Facile
 export type Stage = 'new' | 'learning' | 'review' | 'relearning'
@@ -23,6 +25,9 @@ export interface CardState {
   f?: number // nombre total de fois où la carte a été ratée (« Oublié »), y compris à l'apprentissage. Ajouté en v1.4 — optionnel (sinon : `l`)
   w?: number // réussites d'affilée depuis le dernier raté (3 = la carte est « récupérée »). Ajouté en v1.4 — optionnel
   mt?: number // date (ms) du dernier raté. Ajouté en v1.4 — optionnel
+  fs?: number // FSRS : stabilité en jours. Ajouté en v1.10 — optionnel
+  fd?: number // FSRS : difficulté (1 → 10). Ajouté en v1.10 — optionnel
+  fr?: number // FSRS : valeur de `r` quand fs/fd ont été calculés (si un ancien appareil a répondu depuis, on les recalcule). v1.10
 }
 
 /** Nombre de fois où la carte a été ratée (les anciennes sauvegardes n'ont que les oublis de révision). */
@@ -78,25 +83,24 @@ export function newCard(now = Date.now()): CardState {
 
 const clampEase = (e: number) => Math.max(MIN_EASE, Math.round(e * 100) / 100)
 
-function reviewInterval(c: CardState, rating: Rating): number {
-  const prev = Math.max(c.i, 1)
-  let ivl: number
-  switch (rating) {
-    case 3:
-      ivl = prev * (1 + (c.e - 1) * 0.5)
-      break
-    case 4:
-      ivl = prev * c.e
-      break
-    default:
-      ivl = prev * c.e * 1.3
-  }
-  // v1.9.1 : une révision réussie (Bien / Facile) rend la carte « retenue » (au moins 3 j, ou 7 j pour Facile)
-  const floor = rating === 4 ? FIRST_GOOD_INTERVAL : rating === 5 ? FIRST_EASY_INTERVAL : prev + 1
-  return Math.min(MAX_INTERVAL, Math.max(prev + 1, floor, Math.round(ivl)))
+const easeDelta: Record<Rating, number> = { 1: -0.2, 2: -0.15, 3: -0.05, 4: 0, 5: 0.15 }
+const GRADE: Record<Rating, Grade> = { 1: 1, 2: 1.5, 3: 2, 4: 3, 5: 4 }
+
+/** Mémoire FSRS d'une carte : celle enregistrée si elle est à jour, sinon reprise depuis l'ancien planning (intervalle + facilité). */
+export function memoryOf(c: CardState): Memory | null {
+  if (c.fs !== undefined && c.fd !== undefined && c.fr === c.r) return { s: c.fs, d: c.fd }
+  if (c.s === 'new' || c.r < 1) return null
+  const ivl = c.s === 'review' ? c.i : c.s === 'relearning' ? c.li : 1
+  return memoryFromSm2(c.e, ivl)
 }
 
-const easeDelta: Record<Rating, number> = { 1: -0.2, 2: -0.15, 3: -0.05, 4: 0, 5: 0.15 }
+/** Jour de la dernière réponse (révision : échéance − intervalle ; sinon date de la carte). */
+const lastDay = (c: CardState) => (c.s === 'review' ? c.d - c.i : dayNumber(c.t))
+
+/** Intervalle FSRS en jours entiers (≥ 1, ≤ 10 ans). */
+const fsrsDays = (m: Memory, retention: number) => Math.min(MAX_INTERVAL, Math.max(1, Math.round(intervalFor(m.s, retention))))
+
+const withMemory = (c: CardState, m: Memory): CardState => ({ ...c, fs: Math.round(m.s * 1000) / 1000, fd: Math.round(m.d * 1000) / 1000, fr: c.r })
 
 export interface Outcome {
   card: CardState
@@ -113,23 +117,32 @@ export function track(prev: CardState, next: CardState, rating: Rating, now: num
   return next
 }
 
-/** Applique une réponse à une carte. `today` = numéro de jour courant. */
-export function answer(card: CardState, rating: Rating, now: number, today: number): Outcome {
-  const o = answerCore(card, rating, now, today)
+/** Applique une réponse à une carte. `today` = numéro de jour courant, `retention` = rétention visée (0,85 → 0,95). */
+export function answer(card: CardState, rating: Rating, now: number, today: number, retention = DEFAULT_RETENTION): Outcome {
+  const o = answerCore(card, rating, now, today, retention)
   return { ...o, card: track(card, o.card, rating, now) }
 }
 
 /** Entraînement libre : un raté (Oublié ou Difficile) compte comme une vraie révision (la carte revient bientôt) ; une réussite
  *  est comptée (XP, série) mais ne repousse pas la date de révision d'une carte qui n'est pas encore due. */
-export function answerPractice(card: CardState, rating: Rating, now: number, today: number): Outcome {
+export function answerPractice(card: CardState, rating: Rating, now: number, today: number, retention = DEFAULT_RETENTION): Outcome {
   if (card.s === 'new') return { card } // jamais vue : l'entraînement ne l'introduit pas (c'est le rôle de « Découvrir »)
-  if (rating <= 2 || card.s !== 'review') return answer(card, rating, now, today)
-  const kept: CardState = track(card, { ...card, r: card.r + 1, t: now }, rating, now)
+  if (rating <= 2 || card.s !== 'review') return answer(card, rating, now, today, retention)
+  // la mémoire FSRS reste celle d'avant (le planning ne bouge pas) : on la garde valable malgré le `r` qui avance
+  const mem = memoryOf(card)
+  const base: CardState = { ...card, r: card.r + 1, t: now }
+  const kept: CardState = track(card, mem ? withMemory(base, mem) : base, rating, now)
   return { card: kept, nextDays: card.s === 'review' ? Math.max(0, card.d - today) : undefined }
 }
 
-function answerCore(card: CardState, rating: Rating, now: number, today: number): Outcome {
+function answerCore(card: CardState, rating: Rating, now: number, today: number, retention: number): Outcome {
+  const g = GRADE[rating]
+  const before = memoryOf(card)
+  const elapsed = before ? Math.max(0, today - lastDay(card)) : 0
+  const mem = nextMemory(before, g, elapsed)
   const c: CardState = { ...card, t: now }
+  const ivlFsrs = fsrsDays(mem, retention)
+  const done = (o: Outcome): Outcome => ({ ...o, card: withMemory(o.card, mem) })
   const learningLike = c.s === 'new' || c.s === 'learning' || c.s === 'relearning'
 
   if (learningLike) {
@@ -143,17 +156,17 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number)
       c.st = 0
       c.i = Math.min(MAX_INTERVAL, Math.max(1, days))
       c.d = today + c.i
-      return { card: c, nextDays: c.i }
+      return done({ card: c, nextDays: c.i })
     }
     const stay = (minutes: number, newStep = step): Outcome => {
       c.st = newStep
       c.d = now + minutes * MIN
-      return { card: c, nextMinutes: minutes }
+      return done({ card: c, nextMinutes: minutes })
     }
     const lapseIvl = c.s === 'relearning' ? c.li : GRADUATE_INTERVAL
 
     // v1.9 : reconnue du premier coup, sans hésiter → retenue directement, elle sort de la séance
-    if (card.s === 'new' && rating >= 4) return graduate(rating === 5 ? FIRST_EASY_INTERVAL : FIRST_GOOD_INTERVAL)
+    if (card.s === 'new' && rating >= 4) return graduate(Math.max(rating === 5 ? FIRST_EASY_INTERVAL : FIRST_GOOD_INTERVAL, ivlFsrs))
 
     switch (rating) {
       case 1:
@@ -165,36 +178,38 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number)
       case 4:
         if (step + 1 < steps.length) return stay(steps[step + 1], step + 1)
         // v1.9.1 : réussie en fin d'apprentissage → retenue (au moins 3 jours)
-        return graduate(Math.max(lapseIvl, FIRST_GOOD_INTERVAL))
+        return graduate(Math.max(lapseIvl, FIRST_GOOD_INTERVAL, ivlFsrs))
       default:
-        return graduate(Math.max(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL, FIRST_EASY_INTERVAL))
+        return graduate(Math.max(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL, FIRST_EASY_INTERVAL, ivlFsrs))
     }
   }
 
   // Carte en révision
   c.r += 1
+  c.e = clampEase(c.e + easeDelta[rating])
   if (rating <= 2) {
-    // Oublié : vrai oubli · Difficile : demi-raté (vague souvenir) — dans les deux cas la carte est réapprise
+    // Oublié : vrai oubli · Difficile : demi-raté (vague souvenir) — dans les deux cas la carte est réapprise,
+    // puis revient selon sa nouvelle stabilité (Difficile en garde au moins la moitié)
     if (rating === 1) c.l += 1
-    c.e = clampEase(c.e + easeDelta[rating])
-    c.li = Math.max(1, Math.round(c.i * (rating === 1 ? LAPSE_FACTOR : HARD_LAPSE_FACTOR)))
+    c.li = Math.min(Math.max(1, c.i), ivlFsrs)
     c.s = 'relearning'
     c.st = 0
     c.d = now + RELEARN_STEPS[0] * MIN
-    return { card: c, nextMinutes: RELEARN_STEPS[0] }
+    return done({ card: c, nextMinutes: RELEARN_STEPS[0] })
   }
-  const ivl = reviewInterval(c, rating)
-  c.e = clampEase(c.e + easeDelta[rating])
+  // v1.9.1 : une révision réussie (Bien / Facile) rend la carte « retenue » (au moins 3 j, ou 7 j pour Facile)
+  const floor = rating === 4 ? FIRST_GOOD_INTERVAL : rating === 5 ? FIRST_EASY_INTERVAL : 1
+  const ivl = Math.min(MAX_INTERVAL, Math.max(floor, ivlFsrs))
   c.i = ivl
   c.d = today + ivl
-  return { card: c, nextDays: ivl }
+  return done({ card: c, nextDays: ivl })
 }
 
 /** Prévisualisation des 5 boutons : texte court (« 10 min », « 3 j »…). */
-export function previewLabels(card: CardState, now: number, today: number): Record<Rating, string> {
+export function previewLabels(card: CardState, now: number, today: number, retention = DEFAULT_RETENTION): Record<Rating, string> {
   const out = {} as Record<Rating, string>
   ;([1, 2, 3, 4, 5] as Rating[]).forEach((r) => {
-    const o = answer(card, r, now, today)
+    const o = answer(card, r, now, today, retention)
     out[r] = formatDelay(o)
   })
   return out

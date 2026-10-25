@@ -86,7 +86,7 @@ describe('v1.9.1 — toute révision réussie rend la carte retenue', () => {
     const c: CardState = { ...newCard(now), s: 'review', i: 1, d: today, e: 1.3, r: 6, l: 2 }
     expect(answer(c, 4, now, today).nextDays).toBe(FIRST_GOOD_INTERVAL)
     expect(answer(c, 5, now, today).nextDays).toBe(7)
-    expect(answer(c, 3, now, today).nextDays).toBe(2)
+    expect(answer(c, 3, now, today).nextDays).toBe(1) // v1.10 (FSRS) : carte très difficile, Hésitant la garde à 1 jour
   })
   it('réapprentissage : Bien → retenue même si l\'ancien intervalle était court', () => {
     const c: CardState = { ...newCard(now), s: 'relearning', st: 0, i: 2, li: 1, d: now, r: 4, l: 1 }

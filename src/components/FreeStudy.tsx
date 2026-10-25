@@ -5,6 +5,7 @@ import { POS_GROUPS, buildPractice, buildQueue, countDue, type Filter, type PosG
 import { THEMES } from '../lib/themes'
 import { Sheet } from './ui'
 import { Listening } from './Listening'
+import { Oral } from './Oral'
 import { DecksSheet } from './Decks'
 
 const LS = 'kioku:free'
@@ -36,7 +37,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
   const [p, setP] = useState<Prefs>(loadPrefs)
   const set = (patch: Partial<Prefs>) => setP((cur) => ({ ...cur, ...patch }))
   // Écoute et Mes decks : pages dédiées qui s'ouvrent par-dessus, avec un retour vers Réviser librement
-  const [sub, setSub] = useState<'listen' | 'decks' | null>(null)
+  const [sub, setSub] = useState<'listen' | 'oral' | 'decks' | null>(null)
   useEffect(() => {
     if (!open) setSub(null)
   }, [open])
@@ -122,6 +123,14 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
             </div>
             <span className="chev">›</span>
           </button>
+          <button className="list-row tap" onClick={() => setSub('oral')}>
+            <div className="row-ico" style={{ background: 'hsl(330 85% 92%)' }}>🗣️</div>
+            <div className="grow">
+              <div style={{ fontWeight: 700 }}>Oral</div>
+              <div className="muted small">Shadowing · dire le mot en japonais</div>
+            </div>
+            <span className="chev">›</span>
+          </button>
           <button className="list-row tap" onClick={() => setSub('decks')}>
             <div className="row-ico" style={{ background: 'hsl(175 70% 90%)' }}>📚</div>
             <div className="grow">
@@ -202,6 +211,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
       </div>
       <Listening open={open && sub === 'listen'} onClose={closeAll} back={back} />
+      <Oral open={open && sub === 'oral'} onClose={closeAll} back={back} />
       <DecksSheet open={open && sub === 'decks'} onClose={closeAll} back={back} onStarted={closeAll} />
     </Sheet>
   )

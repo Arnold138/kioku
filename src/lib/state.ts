@@ -26,6 +26,13 @@ export interface Settings {
   naturalPerDay: number
   /** Taille d'une manche : la séance est découpée en petites manches avec une pause entre chaque (0 = tout d'un coup). Ajouté en v1.5. */
   chunk: number
+  /** FSRS : probabilité visée de te souvenir d'une carte le jour où elle revient (0,85 · 0,9 · 0,95). Ajouté en v1.10. */
+  retention?: number
+  /** Voix : lecture automatique au verso de la carte. Ajouté en v1.10 (remplace `autoPlay`, qui était coupé par défaut). */
+  speakBack?: boolean
+  /** Voix : nom de la voix japonaise choisie ('' = automatique) et vitesse. Ajouté en v1.10. */
+  voiceName?: string
+  voiceRate?: number
   _t: number
 }
 
@@ -66,6 +73,10 @@ export const DEFAULT_SETTINGS: Settings = {
   swipe: true,
   naturalPerDay: 2,
   chunk: 10,
+  retention: 0.9,
+  speakBack: true,
+  voiceName: '',
+  voiceRate: 0.85,
   _t: 0
 }
 

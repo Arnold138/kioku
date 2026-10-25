@@ -3,6 +3,46 @@ import { useStore, getBackup } from '../lib/store'
 import { Segmented, Stepper, Toggle } from './ui'
 import { fetchRemoteSnapshot, getStoredConfig, hasEnvConfig, listRemoteSnapshots, reconnect, saveConfig, signIn, signOut, signUp, syncNow, type RemoteSnap } from '../lib/sync'
 import { getLocal, listLocal, saveLocal, type SnapMeta } from '../lib/snapshots'
+import { canSpeak, japaneseVoices, speak } from '../lib/tts'
+import type { Settings as SettingsT } from '../lib/state'
+
+/** Voix japonaise (v1.10) : lecture au verso, voix et vitesse. */
+function VoiceSettings({ s, update }: { s: SettingsT; update: (p: Partial<SettingsT>) => void }) {
+  const [voices, setVoices] = useState<string[]>(() => japaneseVoices().map((v) => v.name))
+  useEffect(() => {
+    if (typeof speechSynthesis === 'undefined') return
+    const h = () => setVoices(japaneseVoices().map((v) => v.name))
+    h()
+    speechSynthesis.addEventListener?.('voiceschanged', h)
+    return () => speechSynthesis.removeEventListener?.('voiceschanged', h)
+  }, [])
+  if (!canSpeak()) {
+    return <div className="list"><Row title="Voix japonaise" sub="La synthèse vocale n'est pas disponible sur cet appareil." ><span /></Row></div>
+  }
+  return (
+    <div className="list">
+      <Row title="Lire le verso automatiquement" sub="Quand tu retournes la carte, tu entends le mot ; 🔊 pour réécouter"><Toggle on={s.speakBack ?? true} onChange={(v) => update({ speakBack: v })} /></Row>
+      <Row title="Lire aussi le recto" sub="Sur les cartes japonais → français, la voix lit le mot avant que tu répondes"><Toggle on={s.autoPlay} onChange={(v) => update({ autoPlay: v })} /></Row>
+      <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+        <div style={{ fontWeight: 600 }}>Vitesse</div>
+        <Segmented value={String(s.voiceRate ?? 0.85)} onChange={(v) => update({ voiceRate: Number(v) })} options={[['0.7', 'Lente'], ['0.85', 'Normale'], ['1', 'Naturelle']]} />
+      </div>
+      <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+        <div>
+          <div style={{ fontWeight: 600 }}>Voix</div>
+          <div className="muted small">Sur iPhone, les voix « améliorées » se téléchargent gratuitement : Réglages → Accessibilité → Contenu énoncé → Voix → Japonais</div>
+        </div>
+        <div className="row" style={{ gap: 8 }}>
+          <select className="select grow" value={s.voiceName ?? ''} onChange={(e) => update({ voiceName: e.target.value })} aria-label="Voix japonaise">
+            <option value="">Automatique</option>
+            {voices.map((n) => <option key={n} value={n}>{n}</option>)}
+          </select>
+          <button className="btn plain" style={{ padding: '8px 14px', fontSize: 14 }} onClick={() => void speak('こんにちは。きょうも がんばりましょう。')}>🔊 Tester</button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function Row({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
@@ -210,6 +250,13 @@ export function Settings() {
           </div>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>
+              <div style={{ fontWeight: 600 }}>Mémoire visée</div>
+              <div className="muted small">Tes chances de te souvenir d'une carte le jour où elle revient. Plus bas = moins de révisions, mais un peu plus d'oublis</div>
+            </div>
+            <Segmented value={String(s.retention ?? 0.9)} onChange={(v) => updateSettings({ retention: Number(v) })} options={[['0.85', '85 %'], ['0.9', '90 %'], ['0.95', '95 %']]} />
+          </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
               <div style={{ fontWeight: 600 }}>Cartes par manche</div>
               <div className="muted small">La séance est coupée en petites manches : les ratés reviennent dans la manche, puis une pause pour continuer ou arrêter</div>
             </div>
@@ -252,8 +299,12 @@ export function Settings() {
             <div style={{ fontWeight: 600 }}>Thème</div>
             <Segmented value={s.theme} onChange={(v) => updateSettings({ theme: v })} options={[['auto', 'Auto'], ['light', 'Clair'], ['dark', 'Sombre']]} />
           </div>
-          <Row title="Prononciation automatique" sub="Voix japonaise de ton appareil"><Toggle on={s.autoPlay} onChange={(v) => updateSettings({ autoPlay: v })} /></Row>
         </div>
+      </div>
+
+      <div>
+        <div className="section-title">Voix japonaise</div>
+        <VoiceSettings s={s} update={updateSettings} />
       </div>
 
       <div>
