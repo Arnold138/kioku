@@ -27,6 +27,9 @@ export interface AchStats extends RewardStats {
   /** v1.11 : village (bâtiments, villes, feuilles balayées, habitants) et cartes shiny */
   village: VillageStats
   shiny: number
+  /** v1.12 : décorations de fêtes gagnées (fêtes différentes) et kanji d'or du parchemin */
+  decorations: number
+  goldKanji: number
 }
 
 /** Rang d'un trophée : il rapporte plus d'XP et brille davantage. */
@@ -244,7 +247,14 @@ export const ACHIEVEMENTS: Achievement[] = [
     { id: 'vTalk50', name: 'Enfant du pays', desc: 'Comprendre 50 phrases d\'habitants', emoji: '🍵', tier: 'silver', test: (s) => s.village.villagers >= 50 },
     { id: 'sh1', name: 'Ça brille !', desc: 'Ta première carte shiny', emoji: '✨', tier: 'bronze', test: (s) => s.shiny >= 1 },
     { id: 'sh10', name: 'Collectionneur', desc: '10 cartes shiny', emoji: '💫', tier: 'silver', test: (s) => s.shiny >= 10 },
-    { id: 'sh50', name: 'Trésor holographique', desc: '50 cartes shiny', emoji: '🌈', tier: 'gold', test: (s) => s.shiny >= 50 }
+    { id: 'sh50', name: 'Trésor holographique', desc: '50 cartes shiny', emoji: '🌈', tier: 'gold', test: (s) => s.shiny >= 50 },
+    // v1.12 — fêtes de saison et parchemin d'or
+    { id: 'fe1', name: 'Premier matsuri', desc: 'Gagner la décoration d\'une fête de saison', emoji: '🎋', tier: 'silver', test: (s) => s.decorations >= 1 },
+    { id: 'fe3', name: 'Au fil des saisons', desc: '3 décorations de fêtes différentes', emoji: '🎐', tier: 'gold', test: (s) => s.decorations >= 3 },
+    { id: 'fe6', name: 'Une année au Japon', desc: 'Les 6 décorations de fêtes', emoji: '🗾', tier: 'platinum', test: (s) => s.decorations >= 6 },
+    { id: 'gk25', name: 'Encre d\'or', desc: '25 kanji d\'or sur le parchemin', emoji: '🖌️', tier: 'bronze', test: (s) => s.goldKanji >= 25 },
+    { id: 'gk100', name: 'Calligraphe', desc: '100 kanji d\'or', emoji: '📜', tier: 'silver', test: (s) => s.goldKanji >= 100 },
+    { id: 'gk300', name: 'Maître du pinceau', desc: '300 kanji d\'or', emoji: '🏯', tier: 'gold', test: (s) => s.goldKanji >= 300 }
   ]),
   ...fam('misc', [
     { id: 'early', name: 'Lève-tôt', desc: 'Réviser avant 8 h', emoji: '🌅', tier: 'bronze', test: (s) => s.hour >= 5 && s.hour < 8 },
@@ -282,6 +292,8 @@ export function buildStats(
     examPerfect?: boolean
     village?: VillageStats
     shiny?: number
+    decorations?: number
+    goldKanji?: number
   },
   p: Progress,
   r: RewardStats
@@ -308,6 +320,8 @@ export function buildStats(
     examsPassed: s.examsPassed ?? [],
     examPerfect: !!s.examPerfect,
     village: s.village ?? { built: 0, houses: 0, lit: 0, cities: 1, monuments: 0, swept: 0, villagers: 0 },
-    shiny: s.shiny ?? 0
+    shiny: s.shiny ?? 0,
+    decorations: s.decorations ?? 0,
+    goldKanji: s.goldKanji ?? 0
   }
 }

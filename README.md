@@ -4,6 +4,16 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.12 — Fêtes de saison, parchemin d'or et Kioku Wrapped
+
+- **Fêtes de saison, aux vraies dates japonaises** : Momiji-gari (15 oct. → 30 nov.), Shōgatsu (26 déc. → 15 janv.), Hanami (15 mars → 30 avril), Tanabata (25 juin → 15 juil.), Natsu matsuri (20 juil. → 31 août) et Tsukimi (10 sept. → 10 oct.). Chaque fête apporte **15 mots** de saison.
+- Retiens **12 mots sur 15** pendant la fête : tu gagnes **sa décoration dans ton village** (érables rouges, kadomatsu, cerisier, bambou à vœux, lanternes, dango et herbes de la pampa) et **+100 XP**. La décoration reste pour toujours, et la fête revient chaque année.
+- Les mots des fêtes sont dans un deck à part (**Fêtes de saison**, dans *Réviser librement*). Ils ne comptent pas dans ton niveau JLPT.
+- **Le parchemin d'or** (onglet Progrès) : chaque kanji d'un mot **solide** (revu à 21 jours ou plus) s'écrit en **encre dorée** ; les autres kanji que tu reconnais sont à l'encre noire. Touche un kanji pour voir un de tes mots qui l'utilise.
+- **Kioku Wrapped** (onglet Progrès) : ton mois ou ton année en quelques écrans animés : jours de pratique, cartes révisées, record, nouveaux mots, ta plus belle revanche (le mot le plus raté que tu as fini par retenir), ton kanji de l'année, tes trophées.
+- **6 nouveaux trophées** : fêtes (1, 3, les 6) et kanji d'or (25, 100, 300).
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), aucun nouveau réglage. Les décorations sont rangées dans les trophées (`fe:<fête>:<année>`) ; le parchemin et le Wrapped sont **calculés à partir de tes cartes**. Copie `kioku:backup:avant-v1.12` à la première ouverture.
+
 ## Nouveautés de la version 1.11 — Le village, la mission du jour et les cartes shiny
 
 - **Nouvel accueil** : ton **village vivant** en haut (ciel qui suit l'heure, constellation de ta série, habitants qui se promènent, feuilles qui tombent), puis **ton niveau** avec la **route du JLPT** (N5 → N4 → N3 → N2), la **Mission du jour**, les **3 anneaux** (objectif, défis, série) et les examens. Interface en **verre**, en clair comme en sombre.
@@ -211,6 +221,8 @@ src/lib/oral.ts        oral : choix des cartes, vérification de la réponse ora
 src/lib/mic.ts         micro : enregistrement et reconnaissance vocale
 src/lib/village.ts     village : bâtiments par thème, villes, monuments, enseignes, habitants
 src/lib/shiny.ts       cartes shiny (récupérées, chanceuses) et collection
+src/lib/festivals.ts   fêtes de saison (dates, mots, décorations) · src/data/festivals.json
+src/lib/scroll.ts      parchemin d'or · src/lib/wrapped.ts  Kioku Wrapped
 src/lib/queue.ts       file du jour (limites, mélange nouvelles/révisions)
 src/lib/state.ts       état, fusion multi-appareils, XP, séries
 src/lib/sync.ts        synchronisation Supabase

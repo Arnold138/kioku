@@ -302,12 +302,12 @@ export function computeProgress(state: AppState, items: Item[]): Progress {
     if (r && r.s !== 'new') seen++
     if (r && isKnown(r)) {
       k.r++
-      if (it.kind === 'word') wordsKnownR++
+      if (it.kind === 'word' && it.lvl !== 'Saison') wordsKnownR++ // v1.12 : les mots des fêtes ne comptent pas dans le niveau JLPT
       if (it.kind === 'sentence') sentencesKnown++
     }
     if (p && isKnown(p)) {
       k.p++
-      if (it.kind === 'word') wordsKnownP++
+      if (it.kind === 'word' && it.lvl !== 'Saison') wordsKnownP++
     }
     if (r && isMature(r)) matureCount++
     if (it.kind === 'custom') customCount++

@@ -104,7 +104,7 @@ describe('mot en contexte', () => {
       const real = hits.filter((h) => !h.id.startsWith('ex:'))
       const idxEx = hits.findIndex((h) => h.id.startsWith('ex:'))
       if (idxEx >= 0) expect(idxEx).toBe(real.length)
-      expect(id.startsWith('w')).toBe(true)
+      expect(id.startsWith('w') || id.startsWith('fe-')).toBe(true) // v1.12 : les mots des fêtes ont aussi leurs phrases
     }
   })
 })

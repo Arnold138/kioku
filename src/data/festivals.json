@@ -1,0 +1,554 @@
+{
+ "shogatsu": [
+  {
+   "jp": "お正月",
+   "kana": "おしょうがつ",
+   "fr": "Nouvel An (les fêtes)",
+   "pos": "n"
+  },
+  {
+   "jp": "元日",
+   "kana": "がんじつ",
+   "fr": "le 1er janvier",
+   "pos": "n"
+  },
+  {
+   "jp": "初詣",
+   "kana": "はつもうで",
+   "fr": "première visite au sanctuaire de l'année",
+   "pos": "n"
+  },
+  {
+   "jp": "お年玉",
+   "kana": "おとしだま",
+   "fr": "étrennes (argent offert aux enfants)",
+   "pos": "n"
+  },
+  {
+   "jp": "おせち料理",
+   "kana": "おせちりょうり",
+   "fr": "plats traditionnels du Nouvel An",
+   "pos": "n"
+  },
+  {
+   "jp": "年賀状",
+   "kana": "ねんがじょう",
+   "fr": "carte de vœux du Nouvel An",
+   "pos": "n"
+  },
+  {
+   "jp": "門松",
+   "kana": "かどまつ",
+   "fr": "décoration de pin et de bambou à l'entrée",
+   "pos": "n"
+  },
+  {
+   "jp": "鏡餅",
+   "kana": "かがみもち",
+   "fr": "gâteaux de riz décoratifs empilés",
+   "pos": "n"
+  },
+  {
+   "jp": "お雑煮",
+   "kana": "おぞうに",
+   "fr": "soupe au mochi du Nouvel An",
+   "pos": "n"
+  },
+  {
+   "jp": "大晦日",
+   "kana": "おおみそか",
+   "fr": "le 31 décembre",
+   "pos": "n"
+  },
+  {
+   "jp": "年越しそば",
+   "kana": "としこしそば",
+   "fr": "soba mangés le soir du réveillon",
+   "pos": "n"
+  },
+  {
+   "jp": "除夜の鐘",
+   "kana": "じょやのかね",
+   "fr": "cloches du temple au réveillon",
+   "pos": "n"
+  },
+  {
+   "jp": "初日の出",
+   "kana": "はつひので",
+   "fr": "premier lever de soleil de l'année",
+   "pos": "n"
+  },
+  {
+   "jp": "おみくじ",
+   "kana": "おみくじ",
+   "fr": "papier de bonne aventure",
+   "pos": "n"
+  },
+  {
+   "jp": "あけましておめでとう",
+   "kana": "あけましておめでとう",
+   "fr": "Bonne année !",
+   "pos": "ex"
+  }
+ ],
+ "hanami": [
+  {
+   "jp": "桜前線",
+   "kana": "さくらぜんせん",
+   "fr": "front de floraison des cerisiers",
+   "pos": "n"
+  },
+  {
+   "jp": "満開",
+   "kana": "まんかい",
+   "fr": "en pleine floraison",
+   "pos": "n"
+  },
+  {
+   "jp": "花びら",
+   "kana": "はなびら",
+   "fr": "pétale",
+   "pos": "n"
+  },
+  {
+   "jp": "夜桜",
+   "kana": "よざくら",
+   "fr": "cerisiers illuminés la nuit",
+   "pos": "n"
+  },
+  {
+   "jp": "花吹雪",
+   "kana": "はなふぶき",
+   "fr": "pluie de pétales",
+   "pos": "n"
+  },
+  {
+   "jp": "開花",
+   "kana": "かいか",
+   "fr": "floraison, ouverture des fleurs",
+   "pos": "n"
+  },
+  {
+   "jp": "散る",
+   "kana": "ちる",
+   "fr": "tomber, s'éparpiller (pétales)",
+   "pos": "v"
+  },
+  {
+   "jp": "お花見弁当",
+   "kana": "おはなみべんとう",
+   "fr": "bento pour le hanami",
+   "pos": "n"
+  },
+  {
+   "jp": "桜餅",
+   "kana": "さくらもち",
+   "fr": "mochi à la feuille de cerisier",
+   "pos": "n"
+  },
+  {
+   "jp": "花見団子",
+   "kana": "はなみだんご",
+   "fr": "dango tricolores du hanami",
+   "pos": "n"
+  },
+  {
+   "jp": "新学期",
+   "kana": "しんがっき",
+   "fr": "nouvelle année scolaire",
+   "pos": "n"
+  },
+  {
+   "jp": "入学式",
+   "kana": "にゅうがくしき",
+   "fr": "cérémonie de rentrée",
+   "pos": "n"
+  },
+  {
+   "jp": "春休み",
+   "kana": "はるやすみ",
+   "fr": "vacances de printemps",
+   "pos": "n"
+  },
+  {
+   "jp": "花粉",
+   "kana": "かふん",
+   "fr": "pollen",
+   "pos": "n"
+  },
+  {
+   "jp": "場所取り",
+   "kana": "ばしょとり",
+   "fr": "réserver une place (sous les arbres)",
+   "pos": "n"
+  }
+ ],
+ "tanabata": [
+  {
+   "jp": "七夕",
+   "kana": "たなばた",
+   "fr": "Tanabata, la fête des étoiles",
+   "pos": "n"
+  },
+  {
+   "jp": "短冊",
+   "kana": "たんざく",
+   "fr": "bande de papier où l'on écrit un vœu",
+   "pos": "n"
+  },
+  {
+   "jp": "願い事",
+   "kana": "ねがいごと",
+   "fr": "vœu, souhait",
+   "pos": "n"
+  },
+  {
+   "jp": "笹",
+   "kana": "ささ",
+   "fr": "bambou nain",
+   "pos": "n"
+  },
+  {
+   "jp": "織姫",
+   "kana": "おりひめ",
+   "fr": "la Tisserande (l'étoile Véga)",
+   "pos": "n"
+  },
+  {
+   "jp": "彦星",
+   "kana": "ひこぼし",
+   "fr": "le Bouvier (l'étoile Altaïr)",
+   "pos": "n"
+  },
+  {
+   "jp": "天の川",
+   "kana": "あまのがわ",
+   "fr": "la Voie lactée",
+   "pos": "n"
+  },
+  {
+   "jp": "飾り",
+   "kana": "かざり",
+   "fr": "décoration",
+   "pos": "n"
+  },
+  {
+   "jp": "願う",
+   "kana": "ねがう",
+   "fr": "souhaiter",
+   "pos": "v"
+  },
+  {
+   "jp": "夜空",
+   "kana": "よぞら",
+   "fr": "ciel nocturne",
+   "pos": "n"
+  },
+  {
+   "jp": "流れ星",
+   "kana": "ながれぼし",
+   "fr": "étoile filante",
+   "pos": "n"
+  },
+  {
+   "jp": "梅雨",
+   "kana": "つゆ",
+   "fr": "saison des pluies",
+   "pos": "n"
+  },
+  {
+   "jp": "浴衣",
+   "kana": "ゆかた",
+   "fr": "yukata (kimono léger d'été)",
+   "pos": "n"
+  },
+  {
+   "jp": "星座",
+   "kana": "せいざ",
+   "fr": "constellation",
+   "pos": "n"
+  },
+  {
+   "jp": "叶う",
+   "kana": "かなう",
+   "fr": "se réaliser (un vœu)",
+   "pos": "v"
+  }
+ ],
+ "natsu": [
+  {
+   "jp": "夏祭り",
+   "kana": "なつまつり",
+   "fr": "fête d'été",
+   "pos": "n"
+  },
+  {
+   "jp": "屋台",
+   "kana": "やたい",
+   "fr": "stand de nourriture",
+   "pos": "n"
+  },
+  {
+   "jp": "金魚すくい",
+   "kana": "きんぎょすくい",
+   "fr": "pêche aux poissons rouges",
+   "pos": "n"
+  },
+  {
+   "jp": "かき氷",
+   "kana": "かきごおり",
+   "fr": "glace pilée au sirop",
+   "pos": "n"
+  },
+  {
+   "jp": "盆踊り",
+   "kana": "ぼんおどり",
+   "fr": "danse de l'Obon",
+   "pos": "n"
+  },
+  {
+   "jp": "お盆",
+   "kana": "おぼん",
+   "fr": "Obon, fête des ancêtres",
+   "pos": "n"
+  },
+  {
+   "jp": "提灯",
+   "kana": "ちょうちん",
+   "fr": "lanterne en papier",
+   "pos": "n"
+  },
+  {
+   "jp": "うちわ",
+   "kana": "うちわ",
+   "fr": "éventail plat",
+   "pos": "n"
+  },
+  {
+   "jp": "太鼓",
+   "kana": "たいこ",
+   "fr": "tambour japonais",
+   "pos": "n"
+  },
+  {
+   "jp": "神輿",
+   "kana": "みこし",
+   "fr": "palanquin sacré porté pendant les fêtes",
+   "pos": "n"
+  },
+  {
+   "jp": "風鈴",
+   "kana": "ふうりん",
+   "fr": "carillon à vent",
+   "pos": "n"
+  },
+  {
+   "jp": "蝉",
+   "kana": "せみ",
+   "fr": "cigale",
+   "pos": "n"
+  },
+  {
+   "jp": "打ち上げ花火",
+   "kana": "うちあげはなび",
+   "fr": "grand feu d'artifice",
+   "pos": "n"
+  },
+  {
+   "jp": "焼きそば",
+   "kana": "やきそば",
+   "fr": "nouilles sautées",
+   "pos": "n"
+  },
+  {
+   "jp": "縁日",
+   "kana": "えんにち",
+   "fr": "fête foraine du temple",
+   "pos": "n"
+  }
+ ],
+ "tsukimi": [
+  {
+   "jp": "お月見",
+   "kana": "おつきみ",
+   "fr": "contemplation de la lune",
+   "pos": "n"
+  },
+  {
+   "jp": "満月",
+   "kana": "まんげつ",
+   "fr": "pleine lune",
+   "pos": "n"
+  },
+  {
+   "jp": "十五夜",
+   "kana": "じゅうごや",
+   "fr": "nuit de la pleine lune d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "月見団子",
+   "kana": "つきみだんご",
+   "fr": "dango offerts à la lune",
+   "pos": "n"
+  },
+  {
+   "jp": "すすき",
+   "kana": "すすき",
+   "fr": "herbe de la pampa japonaise",
+   "pos": "n"
+  },
+  {
+   "jp": "名月",
+   "kana": "めいげつ",
+   "fr": "belle lune d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "三日月",
+   "kana": "みかづき",
+   "fr": "croissant de lune",
+   "pos": "n"
+  },
+  {
+   "jp": "月明かり",
+   "kana": "つきあかり",
+   "fr": "clair de lune",
+   "pos": "n"
+  },
+  {
+   "jp": "秋の夜長",
+   "kana": "あきのよなが",
+   "fr": "les longues nuits d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "虫の音",
+   "kana": "むしのね",
+   "fr": "chant des insectes",
+   "pos": "n"
+  },
+  {
+   "jp": "里芋",
+   "kana": "さといも",
+   "fr": "taro",
+   "pos": "n"
+  },
+  {
+   "jp": "眺める",
+   "kana": "ながめる",
+   "fr": "contempler, regarder au loin",
+   "pos": "v"
+  },
+  {
+   "jp": "お供え",
+   "kana": "おそなえ",
+   "fr": "offrande",
+   "pos": "n"
+  },
+  {
+   "jp": "縁側",
+   "kana": "えんがわ",
+   "fr": "véranda en bois d'une maison japonaise",
+   "pos": "n"
+  },
+  {
+   "jp": "餅つき",
+   "kana": "もちつき",
+   "fr": "pilage du riz pour faire des mochi",
+   "pos": "n"
+  }
+ ],
+ "momiji": [
+  {
+   "jp": "紅葉",
+   "kana": "もみじ",
+   "fr": "érable rouge, feuillage d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "紅葉狩り",
+   "kana": "もみじがり",
+   "fr": "sortie pour admirer les feuilles d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "落ち葉",
+   "kana": "おちば",
+   "fr": "feuilles mortes",
+   "pos": "n"
+  },
+  {
+   "jp": "銀杏",
+   "kana": "いちょう",
+   "fr": "ginkgo",
+   "pos": "n"
+  },
+  {
+   "jp": "栗",
+   "kana": "くり",
+   "fr": "châtaigne",
+   "pos": "n"
+  },
+  {
+   "jp": "焼き芋",
+   "kana": "やきいも",
+   "fr": "patate douce grillée",
+   "pos": "n"
+  },
+  {
+   "jp": "柿",
+   "kana": "かき",
+   "fr": "kaki (fruit)",
+   "pos": "n"
+  },
+  {
+   "jp": "秋風",
+   "kana": "あきかぜ",
+   "fr": "vent d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "枯れ葉",
+   "kana": "かれは",
+   "fr": "feuille sèche",
+   "pos": "n"
+  },
+  {
+   "jp": "色づく",
+   "kana": "いろづく",
+   "fr": "prendre ses couleurs (feuillage)",
+   "pos": "v"
+  },
+  {
+   "jp": "夕焼け",
+   "kana": "ゆうやけ",
+   "fr": "coucher de soleil rougeoyant",
+   "pos": "n"
+  },
+  {
+   "jp": "新米",
+   "kana": "しんまい",
+   "fr": "riz nouveau (de l'année)",
+   "pos": "n"
+  },
+  {
+   "jp": "秋刀魚",
+   "kana": "さんま",
+   "fr": "balaou, poisson d'automne",
+   "pos": "n"
+  },
+  {
+   "jp": "松茸",
+   "kana": "まつたけ",
+   "fr": "champignon matsutake",
+   "pos": "n"
+  },
+  {
+   "jp": "読書の秋",
+   "kana": "どくしょのあき",
+   "fr": "l'automne, saison de la lecture",
+   "pos": "n"
+  }
+ ]
+}

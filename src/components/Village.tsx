@@ -13,6 +13,8 @@ import {
 } from '../lib/village'
 import { Sheet } from './ui'
 import { VillageScene } from './VillageScene'
+import { earnedDecorations } from '../lib/festivals'
+import { FestivalCard } from './Festival'
 import { currentSky } from './Home'
 
 const STAGE_COLOR = ['var(--faint)', '#fb923c', '#a5b4fc', '#ffc56b']
@@ -110,7 +112,7 @@ export function VillageSheet({ open, onClose }: { open: boolean; onClose: () => 
         </div>
 
         <div className="village-big">
-          <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} labels />
+          <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} decor={earnedDecorations(state.ach)} labels />
         </div>
 
         {/* villes */}
@@ -130,6 +132,8 @@ export function VillageSheet({ open, onClose }: { open: boolean; onClose: () => 
             )
           })}
         </div>
+
+        <FestivalCard full onStart={onClose} />
 
         <Villager />
 

@@ -11,6 +11,8 @@ import { buildingsFor, cityStatuses, currentCity, dirtiest, levelProgress, skyFo
 import { Exams } from './Exams'
 import { Challenges } from './Rewards'
 import { VillageScene } from './VillageScene'
+import { activeFestival, earnedDecorations } from '../lib/festivals'
+import { FestivalCard } from './Festival'
 import { VillageSheet } from './Village'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
@@ -123,7 +125,7 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
     <motion.div className="home2" variants={container} initial="hidden" animate="show">
       {/* 1 · Le village vivant */}
       <motion.div variants={item} className="village-banner">
-        <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} />
+        <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} decor={earnedDecorations(state.ach)} />
         <div className="vb-top">
           <div className="vb-brand"><span className="jp-display">記憶</span><span>Kioku</span></div>
           <div className="glass-chip" title="Série de jours">
@@ -250,7 +252,10 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
           </AnimatePresence>
         </motion.div>
 
-        {/* 5 · Examens */}
+        {/* 5 · Fête de saison (v1.12) */}
+        {activeFestival(new Date(now)) && <motion.div variants={item}><FestivalCard /></motion.div>}
+
+        {/* 6 · Examens */}
         <motion.button variants={item} className="glass-card row-card" onClick={() => setExamsOpen(true)}>
           <div className="row-ico2" style={{ background: 'rgba(251,191,36,0.18)' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5b82e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 3h8l1 3H7l1-3z" /><rect x="5" y="6" width="14" height="15" rx="2" /><path d="M9 12h6M9 16h4" /></svg>

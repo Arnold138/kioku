@@ -206,6 +206,80 @@ function Decor({ city }: { city: string }) {
   return null
 }
 
+/** v1.12 — décorations des fêtes de saison gagnées (au premier plan). */
+function FestivalDecor({ decor }: { decor: string[] }) {
+  const has = (id: string) => decor.includes(id)
+  return (
+    <g>
+      {has('natsu') && (
+        <g>
+          <path d="M96 196 Q200 226 350 194" fill="none" stroke="#1b1638" strokeWidth={1} />
+          {[110, 140, 170, 200, 230, 260, 290, 320].map((x, i) => {
+            const y = 199 + Math.sin(((x - 96) / 254) * Math.PI) * 15
+            return (
+              <g key={x}>
+                <circle cx={x} cy={y + 4} r={5} fill={i % 2 ? '#ff7a59' : '#ffd166'} opacity={0.45} filter="url(#vGlow)" />
+                <ellipse cx={x} cy={y + 4} rx={2.8} ry={3.6} fill={i % 2 ? '#ff7a59' : '#ffd166'} />
+              </g>
+            )
+          })}
+        </g>
+      )}
+      {has('momiji') && (
+        <g>
+          <rect x={17} y={272} width={3} height={22} fill="#3a2418" />
+          <circle cx={19} cy={268} r={11} fill="#dc2626" />
+          <circle cx={11} cy={275} r={7} fill="#ea580c" />
+          <circle cx={27} cy={276} r={7} fill="#b91c1c" />
+          <rect x={352} y={276} width={3} height={18} fill="#3a2418" />
+          <circle cx={354} cy={272} r={9} fill="#ef4444" />
+          <circle cx={346} cy={278} r={6} fill="#f97316" />
+        </g>
+      )}
+      {has('shogatsu') && (
+        <g>
+          {[30, 90].map((x) => (
+            <g key={x}>
+              <rect x={x - 6} y={252} width={12} height={8} rx={2} fill="#8a6a44" />
+              <path d={`M${x - 4} 252 L${x - 4} 236 L${x - 2} 240 Z M${x} 252 L${x} 232 L${x + 2} 236 Z M${x + 4} 252 L${x + 4} 238 L${x + 6} 242 Z`} fill="#4ade80" />
+              <path d={`M${x - 7} 250 q7 -8 14 0`} fill="#166534" />
+            </g>
+          ))}
+        </g>
+      )}
+      {has('hanami') && (
+        <g>
+          <rect x={163} y={274} width={3.4} height={22} fill="#4a2e22" />
+          <circle cx={165} cy={268} r={12} fill="#f9a8d4" />
+          <circle cx={155} cy={275} r={8} fill="#fbcfe8" />
+          <circle cx={176} cy={275} r={8} fill="#f472b6" />
+          <circle cx={170} cy={290} r={1.6} fill="#fbcfe8" className="v-leaf-fall" />
+        </g>
+      )}
+      {has('tanabata') && (
+        <g>
+          <rect x={304} y={258} width={2.4} height={38} fill="#4d7c0f" />
+          <path d="M305 262 q10 -4 16 2 M305 270 q-10 -4 -15 1 M305 278 q9 -3 14 3" stroke="#65a30d" strokeWidth={2} fill="none" />
+          {[[314, 265, '#f472b6'], [296, 272, '#60a5fa'], [316, 281, '#facc15'], [299, 284, '#a78bfa']].map(([x, y, c], i) => (
+            <rect key={i} x={x as number} y={y as number} width={3} height={7} fill={c as string} />
+          ))}
+        </g>
+      )}
+      {has('tsukimi') && (
+        <g>
+          {[218, 226, 234].map((x, i) => (
+            <path key={x} d={`M${x} 296 q${2 + i} -16 ${6 - i} -26`} stroke="#d6c08a" strokeWidth={1.4} fill="none" />
+          ))}
+          <path d="M240 296 h16 l-2 -4 h-12 z" fill="#8a6a44" />
+          {[[244, 289], [252, 289], [248, 284]].map(([x, y]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r={3} fill="#fff7e6" />
+          ))}
+        </g>
+      )}
+    </g>
+  )
+}
+
 export interface SceneProps {
   city: CityStatus
   buildings: Building[]
@@ -214,9 +288,11 @@ export interface SceneProps {
   height?: number
   labels?: boolean
   className?: string
+  /** décorations des fêtes de saison gagnées (v1.12) */
+  decor?: string[]
 }
 
-export function VillageScene({ city, buildings, sky, streak, height = 312, labels = false, className }: SceneProps) {
+export function VillageScene({ city, buildings, sky, streak, height = 312, labels = false, className, decor = [] }: SceneProps) {
   const s = SKIES[sky]
   const shown = useMemo(() => buildings.slice(0, SLOTS.length), [buildings])
   const walkers = Math.min(3, buildings.filter((b) => b.stage >= 2).length)
@@ -267,6 +343,7 @@ export function VillageScene({ city, buildings, sky, streak, height = 312, label
 
       <path d="M0 254 Q195 244 390 254 L390 312 L0 312 Z" fill={s.ground} />
       {shown.map((b, i) => (b.leaves > 0 ? <Leaves key={b.id} x={SLOTS[i]} n={b.leaves} seed={i + 1} /> : null))}
+      <FestivalDecor decor={decor} />
 
       {/* habitants qui se promènent */}
       {walkers >= 1 && (

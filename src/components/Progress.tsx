@@ -6,6 +6,9 @@ import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, stre
 import { dayKey, dayNumber, misses } from '../lib/scheduler'
 import { Roadmap } from './Roadmap'
 import { JlptRoute } from './JlptRoute'
+import { WrappedCard } from './Wrapped'
+import { ScrollSheet } from './Scroll'
+import { goldCount, scrollKanji } from '../lib/scroll'
 import { Weak } from './Weak'
 import { forecast, weakCards, weakGroups } from '../lib/insights'
 
@@ -21,6 +24,9 @@ export function Progress() {
   const ret = retentionRate(state, 30, now)
   const reviews = totalReviews(state)
   const [leechOpen, setLeechOpen] = useState(false)
+  const [scrollOpen, setScrollOpen] = useState(false)
+  const kanjiList = useMemo(() => scrollKanji(state, items), [state, items])
+  const gold = goldCount(kanjiList)
   const fc = useMemo(() => forecast(state, now, 7), [state]) // eslint-disable-line
   const maxFc = Math.max(10, ...fc.map((d) => d.n))
   const weak = useMemo(() => weakCards(state, items, now), [state, items]) // eslint-disable-line
@@ -62,6 +68,18 @@ export function Progress() {
       </div>
 
       <JlptRoute />
+
+      <WrappedCard />
+
+      <button className="glass-card scroll-card" onClick={() => setScrollOpen(true)}>
+        <div className="scroll-mini jp-display" aria-hidden="true">{kanjiList.filter((k) => k.gold).slice(0, 6).map((k) => k.ch).join('') || '金'}</div>
+        <div className="grow">
+          <div style={{ fontWeight: 700, fontSize: 16 }}>Le parchemin d'or</div>
+          <div className="muted small tnum">{gold} kanji d'or · {kanjiList.length - gold} à l'encre</div>
+        </div>
+        <span className="chev">›</span>
+      </button>
+      <ScrollSheet open={scrollOpen} onClose={() => setScrollOpen(false)} />
 
       <div className="hero">
         <div className="row spread">
