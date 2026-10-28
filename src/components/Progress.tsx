@@ -5,6 +5,7 @@ import { ACHIEVEMENTS, FAMILIES, TIERS, type Tier } from '../lib/achievements'
 import { computeProgress, dayTotal, levelFromXp, levelTitle, retentionRate, streaks, totalReviews, totalXp } from '../lib/state'
 import { dayKey, dayNumber, misses } from '../lib/scheduler'
 import { Roadmap } from './Roadmap'
+import { JlptRoute } from './JlptRoute'
 import { Weak } from './Weak'
 import { forecast, weakCards, weakGroups } from '../lib/insights'
 
@@ -57,8 +58,10 @@ export function Progress() {
     <div className="stack">
       <div>
         <h1 className="large-title">Progrès</h1>
-        <p className="subtitle">Ton parcours, ton rythme.</p>
+        <p className="subtitle">Ta route vers le N2, ville après ville.</p>
       </div>
+
+      <JlptRoute />
 
       <div className="hero">
         <div className="row spread">

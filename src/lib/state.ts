@@ -33,6 +33,8 @@ export interface Settings {
   /** Voix : nom de la voix japonaise choisie ('' = automatique) et vitesse. Ajouté en v1.10. */
   voiceName?: string
   voiceRate?: number
+  /** Ciel du village : selon l'heure ('auto') ou figé. Ajouté en v1.11. */
+  sky?: 'auto' | 'nuit' | 'aube' | 'jour'
   _t: number
 }
 
@@ -77,6 +79,7 @@ export const DEFAULT_SETTINGS: Settings = {
   speakBack: true,
   voiceName: '',
   voiceRate: 0.85,
+  sky: 'auto',
   _t: 0
 }
 
