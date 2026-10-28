@@ -120,7 +120,7 @@ export default function App() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
         >
-          {tab === 'home' && <Home />}
+          {tab === 'home' && <Home onOpenProgress={() => setTab('progress')} />}
           {tab === 'library' && <Library onAdd={() => openAdd()} onEdit={(id) => openAdd(id)} />}
           {tab === 'progress' && <Progress />}
           {tab === 'settings' && <Settings />}

@@ -17,8 +17,16 @@ import { checkTranslation, checkTyped, type TranslationResult, type TypedResult 
 import { Icon } from './ui'
 import { ComboBadge } from './Rewards'
 import { cardComboBonus } from '../lib/rewards'
+import { shinyBefore, SHINY_MULT, COLLECTION_MULT } from '../lib/shiny'
 
-const RATE_EMOJI: Record<Rating, string> = { 1: '😣', 2: '😕', 3: '🤔', 4: '🙂', 5: '😎' }
+// v1.11 : barre de réponses en verre, une bulle lumineuse et une icône par bouton
+const RATE_ICON: Record<Rating, JSX.Element> = {
+  1: <path d="M7 7l10 10M17 7L7 17" />,
+  2: <path d="M4 13c2.5-3 5-3 8 0s5.5 3 8 0" />,
+  3: <><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 1-1 1.7v.5" /><path d="M12 17.5h.01" /></>,
+  4: <path d="M5 12.5l4.5 4.5L19 7.5" />,
+  5: <><path d="M2.5 12.5l4 4L15 8" /><path d="M10 15l1.5 1.5L21 7" /></>
+}
 
 function sizeClass(jp: string, sentence: boolean) {
   if (sentence || jp.length > 9) return 'long'
@@ -502,6 +510,7 @@ export function Study() {
   }
 
   const isNew = card!.s === 'new'
+  const shiny = shinyBefore(state.ach, cardKey!, dayKey(today), isNew)
   const stageLabel = s.practice ? 'Entraînement' : isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
   const typingOn = state.settings.typing && parsed!.dir === 'p'
   const trOn = s.typeTr && parsed!.dir === 'r'
@@ -548,7 +557,8 @@ export function Study() {
             <div className="swipe-tag right" style={{ opacity: Math.min(1, Math.max(0, dx - 20) / 85) }}>Bien 🙂</div>
           </>
         )}
-        <div className="swipe-wrap" style={dx ? { transform: `translateX(${dx * 0.6}px) rotate(${dx / 40}deg)`, transition: 'none' } : undefined}>
+        <div className={'swipe-wrap' + (shiny ? ' shiny' : '')} style={dx ? { transform: `translateX(${dx * 0.6}px) rotate(${dx / 40}deg)`, transition: 'none' } : undefined}>
+        {shiny && <span className="shiny-tag">Shiny · ×{shiny === 'lucky' ? SHINY_MULT : COLLECTION_MULT} XP</span>}
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={cardKey}
@@ -626,12 +636,13 @@ export function Study() {
         ) : (
           <>
           {swipeOn && s.answered < 2 && !s.practice && <div className="swipe-hint">↔ Glisse la carte : à droite « Bien », à gauche « Oublié »</div>}
-          <div className="rate-grid">
+          <div className="rate-dock">
             {([1, 2, 3, 4, 5] as Rating[]).map((r) => (
-              <button key={r} className={`rate r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)}>
-                <span className="emo">{RATE_EMOJI[r]}</span>
+              <button key={r} className={`rate2 r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)} title={s.practice ? undefined : `Prochaine fois : ${labels?.[r]}`}>
+                <span className="orb">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{RATE_ICON[r]}</svg>
+                </span>
                 {RATING_LABELS[r]}
-                <small>{s.practice ? '\u00a0' : labels?.[r]}</small>
               </button>
             ))}
           </div>

@@ -23,6 +23,8 @@ import { ACHIEVEMENTS, TIERS, buildStats, newlyUnlocked, type Achievement } from
 import { ALL_CHALLENGES_BONUS, cardComboBonus, challengeProgress, comboKey, comboStepsReached, listenKey, listenReward, rewardStats, type ListenMode, type ListenReward } from './rewards'
 import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
 import { oralKey, oralReward, type OralMode, type OralReward } from './oral'
+import { VILLAGER_PER_DAY, VILLAGER_XP, villageStats, villagerCount, villagerKey } from './village'
+import { shinyBefore, shinyCount, shinyKey, shinyOutcome, type ShinyKind } from './shiny'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
@@ -30,7 +32,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.10.0'
+export const APP_VERSION = '1.11.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -38,10 +40,14 @@ const LS_BACKUP7 = 'kioku:backup:avant-v1.7'
 const LS_BACKUP9 = 'kioku:backup:avant-v1.9'
 const LS_BACKUP91 = 'kioku:backup:avant-v1.9.1'
 const LS_BACKUP10 = 'kioku:backup:avant-v1.10'
+const LS_BACKUP11 = 'kioku:backup:avant-v1.11'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
 export const XP_SESSION = 20
+
+/** v1.11 — combo après une réponse : Bien +1, Facile +2, Hésitant/Difficile = pause, Oublié = remis à zéro. */
+export const comboAfter = (combo: number, r: Rating): number => (r === 5 ? combo + 2 : r === 4 ? combo + 1 : r === 1 ? 0 : combo)
 export const XP_GOAL = 30
 
 // ───────── Persistance locale ─────────
@@ -92,9 +98,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP91)) safeSet(LS_BACKUP91, raw)
   // v1.10 : une 10e copie, avant le passage à FSRS (les précédentes restent intactes)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP10)) safeSet(LS_BACKUP10, raw)
+  // v1.11 : une 11e copie, avant le village et les nouveaux combos
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP11)) safeSet(LS_BACKUP11, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -130,6 +138,7 @@ interface UndoInfo {
   newSeen?: boolean // ce mot a été ajouté à la liste des mots vus
   prevCombo?: number // combo avant cette réponse (v1.6)
   prevBestCombo?: number
+  shinyJoined?: boolean // la carte est entrée dans la collection shiny à cette réponse (v1.11)
 }
 
 export interface Session {
@@ -222,6 +231,8 @@ interface Store {
   recordOral: (r: { mode: OralMode; results: boolean[]; sec?: number }) => OralReward
   /** Note une phrase naturelle de fin de séance : « Compris » ou « À revoir » (entre dans le planning comme une vraie carte, + XP). */
   rateSentence: (itemId: string, ok: boolean) => void
+  /** Phrase d'un habitant du village comprise : +10 XP (3 par jour au plus). Renvoie l'XP gagné. Ajouté en v1.11. */
+  understandVillager: (lineId: string) => number
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
   restoreSnapshot: (json: string) => boolean
   exportJson: () => string
@@ -282,7 +293,9 @@ export const useStore = create<Store>((set, get) => {
         perfectSessions: perfect ? 1 : 0,
         hour: new Date(now).getHours(),
         now,
-        ...examStats(state.ach)
+        ...examStats(state.ach),
+        village: villageStats(state, items, now),
+        shiny: shinyCount(state.ach)
       },
       prog,
       rewardStats(state, now)
@@ -569,10 +582,13 @@ export const useStore = create<Store>((set, get) => {
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
-      // combo : chaque carte retenue (≥ Hésitant) le fait monter, « Difficile » le fige, « Oublié » le remet à zéro
+      // v1.11 — combo : « Bien » +1, « Facile » +2, « Hésitant » et « Difficile » le mettent en pause, « Oublié » le remet à zéro
       const prevCombo = s.combo ?? 0
-      const combo = r >= 3 ? prevCombo + 1 : r === 2 ? prevCombo : 0
-      const xp = XP_BY_RATING[r] + (wasNew ? XP_NEW : 0) + (r >= 3 ? cardComboBonus(combo) : 0)
+      const combo = comboAfter(prevCombo, r)
+      // v1.11 — cartes shiny : ×5 (chanceuse ou mot récupéré), ×2 pour une carte déjà dans la collection
+      const shinyKind: ShinyKind = shinyBefore(state.ach, key, day, card.s === 'new')
+      const shiny = shinyOutcome(shinyKind, out.card, r, !!state.ach[shinyKey(key)])
+      const xp = XP_BY_RATING[r] * shiny.mult + (wasNew ? XP_NEW : 0) + (r >= 4 ? cardComboBonus(combo) : 0)
       const sec = Math.min(60, Math.round((now - s.shownAt) / 1000))
       const prevDay = state.daily[day]?.[device]
       const daily = addToDay(state, device, day, {
@@ -586,7 +602,18 @@ export const useStore = create<Store>((set, get) => {
         xp,
         sec
       })
-      commit({ cards: card.s === 'new' && s.practice ? state.cards : { ...state.cards, [key]: out.card }, daily })
+      commit({
+        cards: card.s === 'new' && s.practice ? state.cards : { ...state.cards, [key]: out.card },
+        daily,
+        ...(shiny.joins ? { ach: { ...state.ach, [shinyKey(key)]: now } } : {})
+      })
+      if (shiny.joins)
+        pushToast({
+          kind: 'ach',
+          title: shiny.recovered ? 'Mot récupéré : carte shiny !' : 'Carte shiny !',
+          text: `${shiny.recovered ? 'Raté souvent, réussi 3 fois d\'affilée' : 'Une chance sur 80'} · ×${shiny.mult} XP · rangée dans ta collection`,
+          emoji: '✨'
+        })
 
       // file de la séance
       let learn = s.learn
@@ -615,7 +642,7 @@ export const useStore = create<Store>((set, get) => {
         seen: newSeen ? [...s.seen, itemId] : s.seen,
         combo,
         bestCombo: Math.max(s.bestCombo ?? 0, combo),
-        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, hard: r === 2, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen, prevCombo, prevBestCombo: s.bestCombo ?? 0 }
+        undo: { cardKey: key, prevCard, prevDay, xp, wasNew, forgot: r === 1, hard: r === 2, shownAt: s.shownAt, practice: s.practice, requeued, newMissed, newSeen, prevCombo, prevBestCombo: s.bestCombo ?? 0, shinyJoined: shiny.joins }
       }
       ns = pickNext(ns, now)
       set({ session: ns })
@@ -675,7 +702,12 @@ export const useStore = create<Store>((set, get) => {
         delete d[device]
         daily[day] = d
       }
-      commit({ cards, daily })
+      let ach = state.ach
+      if (u.shinyJoined) {
+        ach = { ...state.ach }
+        delete ach[shinyKey(u.cardKey)]
+      }
+      commit({ cards, daily, ach })
       const missed = u.newMissed ? s.missed.filter((k) => k !== u.cardKey) : s.missed
       const seen = u.newSeen ? s.seen.filter((k) => k !== parseCardId(u.cardKey).itemId) : s.seen
       if (u.practice) {
@@ -786,6 +818,19 @@ export const useStore = create<Store>((set, get) => {
       if (reward.total && reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       afterAction()
       return reward
+    },
+
+    understandVillager: (lineId) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const day = today()
+      const key = villagerKey(day, lineId)
+      if (state.ach[key]) return 0
+      const xp = villagerCount(state.ach, day) < VILLAGER_PER_DAY ? VILLAGER_XP : 0
+      const ach = { ...state.ach, [key]: now }
+      commit({ ach, ...(xp ? { daily: addToDay({ ...state, ach }, device, day, { xp }) } : {}) })
+      afterAction()
+      return xp
     },
 
     rateSentence: (itemId, ok) => {

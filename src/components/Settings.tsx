@@ -299,6 +299,13 @@ export function Settings() {
             <div style={{ fontWeight: 600 }}>Thème</div>
             <Segmented value={s.theme} onChange={(v) => updateSettings({ theme: v })} options={[['auto', 'Auto'], ['light', 'Clair'], ['dark', 'Sombre']]} />
           </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Ciel du village</div>
+              <div className="muted small">Auto : l'aube le matin, le jour l'après-midi, la nuit le soir</div>
+            </div>
+            <Segmented value={s.sky ?? 'auto'} onChange={(v) => updateSettings({ sky: v })} options={[['auto', 'Auto'], ['aube', 'Aube'], ['jour', 'Jour'], ['nuit', 'Nuit']]} />
+          </div>
         </div>
       </div>
 

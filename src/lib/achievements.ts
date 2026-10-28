@@ -1,5 +1,6 @@
 import type { AppState, Progress } from './state'
 import type { RewardStats } from './rewards'
+import type { VillageStats } from './village'
 
 export interface AchStats extends RewardStats {
   reviews: number
@@ -23,6 +24,9 @@ export interface AchStats extends RewardStats {
   /** niveaux dont l'examen complet est réussi (≥ 70 %) */
   examsPassed: string[]
   examPerfect: boolean
+  /** v1.11 : village (bâtiments, villes, feuilles balayées, habitants) et cartes shiny */
+  village: VillageStats
+  shiny: number
 }
 
 /** Rang d'un trophée : il rapporte plus d'XP et brille davantage. */
@@ -48,6 +52,7 @@ export const FAMILIES: Family[] = [
   { id: 'regular', name: 'Régularité' },
   { id: 'level', name: 'Niveaux' },
   { id: 'exam', name: 'Examens' },
+  { id: 'village', name: 'Village' },
   { id: 'misc', name: 'Moments' },
   { id: 'secret', name: 'Secrets' }
 ]
@@ -222,6 +227,25 @@ export const ACHIEVEMENTS: Achievement[] = [
     { id: 'exN1', name: 'N1 validé', desc: 'Examen N1 complet à 70 % ou plus', emoji: '🏯', tier: 'platinum', test: (s) => s.examsPassed.includes('N1') },
     { id: 'exPerfect', name: 'Copie parfaite', desc: '100 % à un examen', emoji: '💯', tier: 'gold', test: (s) => s.examPerfect }
   ]),
+  // v1.11 — le village et les cartes shiny
+  ...fam('village', [
+    { id: 'vBuild5', name: 'Premiers toits', desc: '5 bâtiments sortis de terre', emoji: '🛖', tier: 'bronze', test: (s) => s.village.built >= 5 },
+    { id: 'vLantern', name: 'Première lanterne', desc: 'Un bâtiment illuminé (75 % de ses mots retenus)', emoji: '🏮', tier: 'bronze', test: (s) => s.village.lit >= 1 },
+    { id: 'vHouses5', name: 'Le quartier grandit', desc: '5 maisons ou plus', emoji: '🏘️', tier: 'silver', test: (s) => s.village.houses >= 5 },
+    { id: 'vLit3', name: 'Rue des lanternes', desc: '3 bâtiments illuminés', emoji: '🏯', tier: 'gold', test: (s) => s.village.lit >= 3 },
+    { id: 'vLit8', name: 'Ville lumière', desc: '8 bâtiments illuminés', emoji: '🌃', tier: 'platinum', test: (s) => s.village.lit >= 8 },
+    { id: 'vSweep100', name: 'Coup de balai', desc: '100 feuilles balayées (cartes revues)', emoji: '🧹', tier: 'bronze', test: (s) => s.village.swept >= 100 },
+    { id: 'vSweep500', name: 'Grand balayeur', desc: '500 feuilles balayées', emoji: '🍂', tier: 'silver', test: (s) => s.village.swept >= 500 },
+    { id: 'vSweep2000', name: 'Gardien des rues', desc: '2 000 feuilles balayées', emoji: '🍁', tier: 'gold', test: (s) => s.village.swept >= 2000 },
+    { id: 'vNara', name: 'Citoyen de Nara', desc: 'Ouvrir Nara (N5 solide)', emoji: '🦌', tier: 'silver', test: (s) => s.village.cities >= 2 },
+    { id: 'vKyoto', name: 'Citoyen de Kyoto', desc: 'Ouvrir Kyoto (N4 solide)', emoji: '⛩️', tier: 'gold', test: (s) => s.village.cities >= 3 },
+    { id: 'vOsaka', name: 'Citoyen d\'Osaka', desc: 'Ouvrir Osaka (N3 solide)', emoji: '🏯', tier: 'platinum', test: (s) => s.village.cities >= 4 },
+    { id: 'vTalk10', name: 'On se parle', desc: 'Comprendre 10 phrases d\'habitants', emoji: '🗣️', tier: 'bronze', test: (s) => s.village.villagers >= 10 },
+    { id: 'vTalk50', name: 'Enfant du pays', desc: 'Comprendre 50 phrases d\'habitants', emoji: '🍵', tier: 'silver', test: (s) => s.village.villagers >= 50 },
+    { id: 'sh1', name: 'Ça brille !', desc: 'Ta première carte shiny', emoji: '✨', tier: 'bronze', test: (s) => s.shiny >= 1 },
+    { id: 'sh10', name: 'Collectionneur', desc: '10 cartes shiny', emoji: '💫', tier: 'silver', test: (s) => s.shiny >= 10 },
+    { id: 'sh50', name: 'Trésor holographique', desc: '50 cartes shiny', emoji: '🌈', tier: 'gold', test: (s) => s.shiny >= 50 }
+  ]),
   ...fam('misc', [
     { id: 'early', name: 'Lève-tôt', desc: 'Réviser avant 8 h', emoji: '🌅', tier: 'bronze', test: (s) => s.hour >= 5 && s.hour < 8 },
     { id: 'night', name: 'Oiseau de nuit', desc: 'Réviser après 22 h', emoji: '🦉', tier: 'bronze', test: (s) => s.hour >= 22 || s.hour < 4 },
@@ -256,6 +280,8 @@ export function buildStats(
     exams?: number
     examsPassed?: string[]
     examPerfect?: boolean
+    village?: VillageStats
+    shiny?: number
   },
   p: Progress,
   r: RewardStats
@@ -280,6 +306,8 @@ export function buildStats(
     weekday: d.getDay(),
     exams: s.exams ?? 0,
     examsPassed: s.examsPassed ?? [],
-    examPerfect: !!s.examPerfect
+    examPerfect: !!s.examPerfect,
+    village: s.village ?? { built: 0, houses: 0, lit: 0, cities: 1, monuments: 0, swept: 0, villagers: 0 },
+    shiny: s.shiny ?? 0
   }
 }

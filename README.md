@@ -4,6 +4,22 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.11 — Le village, la mission du jour et les cartes shiny
+
+- **Nouvel accueil** : ton **village vivant** en haut (ciel qui suit l'heure, constellation de ta série, habitants qui se promènent, feuilles qui tombent), puis **ton niveau** avec la **route du JLPT** (N5 → N4 → N3 → N2), la **Mission du jour**, les **3 anneaux** (objectif, défis, série) et les examens. Interface en **verre**, en clair comme en sombre.
+- **Mission du jour** : Tama, le chat du village, te confie tes cartes du jour et te montre **ce que tu vas gagner** (XP, feuilles balayées, jour de série) avant de commencer.
+- **Le village** grandit avec tes mots retenus : **un bâtiment par thème** (ramen-ya pour la nourriture, sanctuaire pour les verbes, gare, école…), qui passe de **terrain à cabane, maison puis boutique illuminée** (10 %, 40 %, 75 % des mots retenus). Les cartes à revoir sont des **feuilles mortes** : une séance les balaie.
+- **Une ville par niveau** : Shirakawa-gō (N5), **Nara (N4)**, Kyoto (N3), Osaka (N2), Tokyo (N1). Une ville s'ouvre quand le niveau d'avant est **solide (80 % des mots retenus)**, et son **monument** (torii, pagode, porte du temple…) se construit avec toi.
+- **Enseignes en japonais** : elles s'écrivent avec tes kanji ; un kanji encore inconnu reste un « ？ ».
+- **Les habitants parlent** avec une phrase qui reprend tes mots récents : tu la comprends, **+10 XP** (3 par jour).
+- **Cartes shiny** : un mot difficile **récupéré** (raté au moins 3 fois, puis réussi 3 fois d'affilée) devient holographique pour toujours, et une carte sur 80 sort en shiny au hasard. **×5 XP** quand elle brille pour la première fois, ×2 ensuite. Elles forment ta **collection**.
+- **16 nouveaux trophées** (famille « Village ») : lanternes, feuilles balayées, villes, habitants, shiny.
+- **Combo** : **Bien +1**, **Facile +2**, **Hésitant et Difficile le mettent en pause**, **Oublié** le remet à zéro (avant, Hésitant le faisait monter).
+- **Boutons de réponse** dans une barre en verre, plus épurée (l'intervalle reste visible en laissant le doigt sur un bouton, sur PC).
+- **Progrès** : la route du JLPT, ville par ville, en tête de page. Les mots du N2 arriveront plus tard.
+- **Réviser librement** et **Mes points faibles** passent dans l'onglet **Cartes**. Nouveau réglage **Ciel du village** (Auto, Aube, Jour, Nuit).
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). Le village est **recalculé à partir de tes cartes**, rien n'est stocké en plus ; la collection shiny et les phrases d'habitants sont rangées dans les trophées (`sh:…`, `h:…`), comme les écoutes. Un seul réglage optionnel ajouté (`sky`). Copie `kioku:backup:avant-v1.11` à la première ouverture.
+
 ## Nouveautés de la version 1.10 — FSRS, voix japonaise et oral
 
 - **Nouvel algorithme de révision : FSRS** (celui d'Anki aujourd'hui). Chaque carte a une **mémoire** : combien de temps tu la retiens (stabilité) et à quel point elle te résiste (difficulté). Les cartes faciles s'espacent beaucoup plus vite, les cartes qui te résistent reviennent plus souvent : **moins de révisions inutiles**.
@@ -193,6 +209,8 @@ src/lib/scheduler.ts   moteur de répétition espacée (5 boutons)
 src/lib/fsrs.ts        formules FSRS-5 (stabilité, difficulté, intervalle)
 src/lib/oral.ts        oral : choix des cartes, vérification de la réponse orale, XP
 src/lib/mic.ts         micro : enregistrement et reconnaissance vocale
+src/lib/village.ts     village : bâtiments par thème, villes, monuments, enseignes, habitants
+src/lib/shiny.ts       cartes shiny (récupérées, chanceuses) et collection
 src/lib/queue.ts       file du jour (limites, mélange nouvelles/révisions)
 src/lib/state.ts       état, fusion multi-appareils, XP, séries
 src/lib/sync.ts        synchronisation Supabase

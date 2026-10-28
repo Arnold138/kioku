@@ -5,6 +5,9 @@ import { POS_GROUPS, passes, type PosGroup } from '../lib/queue'
 import { isKnown, isMature, type CardState } from '../lib/scheduler'
 import { speak, canSpeak } from '../lib/tts'
 import { Icon, Sheet } from './ui'
+import { FreeStudy } from './FreeStudy'
+import { Weak } from './Weak'
+import { weakCards } from '../lib/insights'
 
 const PAGE = 60
 
@@ -24,6 +27,10 @@ export function Library({ onAdd, onEdit }: { onAdd: () => void; onEdit: (id: str
   const [limit, setLimit] = useState(PAGE)
   const [open, setOpen] = useState<Item | null>(null)
   const sentinel = useRef<HTMLDivElement>(null)
+  // v1.11 : « Réviser librement » et « Mes points faibles » quittent l'accueil pour l'onglet Cartes
+  const [freeOpen, setFreeOpen] = useState(false)
+  const [weakOpen, setWeakOpen] = useState(false)
+  const weak = useMemo(() => weakCards(state, items, Date.now()), [state, items])
 
   const list = useMemo(
     () =>
@@ -51,6 +58,30 @@ export function Library({ onAdd, onEdit }: { onAdd: () => void; onEdit: (id: str
         </div>
         <p className="subtitle">{items.length} cartes · touche un mot pour le détail</p>
       </div>
+      <div className="glass-list">
+        <button className="list-row tap" onClick={() => setFreeOpen(true)}>
+          <div className="row-ico2" style={{ background: 'rgba(124,118,255,0.18)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" fill="var(--accent)" /></svg>
+          </div>
+          <div className="grow">
+            <div style={{ fontWeight: 700 }}>Réviser librement</div>
+            <div className="muted small">Écoute, oral, mes decks, thèmes…</div>
+          </div>
+          <span className="chev">›</span>
+        </button>
+        <button className="list-row tap" onClick={() => setWeakOpen(true)}>
+          <div className="row-ico2" style={{ background: 'rgba(251,146,60,0.18)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.2 1.2-3.6 2.4-4.6.3 1.6 1.2 2.6 2.1 2.6 0-3 .5-5.6.5-8z" /></svg>
+          </div>
+          <div className="grow">
+            <div style={{ fontWeight: 700 }}>Mes points faibles</div>
+            <div className="muted small">{weak.length ? `${weak.length} carte${weak.length > 1 ? 's' : ''} à renforcer` : 'Aucun pour le moment'}</div>
+          </div>
+          <span className="chev">›</span>
+        </button>
+      </div>
+      <FreeStudy open={freeOpen} onClose={() => setFreeOpen(false)} />
+      <Weak open={weakOpen} onClose={() => setWeakOpen(false)} />
       <div className="search">
         {Icon.search()}
         <input placeholder="Rechercher (kanji, kana, romaji, français)" value={q} onChange={(e) => setQ(e.target.value)} autoCapitalize="off" autoCorrect="off" />
