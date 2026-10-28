@@ -2,8 +2,9 @@ import wordsJson from '../data/words.json'
 import sentencesJson from '../data/sentences.json'
 import videoJson from '../data/video.json'
 import { toRomaji } from './romaji'
+import { FESTIVAL_ITEMS } from './festivals'
 
-export type Level = 'N5' | 'N4' | 'N3' | 'Perso'
+export type Level = 'N5' | 'N4' | 'N3' | 'Perso' | 'Saison'
 export type Kind = 'word' | 'sentence' | 'custom'
 export type Dir = 'r' | 'p' // r = reconnaissance (JP→FR) · p = production (FR→JP)
 
@@ -58,6 +59,7 @@ export const DECKS: DeckInfo[] = [
   { id: 'vid1', name: 'Vidéo · Shopping', sub: 'Ken, balade à Taipei', emoji: '🛍️', hue: 340, sentences: true, optIn: true },
   { id: 'vid2', name: 'Vidéo · Loisirs', sub: 'Conversation avec Ayano', emoji: '🎧', hue: 195, sentences: true, optIn: true },
   { id: 'vid3', name: 'Vidéo · Seto', sub: 'Ken, balade dans sa ville natale', emoji: '🐱', hue: 20, sentences: true, optIn: true },
+  { id: 'fetes', name: 'Fêtes de saison', sub: 'Les mots des fêtes japonaises', emoji: '🎋', hue: 15, optIn: true },
   { id: 'perso', name: 'Mes cartes', sub: 'Vidéos, animés, notes', emoji: '⭐', hue: 35, sentences: true }
 ]
 export const deckInfo = (id: string): DeckInfo | undefined => DECKS.find((d) => d.id === id)
@@ -131,6 +133,8 @@ const VIDEO_ITEMS: Item[] = (videoJson as RawVideo[]).map<Item>((v) => {
   }
 })
 BASE_ITEMS.push(...VIDEO_ITEMS)
+// v1.12 : les mots des fêtes de saison (deck « fetes », à la demande)
+BASE_ITEMS.push(...FESTIVAL_ITEMS)
 
 const baseById = new Map(BASE_ITEMS.map((i) => [i.id, i]))
 

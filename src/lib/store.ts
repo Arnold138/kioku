@@ -25,6 +25,8 @@ import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
 import { oralKey, oralReward, type OralMode, type OralReward } from './oral'
 import { VILLAGER_PER_DAY, VILLAGER_XP, villageStats, villagerCount, villagerKey } from './village'
 import { shinyBefore, shinyCount, shinyKey, shinyOutcome, type ShinyKind } from './shiny'
+import { activeFestival, earnedDecorations, festivalKey, festivalProgress, festivalYear } from './festivals'
+import { goldCount, scrollKanji } from './scroll'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
@@ -32,7 +34,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.11.0'
+export const APP_VERSION = '1.12.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -41,6 +43,7 @@ const LS_BACKUP9 = 'kioku:backup:avant-v1.9'
 const LS_BACKUP91 = 'kioku:backup:avant-v1.9.1'
 const LS_BACKUP10 = 'kioku:backup:avant-v1.10'
 const LS_BACKUP11 = 'kioku:backup:avant-v1.11'
+const LS_BACKUP12 = 'kioku:backup:avant-v1.12'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -49,6 +52,7 @@ export const XP_SESSION = 20
 /** v1.11 — combo après une réponse : Bien +1, Facile +2, Hésitant/Difficile = pause, Oublié = remis à zéro. */
 export const comboAfter = (combo: number, r: Rating): number => (r === 5 ? combo + 2 : r === 4 ? combo + 1 : r === 1 ? 0 : combo)
 export const XP_GOAL = 30
+export const FESTIVAL_XP = 100
 
 // ───────── Persistance locale ─────────
 function safeGet(key: string): string | null {
@@ -100,9 +104,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP10)) safeSet(LS_BACKUP10, raw)
   // v1.11 : une 11e copie, avant le village et les nouveaux combos
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP11)) safeSet(LS_BACKUP11, raw)
+  // v1.12 : une 12e copie, avant les fêtes de saison et le parchemin d'or
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP12)) safeSet(LS_BACKUP12, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -295,7 +301,9 @@ export const useStore = create<Store>((set, get) => {
         now,
         ...examStats(state.ach),
         village: villageStats(state, items, now),
-        shiny: shinyCount(state.ach)
+        shiny: shinyCount(state.ach),
+        decorations: earnedDecorations(state.ach).length,
+        goldKanji: goldCount(scrollKanji(state, items))
       },
       prog,
       rewardStats(state, now)
@@ -348,9 +356,24 @@ export const useStore = create<Store>((set, get) => {
     if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
   }
 
-  /** Après chaque action qui rapporte : défis du jour, puis trophées. */
+  /** v1.12 — fête de saison : 12 mots sur 15 retenus pendant la fête → sa décoration dans le village (+100 XP). */
+  const checkFestival = (): void => {
+    const { state, device } = get()
+    const now = Date.now()
+    const f = activeFestival(new Date(now))
+    if (!f) return
+    const key = festivalKey(f.id, festivalYear(f, new Date(now)))
+    if (state.ach[key] || !festivalProgress(state, f.id).done) return
+    const ach = { ...state.ach, [key]: now }
+    commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp: FESTIVAL_XP }) })
+    pushToast({ kind: 'ach', title: `${f.jp} · fête réussie !`, text: `${f.reward} dans ton village · +${FESTIVAL_XP} XP`, emoji: '🎆' })
+    set((s) => ({ confettiTick: s.confettiTick + 1 }))
+  }
+
+  /** Après chaque action qui rapporte : défis du jour, fête de saison, puis trophées. */
   const afterAction = (perfect = false) => {
     checkChallenges()
+    checkFestival()
     checkAchievements(perfect)
   }
 

@@ -62,7 +62,7 @@ describe('décks vidéo (phrases à réviser librement)', () => {
       expect(it.fr.length).toBeGreaterThan(0)
       expect(it.romaji.length).toBeGreaterThan(0)
     }
-    expect(DECKS.filter((d) => d.optIn).map((d) => d.id)).toEqual(['vid1', 'vid2', 'vid3'])
+    expect(DECKS.filter((d) => d.optIn).map((d) => d.id)).toEqual(['vid1', 'vid2', 'vid3', 'fetes']) // v1.12 : + fêtes de saison
     expect(isOptIn('vid1')).toBe(true)
     expect(isOptIn('N5')).toBe(false)
   })
