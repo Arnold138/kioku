@@ -18,6 +18,51 @@ import { Icon } from './ui'
 import { ComboBadge } from './Rewards'
 import { cardComboBonus } from '../lib/rewards'
 import { shinyBefore, SHINY_MULT, COLLECTION_MULT } from '../lib/shiny'
+import { checkCloze, clozeFor, type Cloze } from '../lib/cloze'
+import { TracePractice } from './TracePractice'
+
+/** v1.13 — carte à trous : la phrase (en kana) avec le mot caché, sa traduction, et ton astuce en indice. */
+function ClozeFront({ it, cz }: { it: Item; cz: Cloze }) {
+  const [hint, setHint] = useState(false)
+  return (
+    <div className="face front">
+      <span className="chip kind accent">Phrase à trous</span>
+      <div className="cloze-line jp">
+        {cz.tokens.map((t, i) => (i === cz.index ? <span key={i} className="cloze-gap" aria-label="mot caché">？</span> : <span key={i}>{t}</span>))}
+      </div>
+      <div className="hint" style={{ maxWidth: 300 }}>{cz.sentence.fr}</div>
+      {hint ? (
+        <span className="chip accent">{it.fr}</span>
+      ) : (
+        <button className="reading-hidden hint-btn" onClick={(e) => { e.stopPropagation(); setHint(true) }}>💡 Sens du mot</button>
+      )}
+    </div>
+  )
+}
+
+function ClozeBack({ it, cz, typed, extras }: { it: Item; cz: Cloze; typed: TypedResult | null; extras: JSX.Element }) {
+  return (
+    <div className="face back">
+      <Speak text={cz.sentence.kana} />
+      {typed && typed.script !== 'vide' && (
+        <div className={'typed-result ' + (typed.ok ? 'good' : 'bad')}>
+          {typed.ok ? '✓ Bonne réponse' : '✗ Pas tout à fait'}
+          {!typed.ok && <span>Tu as écrit : <b className="jp">{typed.input}</b></span>}
+        </div>
+      )}
+      <div className="cloze-line jp">
+        {cz.tokens.map((t, i) => (i === cz.index ? <span key={i} className="cloze-hit">{t}</span> : <span key={i}>{t}</span>))}
+      </div>
+      <div className="jp muted" style={{ fontSize: 15 }}>{cz.sentence.jp}</div>
+      <div className="hint" style={{ maxWidth: 300 }}>{cz.sentence.fr}</div>
+      <div className="divider" />
+      <div className="jp" style={{ fontSize: 28, fontWeight: 700 }}>{it.jp}</div>
+      <Reading it={it} long={false} />
+      <div className="meaning">{it.fr}</div>
+      {extras}
+    </div>
+  )
+}
 
 // v1.11 : barre de réponses en verre, une bulle lumineuse et une icône par bouton
 const RATE_ICON: Record<Rating, JSX.Element> = {
@@ -48,12 +93,21 @@ function Extras({ it, cardKey, ctx, lapses }: { it: Item; cardKey: string; ctx: 
   const memo = useStore((st) => st.state.cards[cardKey]?.m)
   const setMemo = useStore((st) => st.setMemo)
   const [edit, setEdit] = useState(false)
+  const [trace, setTrace] = useState(false)
+  const hasKanji = it.kind !== 'sentence' && /[一-鿿]/.test(it.jp)
   const [v, setV] = useState('')
   const leech = lapses >= LEECH_AT
   const canMemo = it.kind !== 'sentence'
   return (
     <div className="extras" onClick={(e) => e.stopPropagation()}>
       {lapses > 0 && <span className="chip warn">🔥 Raté {lapses} fois{leech ? ' · mot difficile' : ''}</span>}
+      {hasKanji && <button className="chip btn-chip accent" onClick={() => setTrace(true)}>✍️ Tracer {it.jp}</button>}
+      {hasKanji && (
+        // la feuille s'ouvre par-dessus (portail) : ses gestes ne doivent pas faire glisser la carte
+        <span onPointerDown={(e) => e.stopPropagation()} onPointerMove={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+          <TracePractice open={trace} onClose={() => setTrace(false)} word={it} />
+        </span>
+      )}
       {ctx.length > 0 && (
         <div className="ctx">
           <div className="ctx-label">En contexte</div>
@@ -278,6 +332,7 @@ export function Study() {
   const card = cardKey ? state.cards[cardKey] ?? newCard(now) : null
   const labels = useMemo(() => (card ? previewLabels(card, now, today, state.settings.retention ?? 0.9) : null), [cardKey, s?.revealed]) // eslint-disable-line
 
+  const cloze = useMemo(() => (item && parsed?.dir === 'c' ? clozeFor(item, items) : null), [item, items, parsed?.dir])
   const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
   const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
   const lapses = misses(card ?? undefined)
@@ -336,7 +391,7 @@ export function Study() {
   useEffect(() => {
     if (!item || !parsed) return
     if (s?.revealed) {
-      if (state.settings.speakBack ?? true) void speak(item.kana || item.jp)
+      if (state.settings.speakBack ?? true) void speak(parsed.dir === 'c' && cloze ? cloze.sentence.kana : item.kana || item.jp)
     } else if (parsed.dir === 'r' && state.settings.autoPlay) void speak(item.kana || item.jp)
   }, [cardKey, s?.revealed]) // eslint-disable-line
 
@@ -568,15 +623,49 @@ export function Study() {
             exit={{ x: -70, opacity: 0, transition: { duration: 0.18 } }}
             transition={{ rotateY: { type: 'spring', stiffness: 220, damping: 24 }, x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
           >
-            <Front it={item} dir={parsed!.dir} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
-            <Back it={item} dir={parsed!.dir} typed={typed} tr={tr} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
+            {cloze ? (
+              <>
+                <ClozeFront it={item} cz={cloze} />
+                <ClozeBack it={item} cz={cloze} typed={typed} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={[]} lapses={lapses} />} />
+              </>
+            ) : (
+              <>
+                <Front it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
+                <Back it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} typed={typed} tr={tr} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
+              </>
+            )}
           </motion.div>
         </AnimatePresence>
         </div>
       </div>
 
       <div className="study-bottom">
-        {!s.revealed && trOn ? (
+        {!s.revealed && cloze ? (
+          <form
+            className="typing-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setTyped(checkCloze(item, cloze, draft))
+              reveal()
+            }}
+          >
+            <input
+              key={cardKey}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Le mot caché, en kana ou en rōmaji"
+              autoFocus
+              autoCapitalize="off"
+              autoCorrect="off"
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="go"
+              aria-label="Le mot caché"
+            />
+            <button className="btn" type="submit">Vérifier</button>
+            <button className="known-btn" type="button" onClick={() => { setTyped(null); reveal() }}>Je ne sais pas — voir la réponse</button>
+          </form>
+        ) : !s.revealed && trOn ? (
           <form
             className="typing-form"
             onSubmit={(e) => {

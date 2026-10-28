@@ -4,6 +4,16 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.13 — Cartes à trous et tracé des kanji
+
+- **Cartes à trous** dans tes révisions : une vraie phrase (vidéos, phrases du deck, exemples) avec un mot que tu connais caché, et sa traduction. **Tu écris le mot** (kana, kanji ou rōmaji) ; la forme de la phrase (ex. 食べました) est acceptée aussi. Un bouton « Sens du mot » sert d'indice.
+- Elles se débloquent quand le mot est **retenu** (3 jours ou plus) et suivent le **même planning FSRS** que les autres cartes. Réglage **Cartes à trous / jour** (Réglages → Objectifs) : Aucune, 3, **5** (par défaut), 10 ou 20. Elles ont leur propre quota et ne prennent pas la place des nouveaux mots.
+- **Tracer les kanji** (*Réviser librement* → Tracer les kanji) : l'**ordre des traits s'anime**, puis tu traces au doigt. **Chaque trait est vérifié** (forme, place, sens) ; un trait raté clignote, et après 3 essais il se dessine pour toi. Deux modes : **avec le modèle** en transparence (et un point rouge au départ de chaque trait) ou **de mémoire**.
+- Au verso des cartes, un bouton **✍️ Tracer** permet de tracer les kanji du mot tout de suite.
+- **12 XP** par kanji, **+6** sans faute. **3 nouveaux trophées** de tracé, rangés avec ceux du parchemin dans une famille **Kanji**.
+- Les tracés viennent de **KanjiVG** (gratuit, CC BY-SA 3.0) : les 1 112 kanji des mots de l'app sont **dans l'app**, ils marchent hors ligne.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). Une carte à trous a l'identifiant `<mot>:c` : une ancienne version de l'app ne la montre pas mais la garde. Un réglage (`clozePerDay`) et un compteur du jour (`nc`) optionnels ; l'historique des tracés est dans les trophées (`tk:…`). Copie `kioku:backup:avant-v1.13` à la première ouverture.
+
 ## Nouveautés de la version 1.12 — Fêtes de saison, parchemin d'or et Kioku Wrapped
 
 - **Fêtes de saison, aux vraies dates japonaises** : Momiji-gari (15 oct. → 30 nov.), Shōgatsu (26 déc. → 15 janv.), Hanami (15 mars → 30 avril), Tanabata (25 juin → 15 juil.), Natsu matsuri (20 juil. → 31 août) et Tsukimi (10 sept. → 10 oct.). Chaque fête apporte **15 mots** de saison.
@@ -223,6 +233,7 @@ src/lib/village.ts     village : bâtiments par thème, villes, monuments, ensei
 src/lib/shiny.ts       cartes shiny (récupérées, chanceuses) et collection
 src/lib/festivals.ts   fêtes de saison (dates, mots, décorations) · src/data/festivals.json
 src/lib/scroll.ts      parchemin d'or · src/lib/wrapped.ts  Kioku Wrapped
+src/lib/cloze.ts       cartes à trous · src/lib/trace.ts  tracé des kanji · src/data/kanjivg.json (KanjiVG)
 src/lib/queue.ts       file du jour (limites, mélange nouvelles/révisions)
 src/lib/state.ts       état, fusion multi-appareils, XP, séries
 src/lib/sync.ts        synchronisation Supabase
@@ -240,6 +251,7 @@ Chaque appareil garde tout en local (fonctionne hors ligne) et envoie/récupère
 ## Sources et licences
 
 - Listes de vocabulaire JLPT N5/N4/N3 : projet ouvert *jamsinclair/open-anki-jlpt-decks*.
+- Tracés des kanji : **KanjiVG** © Ulrich Apel et contributeurs (CC BY-SA 3.0), https://kanjivg.tagaini.net — extraits pour les kanji de l'app (`src/data/kanjivg.json`, même licence).
 - Algorithme FSRS-5 : projet ouvert *open-spaced-repetition* (paramètres par défaut).
 - Classement par fréquence : données de priorité du dictionnaire **JMdict** © EDRDG (CC BY-SA 4.0).
 - Traductions françaises et phrases : rédigées pour ce projet — **relis-les et corrige-les au fil de ta progression** (une carte perso peut toujours être ajoutée ou modifiée).

@@ -4,6 +4,7 @@ import { dayTotal } from './state'
 import { dayKey, dayNumber, isDue, type CardState } from './scheduler'
 import { inTheme } from './themes'
 import { naturalSentences } from './natural'
+import { clozeFor } from './cloze'
 
 export type PosGroup = 'all' | 'verbs' | 'adjs' | 'nouns' | 'others'
 /** normal = révisions dues + nouvelles (planning habituel) · new = nouvelles seulement · practice = entraînement libre sans toucher au planning */
@@ -58,6 +59,8 @@ export interface QueueBuild {
   freshProd: string[]
   /** phrases naturelles des vidéos du jour (hors quota de mots) */
   freshNat: string[]
+  /** nouvelles cartes à trous (v1.13, quota à part) */
+  freshCloze: string[]
   newLeft: number
   prodLeft: number
   /** Révisions dues mais reportées à un autre jour à cause du quota quotidien. */
@@ -78,12 +81,17 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   const review: Array<[number, string, CardState]> = []
   const fresh: string[] = []
   const freshProd: string[] = []
+  const freshCloze: string[] = []
+  // v1.13 : cartes à trous, avec leur propre quota (0 = désactivées)
+  const clozeOn = (state.settings.clozePerDay ?? 0) > 0
+  const clozeLeft = !clozeOn ? 0 : f.free ? cap : Math.max(0, (state.settings.clozePerDay ?? 0) - (dt.nc ?? 0))
 
   const list = items.filter((it) => passes(it, f)).sort((a, b) => a.order - b.order)
   for (const it of list) {
     const r = state.cards[`${it.id}:r`]
     const p = state.cards[`${it.id}:p`]
-    for (const [key, c] of [[`${it.id}:r`, r], [`${it.id}:p`, p]] as const) {
+    const cz = it.kind === 'word' ? state.cards[`${it.id}:c`] : undefined
+    for (const [key, c] of [[`${it.id}:r`, r], [`${it.id}:p`, p], [`${it.id}:c`, cz]] as const) {
       if (scope === 'new') break
       if (!c || c.s === 'new') continue
       if (!isDue(c, now, today)) continue
@@ -96,6 +104,10 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     } else if (it.kind !== 'sentence' && state.settings.production && (!p || p.s === 'new')) {
       // la production se débloque quand la reconnaissance est solide (≥ 3 jours)
       if (r.s === 'review' && r.i >= 3 && freshProd.length < prodLeft) freshProd.push(`${it.id}:p`)
+    }
+    // v1.13 : la carte à trous se débloque quand le mot est retenu et qu'une phrase le contient
+    if (clozeOn && scope !== 'new' && it.kind === 'word' && (!cz || cz.s === 'new') && r && r.s === 'review' && r.i >= 3 && freshCloze.length < clozeLeft && clozeFor(it, items)) {
+      freshCloze.push(`${it.id}:c`)
     }
   }
   // Apprentissage : ce qui est dû d'abord ; révisions : les plus en retard d'abord
@@ -124,6 +136,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     fresh,
     freshProd,
     freshNat,
+    freshCloze,
     newLeft,
     prodLeft
   }
@@ -152,6 +165,8 @@ export function buildPractice(state: AppState, items: Item[], f: Filter, extraNe
     const started = !!r && r.s !== 'new'
     if (started) out.push(`${it.id}:r`)
     if (it.kind !== 'sentence' && (started || (!!p && p.s !== 'new'))) out.push(`${it.id}:p`)
+    const cz = state.cards[`${it.id}:c`]
+    if (cz && cz.s !== 'new') out.push(`${it.id}:c`)
   }
   shuffle(out)
   return f.limit != null ? out.slice(0, f.limit + extraNew) : out
@@ -179,7 +194,7 @@ export function pickWarmup(state: AppState, items: Item[], n: number, now: numbe
 /** Mélange : révisions d'abord, nouvelles cartes glissées régulièrement. */
 export function interleave(q: QueueBuild): string[] {
   const out: string[] = [...q.learning]
-  const news = [...q.fresh, ...q.freshProd, ...q.freshNat]
+  const news = [...q.fresh, ...q.freshProd, ...q.freshNat, ...(q.freshCloze ?? [])]
   const rev = [...q.review]
   if (!rev.length) return [...out, ...news]
   const every = Math.max(2, Math.floor(rev.length / (news.length + 1)) + 1)
@@ -197,8 +212,8 @@ export function countDue(state: AppState, items: Item[], f: Filter, now: number,
   return {
     learning: q.learning.length,
     review: q.review.length,
-    fresh: q.fresh.length + q.freshProd.length + q.freshNat.length,
+    fresh: q.fresh.length + q.freshProd.length + q.freshNat.length + q.freshCloze.length,
     deferred: q.deferred,
-    total: q.learning.length + q.review.length + q.fresh.length + q.freshProd.length + q.freshNat.length
+    total: q.learning.length + q.review.length + q.fresh.length + q.freshProd.length + q.freshNat.length + q.freshCloze.length
   }
 }

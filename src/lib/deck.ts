@@ -6,7 +6,7 @@ import { FESTIVAL_ITEMS } from './festivals'
 
 export type Level = 'N5' | 'N4' | 'N3' | 'Perso' | 'Saison'
 export type Kind = 'word' | 'sentence' | 'custom'
-export type Dir = 'r' | 'p' // r = reconnaissance (JP→FR) · p = production (FR→JP)
+export type Dir = 'r' | 'p' | 'c' // r = reconnaissance (JP→FR) · p = production (FR→JP) · c = phrase à trous (v1.13)
 
 export interface Item {
   id: string // w12 · s3 · c-xxxx

@@ -272,6 +272,13 @@ export function Settings() {
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
           <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Cartes à trous / jour</div>
+              <div className="muted small">Une vraie phrase avec un mot que tu connais caché : tu écris le mot. Elles entrent dans tes révisions</div>
+            </div>
+            <Segmented value={String(s.clozePerDay ?? 5)} onChange={(v) => updateSettings({ clozePerDay: Number(v) })} options={[['0', 'Aucune'], ['3', '3'], ['5', '5'], ['10', '10'], ['20', '20']]} />
+          </div>
           <Row title="Écrire les réponses" sub="Sur les cartes de production, tape le mot en rōmaji ou en kana au lieu de le penser"><Toggle on={s.typing} onChange={(v) => updateSettings({ typing: v })} /></Row>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>
@@ -337,7 +344,7 @@ export function Settings() {
       </div>
 
       <p className="muted small" style={{ textAlign: 'center', margin: '14px 20px 0', lineHeight: 1.5 }}>
-        Kioku 記憶 · Vocabulaire : listes JLPT ouvertes (jamsinclair/open-anki-jlpt-decks) et fréquences JMdict (© EDRDG, CC BY-SA 4.0). Traductions françaises rédigées pour cette app.
+        Kioku 記憶 · Vocabulaire : listes JLPT ouvertes (jamsinclair/open-anki-jlpt-decks) et fréquences JMdict (© EDRDG, CC BY-SA 4.0). Tracés des kanji : KanjiVG (© Ulrich Apel, CC BY-SA 3.0). Traductions françaises rédigées pour cette app.
       </p>
     </div>
   )
