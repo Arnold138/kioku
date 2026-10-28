@@ -34,7 +34,7 @@ describe('séance en manches dans le store (v1.5)', () => {
   beforeEach(() => {
     useStore.getState().init()
     const st = emptyState()
-    st.settings = { ...st.settings, reviewsPerDay: 0, newPerDay: 0, naturalPerDay: 0, production: false }
+    st.settings = { ...st.settings, reviewsPerDay: 0, newPerDay: 0, naturalPerDay: 0, production: false, clozePerDay: 0 }
     baseItems.filter((i) => i.kind === 'word').slice(0, 30).forEach((w) => (st.cards[`${w.id}:r`] = due()))
     useStore.setState({ state: st })
   })

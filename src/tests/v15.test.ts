@@ -115,6 +115,7 @@ describe('phrases naturelles', () => {
   it('« À étudier » reçoit les phrases du jour, hors quota de mots, et le réglage les coupe', () => {
     const st = stateKnowing(676)
     st.settings.naturalPerDay = 2
+    st.settings.clozePerDay = 0 // v1.13 : on isole les phrases naturelles des cartes à trous
     const q = buildQueue(st, baseItems, ALL, NOW)
     expect(q.freshNat.length).toBe(2)
     expect(countDue(st, baseItems, ALL, NOW).fresh).toBe(q.fresh.length + q.freshProd.length + 2)

@@ -27,6 +27,7 @@ import { VILLAGER_PER_DAY, VILLAGER_XP, villageStats, villagerCount, villagerKey
 import { shinyBefore, shinyCount, shinyKey, shinyOutcome, type ShinyKind } from './shiny'
 import { activeFestival, earnedDecorations, festivalKey, festivalProgress, festivalYear } from './festivals'
 import { goldCount, scrollKanji } from './scroll'
+import { traceKey, traceReward, tracedPerfect } from './trace'
 
 const LS_KEY = 'kioku:v1' // ⚠️ ne jamais changer : c'est la clé de ta sauvegarde locale
 const LS_DEVICE = 'kioku:device'
@@ -34,7 +35,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.12.0'
+export const APP_VERSION = '1.13.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -44,6 +45,7 @@ const LS_BACKUP91 = 'kioku:backup:avant-v1.9.1'
 const LS_BACKUP10 = 'kioku:backup:avant-v1.10'
 const LS_BACKUP11 = 'kioku:backup:avant-v1.11'
 const LS_BACKUP12 = 'kioku:backup:avant-v1.12'
+const LS_BACKUP13 = 'kioku:backup:avant-v1.13'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -106,9 +108,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP11)) safeSet(LS_BACKUP11, raw)
   // v1.12 : une 12e copie, avant les fêtes de saison et le parchemin d'or
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP12)) safeSet(LS_BACKUP12, raw)
+  // v1.13 : une 13e copie, avant les cartes à trous
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP13)) safeSet(LS_BACKUP13, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -239,6 +243,8 @@ interface Store {
   rateSentence: (itemId: string, ok: boolean) => void
   /** Phrase d'un habitant du village comprise : +10 XP (3 par jour au plus). Renvoie l'XP gagné. Ajouté en v1.11. */
   understandVillager: (lineId: string) => number
+  /** Tracé de kanji terminé : `mistakes` = erreurs par kanji. Renvoie l'XP gagné. Ajouté en v1.13. */
+  recordTrace: (r: { mistakes: number[]; sec?: number }) => number
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
   restoreSnapshot: (json: string) => boolean
   exportJson: () => string
@@ -274,7 +280,8 @@ export const useStore = create<Store>((set, get) => {
       sec: cur.sec + (delta.sec ?? 0),
       rv: (cur.rv ?? 0) + (delta.rv ?? 0),
       nv: (cur.nv ?? 0) + (delta.nv ?? 0),
-      ...(cur.hd !== undefined || delta.hd ? { hd: (cur.hd ?? 0) + (delta.hd ?? 0) } : {})
+      ...(cur.hd !== undefined || delta.hd ? { hd: (cur.hd ?? 0) + (delta.hd ?? 0) } : {}),
+      ...(cur.nc !== undefined || delta.nc ? { nc: (cur.nc ?? 0) + (delta.nc ?? 0) } : {})
     }
     return { ...state.daily, [day]: { ...(state.daily[day] ?? {}), [dev]: upd } }
   }
@@ -303,7 +310,8 @@ export const useStore = create<Store>((set, get) => {
         village: villageStats(state, items, now),
         shiny: shinyCount(state.ach),
         decorations: earnedDecorations(state.ach).length,
-        goldKanji: goldCount(scrollKanji(state, items))
+        goldKanji: goldCount(scrollKanji(state, items)),
+        traced: tracedPerfect(state.ach)
       },
       prog,
       rewardStats(state, now)
@@ -620,6 +628,7 @@ export const useStore = create<Store>((set, get) => {
         hd: r === 2 ? 1 : 0, // « Difficile » : demi-raté, compté à part (35 %)
         nw: wasNew && dir === 'r' && !natural ? 1 : 0,
         np: wasNew && dir === 'p' ? 1 : 0,
+        nc: wasNew && dir === 'c' ? 1 : 0, // v1.13 : cartes à trous (quota à part)
         nv: wasNew && natural ? 1 : 0, // phrases naturelles : comptées à part (elles ne prennent pas la place des mots du jour)
         rv: card.s === 'review' && !s.practice ? 1 : 0, // compte pour le quota de révisions du jour
         xp,
@@ -841,6 +850,18 @@ export const useStore = create<Store>((set, get) => {
       if (reward.total && reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       afterAction()
       return reward
+    },
+
+    recordTrace: (r) => {
+      const { state, device } = get()
+      if (!r.mistakes.length) return 0
+      const now = Date.now()
+      const rw = traceReward(r.mistakes)
+      const ach = { ...state.ach, [traceKey(rw.perfect, rw.total, now)]: now }
+      const sec = Math.max(0, Math.min(1200, Math.round(r.sec ?? 0)))
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp: rw.xp, sec }) })
+      afterAction()
+      return rw.xp
     },
 
     understandVillager: (lineId) => {

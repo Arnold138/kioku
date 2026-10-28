@@ -6,6 +6,7 @@ import { THEMES } from '../lib/themes'
 import { Sheet } from './ui'
 import { Listening } from './Listening'
 import { Oral } from './Oral'
+import { TracePractice } from './TracePractice'
 import { DecksSheet } from './Decks'
 
 const LS = 'kioku:free'
@@ -37,7 +38,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
   const [p, setP] = useState<Prefs>(loadPrefs)
   const set = (patch: Partial<Prefs>) => setP((cur) => ({ ...cur, ...patch }))
   // Écoute et Mes decks : pages dédiées qui s'ouvrent par-dessus, avec un retour vers Réviser librement
-  const [sub, setSub] = useState<'listen' | 'oral' | 'decks' | null>(null)
+  const [sub, setSub] = useState<'listen' | 'oral' | 'trace' | 'decks' | null>(null)
   useEffect(() => {
     if (!open) setSub(null)
   }, [open])
@@ -131,6 +132,14 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
             </div>
             <span className="chev">›</span>
           </button>
+          <button className="list-row tap" onClick={() => setSub('trace')}>
+            <div className="row-ico" style={{ background: 'hsl(45 90% 88%)' }}>✍️</div>
+            <div className="grow">
+              <div style={{ fontWeight: 700 }}>Tracer les kanji</div>
+              <div className="muted small">Ordre des traits, vérifié trait par trait</div>
+            </div>
+            <span className="chev">›</span>
+          </button>
           <button className="list-row tap" onClick={() => setSub('decks')}>
             <div className="row-ico" style={{ background: 'hsl(175 70% 90%)' }}>📚</div>
             <div className="grow">
@@ -212,6 +221,7 @@ export function FreeStudy({ open, onClose }: { open: boolean; onClose: () => voi
       </div>
       <Listening open={open && sub === 'listen'} onClose={closeAll} back={back} />
       <Oral open={open && sub === 'oral'} onClose={closeAll} back={back} />
+      <TracePractice open={open && sub === 'trace'} onClose={closeAll} back={back} />
       <DecksSheet open={open && sub === 'decks'} onClose={closeAll} back={back} onStarted={closeAll} />
     </Sheet>
   )
