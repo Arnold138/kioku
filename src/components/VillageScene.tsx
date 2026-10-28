@@ -12,15 +12,15 @@ const SKIES: Record<Sky, { top: string; mid: string; bot: string; mount: string;
 
 /** Couleurs propres à chaque ville. */
 const PALETTE: Record<string, { wall: string; roof: string; roof2: string }> = {
-  shirakawa: { wall: '#2b2250', roof: '#5b4630', roof2: '#6d5538' },
-  nara: { wall: '#2b2250', roof: '#43358a', roof2: '#7a2e2a' },
-  kyoto: { wall: '#2a2147', roof: '#3a2d63', roof2: '#8a2f2f' },
-  osaka: { wall: '#25213f', roof: '#2f3c6b', roof2: '#a33a3a' },
-  tokyo: { wall: '#1f2340', roof: '#2f3a66', roof2: '#3d4f8a' }
+  shirakawa: { wall: '#4a3d7c', roof: '#8a6a44', roof2: '#a07a4c' },
+  nara: { wall: '#4a3d7c', roof: '#6a58bf', roof2: '#b8453b' },
+  kyoto: { wall: '#463a75', roof: '#5f4fa8', roof2: '#b8453b' },
+  osaka: { wall: '#3f3a6e', roof: '#4d5fa3', roof2: '#c24a45' },
+  tokyo: { wall: '#3a3d6b', roof: '#4d5c9a', roof2: '#5f74b8' }
 }
 
 const LIT = '#ffc56b'
-const DIM = '#3a2f6b'
+const DIM = '#2a2150'
 const GROUND_Y = 258
 
 // constellation de la série : jusqu'à 7 étoiles, une par jour de série
@@ -107,8 +107,9 @@ function House({ b, x, city }: { b: Building; x: number; city: string }) {
   return (
     <g>
       {lit && <rect x={x - w / 2 + 2} y={top + 4} width={w - 4} height={h - 8} fill={LIT} opacity={0.5} filter="url(#vGlow)" />}
-      <rect x={x - w / 2} y={top} width={w} height={h} fill={b.stage === 1 ? '#241d45' : pal.wall} />
-      <Roof shape={b.shape} x={x} w={w} top={top} color={b.stage === 1 ? '#33286a' : pal.roof} color2={pal.roof2} city={city} />
+      <rect x={x - w / 2} y={top} width={w} height={h} fill={b.stage === 1 ? '#3b3170' : pal.wall} stroke="rgba(255,255,255,0.14)" strokeWidth={0.8} />
+      <Roof shape={b.shape} x={x} w={w} top={top} color={b.stage === 1 ? '#6a5a9e' : pal.roof} color2={pal.roof2} city={city} />
+      {b.stage === 1 && <rect x={x - 3} y={top + 5} width={6} height={6} rx={1} fill={LIT} opacity={0.75} />}
       {b.stage >= 2 &&
         Array.from({ length: win }, (_, i) => {
           const wx = x - w / 2 + 6 + i * ((w - 12) / Math.max(1, win)) + 1
