@@ -90,7 +90,7 @@ export function Weak({ open, onClose, initial }: { open: boolean; onClose: () =>
                         {item.kind !== 'sentence' && <div className="romaji-line" style={{ fontSize: 14 }}>{item.romaji}</div>}
                         <div style={{ marginTop: 2 }}>{item.fr}</div>
                         <div className="muted small" style={{ marginTop: 3 }}>
-                          {key.endsWith(':p') ? 'À dire en japonais' : 'À reconnaître'} · série {Math.min(streak, RECOVER_AT)}/{RECOVER_AT}
+                          {key.endsWith(':p') ? 'À dire en japonais' : key.endsWith(':f') ? 'Formes' : key.endsWith(':c') ? 'Phrase à trous' : 'À reconnaître'} · série {Math.min(streak, RECOVER_AT)}/{RECOVER_AT}
                         </div>
                       </div>
                       <div className="row" style={{ gap: 6 }}>

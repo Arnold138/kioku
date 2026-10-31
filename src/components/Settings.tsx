@@ -279,6 +279,13 @@ export function Settings() {
             </div>
             <Segmented value={String(s.clozePerDay ?? 5)} onChange={(v) => updateSettings({ clozePerDay: Number(v) })} options={[['0', 'Aucune'], ['3', '3'], ['5', '5'], ['10', '10'], ['20', '20']]} />
           </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Cartes de forme / jour</div>
+              <div className="muted small">Un verbe ou un adjectif que tu connais, une forme à écrire (passé, ている, causatif…). Elles entrent dans tes révisions</div>
+            </div>
+            <Segmented value={String(s.formsPerDay ?? 5)} onChange={(v) => updateSettings({ formsPerDay: Number(v) })} options={[['0', 'Aucune'], ['3', '3'], ['5', '5'], ['10', '10'], ['20', '20']]} />
+          </div>
           <Row title="Écrire les réponses" sub="Sur les cartes de production, tape le mot en rōmaji ou en kana au lieu de le penser"><Toggle on={s.typing} onChange={(v) => updateSettings({ typing: v })} /></Row>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>

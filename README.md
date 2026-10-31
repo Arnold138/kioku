@@ -4,6 +4,18 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.14 — Les formes des verbes et des adjectifs
+
+- **Toutes les formes** des verbes et des adjectifs de l'app, calculées pour chaque mot : **ます, ません, ました, ない, た, なかった, て, ている** (continu), **たい, ましょう, volitif (よう / おう), ば, たら, potentiel, passif, causatif, causatif-passif, impératif, てもらう, てくれる, てあげる**. Pour les adjectifs : négatif, passé, forme て, adverbe, « devenir », « trop », たら, ば / なら.
+- **Cartes de forme** dans tes révisions : un verbe ou un adjectif que tu as **retenu**, une forme à **écrire** (kana, kanji ou rōmaji). La forme **change à chaque révision**. Au début : les formes **N5** ; quand la carte tient **7 jours**, les formes **N4** s'ajoutent ; à **21 jours**, les formes **N3** (causatif-passif). Même planning **FSRS** que les autres cartes.
+- Réglage **Cartes de forme / jour** (Réglages → Objectifs) : Aucune, 3, **5** (par défaut), 10 ou 20. Elles ont leur propre quota et ne prennent pas la place des nouveaux mots.
+- Au verso des verbes et des adjectifs, un bouton **📖 Formes** ouvre le **tableau complet** du mot ; touche une forme pour l'écouter.
+- **Conjugaison 🔀** (*Réviser librement*) : 10 formes à écrire, en choisissant **verbes, adjectifs ou les deux** et les **groupes de formes** (Base, Envie / intention, Potentiel-passif-causatif, Donner / recevoir). **12 XP** par forme juste, combo jusqu'à ×1,6, **+40 XP** si 10/10. Ça ne change pas le planning.
+- Les **formes courtes de l'oral** sont acceptées : 食べてる pour 食べている, 見れる pour 見られる. Les verbes d'état (分かる, できる…) et de politesse (いらっしゃる…) n'ont que les formes qui existent vraiment.
+- **15 nouveaux mots** tirés de la vidéo à Taïwan (案内する, 地元, 後で, ぐらい, ばかり, こちらこそ, わざわざ, 食べ歩き, 夜明け…), ajoutés comme des mots normaux, avec une phrase d'exemple chacun : ils arrivent **en premier** dans tes nouvelles cartes.
+- **3 nouveaux trophées** de conjugaison (10, 100, 500 formes justes).
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). Une carte de forme a l'identifiant `<mot>:f` : une ancienne version de l'app ne la montre pas mais la garde. Un réglage (`formsPerDay`) et un compteur du jour (`nf`) optionnels ; les formes sont **calculées**, rien n'est stocké en plus ; l'historique de l'entraînement est dans les trophées (`cj:…`). Copie `kioku:backup:avant-v1.14` à la première ouverture.
+
 ## Nouveautés de la version 1.13 — Cartes à trous et tracé des kanji
 
 - **Cartes à trous** dans tes révisions : une vraie phrase (vidéos, phrases du deck, exemples) avec un mot que tu connais caché, et sa traduction. **Tu écris le mot** (kana, kanji ou rōmaji) ; la forme de la phrase (ex. 食べました) est acceptée aussi. Un bouton « Sens du mot » sert d'indice.

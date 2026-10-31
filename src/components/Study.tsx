@@ -20,6 +20,8 @@ import { cardComboBonus } from '../lib/rewards'
 import { shinyBefore, SHINY_MULT, COLLECTION_MULT } from '../lib/shiny'
 import { checkCloze, clozeFor, type Cloze } from '../lib/cloze'
 import { TracePractice } from './TracePractice'
+import { checkForm, conjKind, conjugate, pickForm } from '../lib/conjugate'
+import { FormBack, FormFront, FormsSheet } from './Conjugation'
 
 /** v1.13 — carte à trous : la phrase (en kana) avec le mot caché, sa traduction, et ton astuce en indice. */
 function ClozeFront({ it, cz }: { it: Item; cz: Cloze }) {
@@ -94,6 +96,8 @@ function Extras({ it, cardKey, ctx, lapses }: { it: Item; cardKey: string; ctx: 
   const setMemo = useStore((st) => st.setMemo)
   const [edit, setEdit] = useState(false)
   const [trace, setTrace] = useState(false)
+  const [forms, setForms] = useState(false)
+  const canForms = it.kind === 'word' && !!conjKind(it)
   const hasKanji = it.kind !== 'sentence' && /[一-鿿]/.test(it.jp)
   const [v, setV] = useState('')
   const leech = lapses >= LEECH_AT
@@ -106,6 +110,12 @@ function Extras({ it, cardKey, ctx, lapses }: { it: Item; cardKey: string; ctx: 
         // la feuille s'ouvre par-dessus (portail) : ses gestes ne doivent pas faire glisser la carte
         <span onPointerDown={(e) => e.stopPropagation()} onPointerMove={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
           <TracePractice open={trace} onClose={() => setTrace(false)} word={it} />
+        </span>
+      )}
+      {canForms && <button className="chip btn-chip accent" onClick={() => setForms(true)}>📖 Formes</button>}
+      {canForms && (
+        <span onPointerDown={(e) => e.stopPropagation()} onPointerMove={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+          <FormsSheet open={forms} onClose={() => setForms(false)} word={it} />
         </span>
       )}
       {ctx.length > 0 && (
@@ -333,6 +343,14 @@ export function Study() {
   const labels = useMemo(() => (card ? previewLabels(card, now, today, state.settings.retention ?? 0.9) : null), [cardKey, s?.revealed]) // eslint-disable-line
 
   const cloze = useMemo(() => (item && parsed?.dir === 'c' ? clozeFor(item, items) : null), [item, items, parsed?.dir])
+  // v1.14 : carte de forme — la forme demandée dépend du nombre de révisions de la carte
+  const formRev = cardKey ? state.cards[cardKey]?.r ?? 0 : 0
+  const formIv = cardKey ? state.cards[cardKey]?.i ?? 0 : 0
+  const formC = useMemo(() => {
+    if (!item || parsed?.dir !== 'f') return null
+    const fd = pickForm(item, { i: formIv, r: formRev })
+    return fd ? conjugate(item, fd) : null
+  }, [item, parsed?.dir, cardKey, formRev, formIv]) // eslint-disable-line
   const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
   const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
   const lapses = misses(card ?? undefined)
@@ -391,7 +409,7 @@ export function Study() {
   useEffect(() => {
     if (!item || !parsed) return
     if (s?.revealed) {
-      if (state.settings.speakBack ?? true) void speak(parsed.dir === 'c' && cloze ? cloze.sentence.kana : item.kana || item.jp)
+      if (state.settings.speakBack ?? true) void speak(parsed.dir === 'c' && cloze ? cloze.sentence.kana : parsed.dir === 'f' && formC ? formC.kana : item.kana || item.jp)
     } else if (parsed.dir === 'r' && state.settings.autoPlay) void speak(item.kana || item.jp)
   }, [cardKey, s?.revealed]) // eslint-disable-line
 
@@ -628,6 +646,11 @@ export function Study() {
                 <ClozeFront it={item} cz={cloze} />
                 <ClozeBack it={item} cz={cloze} typed={typed} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={[]} lapses={lapses} />} />
               </>
+            ) : formC ? (
+              <>
+                <FormFront it={item} c={formC} />
+                <FormBack it={item} c={formC} typed={typed} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={[]} lapses={lapses} />} />
+              </>
             ) : (
               <>
                 <Front it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
@@ -661,6 +684,31 @@ export function Study() {
               spellCheck={false}
               enterKeyHint="go"
               aria-label="Le mot caché"
+            />
+            <button className="btn" type="submit">Vérifier</button>
+            <button className="known-btn" type="button" onClick={() => { setTyped(null); reveal() }}>Je ne sais pas — voir la réponse</button>
+          </form>
+        ) : !s.revealed && formC ? (
+          <form
+            className="typing-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setTyped(checkForm(formC, draft))
+              reveal()
+            }}
+          >
+            <input
+              key={cardKey}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="La forme, en kana ou en rōmaji"
+              autoFocus
+              autoCapitalize="off"
+              autoCorrect="off"
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="go"
+              aria-label="La forme demandée"
             />
             <button className="btn" type="submit">Vérifier</button>
             <button className="known-btn" type="button" onClick={() => { setTyped(null); reveal() }}>Je ne sais pas — voir la réponse</button>

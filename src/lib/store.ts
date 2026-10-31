@@ -23,6 +23,7 @@ import { ACHIEVEMENTS, TIERS, buildStats, newlyUnlocked, type Achievement } from
 import { ALL_CHALLENGES_BONUS, cardComboBonus, challengeProgress, comboKey, comboStepsReached, listenKey, listenReward, rewardStats, type ListenMode, type ListenReward } from './rewards'
 import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
 import { oralKey, oralReward, type OralMode, type OralReward } from './oral'
+import { conjKey, conjReward, conjugatedTotal, type ConjReward } from './conjdrill'
 import { VILLAGER_PER_DAY, VILLAGER_XP, villageStats, villagerCount, villagerKey } from './village'
 import { shinyBefore, shinyCount, shinyKey, shinyOutcome, type ShinyKind } from './shiny'
 import { activeFestival, earnedDecorations, festivalKey, festivalProgress, festivalYear } from './festivals'
@@ -35,7 +36,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.13.0'
+export const APP_VERSION = '1.14.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -46,6 +47,7 @@ const LS_BACKUP10 = 'kioku:backup:avant-v1.10'
 const LS_BACKUP11 = 'kioku:backup:avant-v1.11'
 const LS_BACKUP12 = 'kioku:backup:avant-v1.12'
 const LS_BACKUP13 = 'kioku:backup:avant-v1.13'
+const LS_BACKUP14 = 'kioku:backup:avant-v1.14'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -110,9 +112,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP12)) safeSet(LS_BACKUP12, raw)
   // v1.13 : une 13e copie, avant les cartes à trous
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP13)) safeSet(LS_BACKUP13, raw)
+  // v1.14 : copie avant les cartes de forme (verbes, adjectifs)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP14)) safeSet(LS_BACKUP14, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -245,6 +249,8 @@ interface Store {
   understandVillager: (lineId: string) => number
   /** Tracé de kanji terminé : `mistakes` = erreurs par kanji. Renvoie l'XP gagné. Ajouté en v1.13. */
   recordTrace: (r: { mistakes: number[]; sec?: number }) => number
+  /** Entraînement « Conjugaison » terminé : XP, sans effet sur le planning. Ajouté en v1.14. */
+  recordConj: (r: { results: boolean[]; sec?: number }) => ConjReward
   /** Revient à l'état d'un point de restauration (les cartes de la copie deviennent les plus récentes, donc elles gagnent à la synchro). */
   restoreSnapshot: (json: string) => boolean
   exportJson: () => string
@@ -281,7 +287,8 @@ export const useStore = create<Store>((set, get) => {
       rv: (cur.rv ?? 0) + (delta.rv ?? 0),
       nv: (cur.nv ?? 0) + (delta.nv ?? 0),
       ...(cur.hd !== undefined || delta.hd ? { hd: (cur.hd ?? 0) + (delta.hd ?? 0) } : {}),
-      ...(cur.nc !== undefined || delta.nc ? { nc: (cur.nc ?? 0) + (delta.nc ?? 0) } : {})
+      ...(cur.nc !== undefined || delta.nc ? { nc: (cur.nc ?? 0) + (delta.nc ?? 0) } : {}),
+      ...(cur.nf !== undefined || delta.nf ? { nf: (cur.nf ?? 0) + (delta.nf ?? 0) } : {})
     }
     return { ...state.daily, [day]: { ...(state.daily[day] ?? {}), [dev]: upd } }
   }
@@ -311,7 +318,8 @@ export const useStore = create<Store>((set, get) => {
         shiny: shinyCount(state.ach),
         decorations: earnedDecorations(state.ach).length,
         goldKanji: goldCount(scrollKanji(state, items)),
-        traced: tracedPerfect(state.ach)
+        traced: tracedPerfect(state.ach),
+        conjugated: conjugatedTotal(state.ach)
       },
       prog,
       rewardStats(state, now)
@@ -629,6 +637,7 @@ export const useStore = create<Store>((set, get) => {
         nw: wasNew && dir === 'r' && !natural ? 1 : 0,
         np: wasNew && dir === 'p' ? 1 : 0,
         nc: wasNew && dir === 'c' ? 1 : 0, // v1.13 : cartes à trous (quota à part)
+        nf: wasNew && dir === 'f' ? 1 : 0, // v1.14 : cartes de forme (quota à part)
         nv: wasNew && natural ? 1 : 0, // phrases naturelles : comptées à part (elles ne prennent pas la place des mots du jour)
         rv: card.s === 'review' && !s.practice ? 1 : 0, // compte pour le quota de révisions du jour
         xp,
@@ -848,6 +857,23 @@ export const useStore = create<Store>((set, get) => {
       const after = levelFromXp(totalXp(get().state)).level
       if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
       if (reward.total && reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
+      afterAction()
+      return reward
+    },
+
+    recordConj: (r) => {
+      const { state, device } = get()
+      const now = Date.now()
+      const reward = conjReward(r.results)
+      if (!reward.total) return reward
+      const before = levelFromXp(totalXp(state)).level
+      const ach = { ...state.ach, [conjKey(reward.ok, reward.total, now)]: now }
+      const sec = Math.max(0, Math.min(1200, Math.round(r.sec ?? 0)))
+      commit({ ach, daily: addToDay({ ...state, ach }, device, today(), { xp: reward.total_xp, sec }) })
+      recordCombo(0, reward.bestCombo)
+      const after = levelFromXp(totalXp(get().state)).level
+      if (after > before) pushToast({ kind: 'level', title: `Niveau ${after} !`, text: levelLabel(after), emoji: '🎉' })
+      if (reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       afterAction()
       return reward
     },

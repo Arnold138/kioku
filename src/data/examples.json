@@ -1818,5 +1818,80 @@
 "jp": "天気が悪いので、出かけません。",
 "kana": "てんき が わるい ので でかけません",
 "fr": "Comme il fait mauvais, je ne sors pas."
+},
+"w2001": {
+"jp": "台湾の街を案内してもらいました。",
+"kana": "たいわん の まち を あんないして もらいました",
+"fr": "On m'a fait visiter les rues de Taïwan."
+},
+"w2002": {
+"jp": "地元の人です。",
+"kana": "じもと の ひと です",
+"fr": "C'est quelqu'un du coin."
+},
+"w2003": {
+"jp": "後で中に入りたいです。",
+"kana": "あとで なか に はいりたい です",
+"fr": "Plus tard, j'aimerais entrer à l'intérieur."
+},
+"w2004": {
+"jp": "毎朝六時ぐらいに起きてます。",
+"kana": "まいあさ ろくじ ぐらい に おきてます",
+"fr": "Je me lève vers six heures tous les matins."
+},
+"w2005": {
+"jp": "えっと、六時ぐらいです。",
+"kana": "えっと ろくじ ぐらい です",
+"fr": "Euh, vers six heures."
+},
+"w2006": {
+"jp": "さっき来たばかりです。",
+"kana": "さっき きた ばかり です",
+"fr": "Je viens juste d'arriver."
+},
+"w2007": {
+"jp": "いえいえ、こちらこそありがとうございます。",
+"kana": "いえいえ こちらこそ ありがとう ございます",
+"fr": "Mais non, c'est moi qui vous remercie."
+},
+"w2008": {
+"jp": "いえいえ、大丈夫ですよ。",
+"kana": "いえいえ だいじょうぶ です よ",
+"fr": "Mais non, ce n'est rien."
+},
+"w2009": {
+"jp": "なんか美味しそうだなって思った。",
+"kana": "なんか おいしそう だ な って おもった",
+"fr": "Je me suis dit que ça avait l'air bon, genre."
+},
+"w2010": {
+"jp": "わざわざ駅まで案内してくれた。",
+"kana": "わざわざ えき まで あんないして くれた",
+"fr": "Il a pris la peine de me guider jusqu'à la gare."
+},
+"w2011": {
+"jp": "食べ歩きもいいけど、中に入りたいです。",
+"kana": "たべあるき も いい けど なか に はいりたい です",
+"fr": "Manger en marchant, c'est bien, mais j'aimerais entrer."
+},
+"w2012": {
+"jp": "夜明けに起きました。",
+"kana": "よあけ に おきました",
+"fr": "Je me suis levé à l'aube."
+},
+"w2013": {
+"jp": "このドーナツは有名ですか？",
+"kana": "この ドーナツ は ゆうめい です か",
+"fr": "Ce donut est célèbre ?"
+},
+"w2014": {
+"jp": "台湾スタイルですね。",
+"kana": "たいわん スタイル です ね",
+"fr": "C'est le style taïwanais, hein."
+},
+"w2015": {
+"jp": "台湾で友達に会いました。",
+"kana": "たいわん で ともだち に あいました",
+"fr": "J'ai retrouvé un ami à Taïwan."
 }
 }

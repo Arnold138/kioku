@@ -116,6 +116,7 @@ describe('phrases naturelles', () => {
     const st = stateKnowing(676)
     st.settings.naturalPerDay = 2
     st.settings.clozePerDay = 0 // v1.13 : on isole les phrases naturelles des cartes à trous
+    st.settings.formsPerDay = 0 // v1.14 : … et des cartes de forme
     const q = buildQueue(st, baseItems, ALL, NOW)
     expect(q.freshNat.length).toBe(2)
     expect(countDue(st, baseItems, ALL, NOW).fresh).toBe(q.fresh.length + q.freshProd.length + 2)
