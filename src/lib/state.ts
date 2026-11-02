@@ -37,6 +37,8 @@ export interface Settings {
   sky?: 'auto' | 'nuit' | 'aube' | 'jour'
   /** Nouvelles cartes à trous par jour dans les révisions (0 = désactivées). Ajouté en v1.13. */
   clozePerDay?: number
+  /** Nouvelles cartes de forme (verbes, adjectifs) par jour dans les révisions (0 = désactivées). Ajouté en v1.14. */
+  formsPerDay?: number
   _t: number
 }
 
@@ -52,6 +54,7 @@ export interface DayStat {
   rv?: number // révisions de cartes déjà apprises (compte pour le quota du jour). Ajouté en v1.3 — optionnel
   nv?: number // phrases naturelles (vidéos) découvertes ce jour-là. Ajouté en v1.4 — optionnel
   nc?: number // nouvelles cartes à trous ce jour-là. Ajouté en v1.13 — optionnel
+  nf?: number // nouvelles cartes de forme (verbes, adjectifs) ce jour-là. Ajouté en v1.14 — optionnel
 }
 
 export interface AppState {
@@ -84,6 +87,7 @@ export const DEFAULT_SETTINGS: Settings = {
   voiceRate: 0.85,
   sky: 'auto',
   clozePerDay: 5,
+  formsPerDay: 5,
   _t: 0
 }
 
@@ -127,7 +131,8 @@ export function mergeStates(a: AppState, b: AppState): AppState {
               ...(cur.rv !== undefined || st.rv !== undefined ? { rv: Math.max(cur.rv ?? 0, st.rv ?? 0) } : {}),
               ...(cur.nv !== undefined || st.nv !== undefined ? { nv: Math.max(cur.nv ?? 0, st.nv ?? 0) } : {}),
               ...(cur.hd !== undefined || st.hd !== undefined ? { hd: Math.max(cur.hd ?? 0, st.hd ?? 0) } : {}),
-              ...(cur.nc !== undefined || st.nc !== undefined ? { nc: Math.max(cur.nc ?? 0, st.nc ?? 0) } : {})
+              ...(cur.nc !== undefined || st.nc !== undefined ? { nc: Math.max(cur.nc ?? 0, st.nc ?? 0) } : {}),
+              ...(cur.nf !== undefined || st.nf !== undefined ? { nf: Math.max(cur.nf ?? 0, st.nf ?? 0) } : {})
             }
           : { ...st }
       }
@@ -203,6 +208,7 @@ export function dayTotal(state: AppState, day: string): DayStat {
     t.nv = (t.nv ?? 0) + (d.nv ?? 0)
     t.hd = (t.hd ?? 0) + (d.hd ?? 0)
     t.nc = (t.nc ?? 0) + (d.nc ?? 0)
+    t.nf = (t.nf ?? 0) + (d.nf ?? 0)
   }
   return t
 }

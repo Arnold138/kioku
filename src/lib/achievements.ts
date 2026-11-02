@@ -32,6 +32,8 @@ export interface AchStats extends RewardStats {
   goldKanji: number
   /** v1.13 : kanji tracés sans faute */
   traced: number
+  /** v1.14 : formes justes à l'entraînement « Conjugaison » */
+  conjugated: number
 }
 
 /** Rang d'un trophée : il rapporte plus d'XP et brille davantage. */
@@ -59,6 +61,7 @@ export const FAMILIES: Family[] = [
   { id: 'exam', name: 'Examens' },
   { id: 'village', name: 'Village' },
   { id: 'kanji', name: 'Kanji' },
+  { id: 'conj', name: 'Conjugaison' },
   { id: 'misc', name: 'Moments' },
   { id: 'secret', name: 'Secrets' }
 ]
@@ -265,6 +268,12 @@ export const ACHIEVEMENTS: Achievement[] = [
     { id: 'tr25', name: 'Main sûre', desc: '25 kanji tracés sans faute', emoji: '🖋️', tier: 'silver', test: (s) => s.traced >= 25 },
     { id: 'tr100', name: 'Shodō', desc: '100 kanji tracés sans faute', emoji: '🎴', tier: 'gold', test: (s) => s.traced >= 100 }
   ]),
+  // v1.14 — entraînement « Conjugaison »
+  ...fam('conj', [
+    { id: 'cj10', name: 'Premières formes', desc: '10 formes justes à l\'entraînement Conjugaison', emoji: '🔀', tier: 'bronze', test: (s) => s.conjugated >= 10 },
+    { id: 'cj100', name: 'Mécanique bien huilée', desc: '100 formes justes', emoji: '⚙️', tier: 'silver', test: (s) => s.conjugated >= 100 },
+    { id: 'cj500', name: 'Mille visages', desc: '500 formes justes', emoji: '🎭', tier: 'gold', test: (s) => s.conjugated >= 500 }
+  ]),
   ...fam('misc', [
     { id: 'early', name: 'Lève-tôt', desc: 'Réviser avant 8 h', emoji: '🌅', tier: 'bronze', test: (s) => s.hour >= 5 && s.hour < 8 },
     { id: 'night', name: 'Oiseau de nuit', desc: 'Réviser après 22 h', emoji: '🦉', tier: 'bronze', test: (s) => s.hour >= 22 || s.hour < 4 },
@@ -304,6 +313,7 @@ export function buildStats(
     decorations?: number
     goldKanji?: number
     traced?: number
+    conjugated?: number
   },
   p: Progress,
   r: RewardStats
@@ -333,6 +343,7 @@ export function buildStats(
     shiny: s.shiny ?? 0,
     decorations: s.decorations ?? 0,
     goldKanji: s.goldKanji ?? 0,
-    traced: s.traced ?? 0
+    traced: s.traced ?? 0,
+    conjugated: s.conjugated ?? 0
   }
 }
