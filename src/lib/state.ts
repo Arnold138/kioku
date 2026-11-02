@@ -39,6 +39,10 @@ export interface Settings {
   clozePerDay?: number
   /** Nouvelles cartes de forme (verbes, adjectifs) par jour dans les révisions (0 = désactivées). Ajouté en v1.14. */
   formsPerDay?: number
+  /** Accueil : la chambre d'étude ('chambre') ou le village ('village'). Ajouté en v1.15 — absent des anciennes sauvegardes = chambre. */
+  home?: 'chambre' | 'village'
+  /** Météo de la chambre : vraie météo à Valence ('auto') ou figée. Ajouté en v1.15. */
+  weather?: 'auto' | 'pluie' | 'nuages' | 'clair'
   _t: number
 }
 
@@ -88,6 +92,8 @@ export const DEFAULT_SETTINGS: Settings = {
   sky: 'auto',
   clozePerDay: 5,
   formsPerDay: 5,
+  home: 'chambre',
+  weather: 'auto',
   _t: 0
 }
 

@@ -4,6 +4,17 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.15 — Ta chambre d'étude
+
+- **Nouvel accueil** : ta **chambre d'étude**, peinte et **animée**. Tu y travailles à ton bureau avec **Yuki**, ton chat ragdoll. Tu respires, ta tête suit la musique, ta main écrit ; Yuki respire et une oreille tressaille. La lampe, les guirlandes et la bougie vivent, la vapeur monte du café. **Rien n'est posé par-dessus** : c'est la peinture elle-même qui bouge.
+- **Une amélioration tous les 50 mots retenus** (16 en tout) : guirlande, plantes, piles de livres, étagère, bougie, **calligraphie 七転八起**, livres au sol, tapis… Chaque objet est **peint dans la scène** et apparaît en fondu. Le bandeau **Ta chambre** montre où tu en es et ce qui arrive ensuite.
+- **L'heure réelle** : **jour**, **crépuscule** ou **nuit**, selon le soleil à **Valence**. La nuit, **Yuki dort les yeux fermés** ; le jour, il a les yeux ouverts et cligne.
+- **La vraie météo** à Valence (service gratuit **Open-Meteo**, mise à jour toutes les 30 min) : **pluie** sur la vitre seulement quand il pleut, **nuages** quand c'est couvert, **ciel clair** sinon. Hors ligne : pluie par défaut.
+- **Mission du jour** : c'est **Yuki** qui te confie tes cartes.
+- **Réglages → Affichage** : **Accueil** (**Chambre** ou **Village** : le village et ses trophées sont toujours là), **Ciel** (Auto, Aube, Jour, Nuit) et **Météo de la chambre** (Auto, Pluie, Nuages, Clair).
+- La chambre fonctionne **hors ligne** (images gardées sur le téléphone) et **se met en pause** quand l'app est en arrière-plan.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). Deux réglages optionnels ajoutés (`home`, `weather`) ; une ancienne sauvegarde s'ouvre sur la chambre, météo auto. La météo est gardée à part (`kioku:meteo`), hors de ta sauvegarde. Copie `kioku:backup:avant-v1.15` à la première ouverture.
+
 ## Nouveautés de la version 1.14 — Les formes des verbes et des adjectifs
 
 - **Toutes les formes** des verbes et des adjectifs de l'app, calculées pour chaque mot : **ます, ません, ました, ない, た, なかった, て, ている** (continu), **たい, ましょう, volitif (よう / おう), ば, たら, potentiel, passif, causatif, causatif-passif, impératif, てもらう, てくれる, てあげる**. Pour les adjectifs : négatif, passé, forme て, adverbe, « devenir », « trop », たら, ば / なら.

@@ -36,7 +36,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.14.0'
+export const APP_VERSION = '1.15.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -48,6 +48,7 @@ const LS_BACKUP11 = 'kioku:backup:avant-v1.11'
 const LS_BACKUP12 = 'kioku:backup:avant-v1.12'
 const LS_BACKUP13 = 'kioku:backup:avant-v1.13'
 const LS_BACKUP14 = 'kioku:backup:avant-v1.14'
+const LS_BACKUP15 = 'kioku:backup:avant-v1.15'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -114,9 +115,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP13)) safeSet(LS_BACKUP13, raw)
   // v1.14 : copie avant les cartes de forme (verbes, adjectifs)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP14)) safeSet(LS_BACKUP14, raw)
+  // v1.15 : copie avant la chambre d'étude (les précédentes restent intactes)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP15)) safeSet(LS_BACKUP15, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
