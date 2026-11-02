@@ -14,6 +14,8 @@ import { VillageScene } from './VillageScene'
 import { activeFestival, earnedDecorations } from '../lib/festivals'
 import { FestivalCard } from './Festival'
 import { VillageSheet } from './Village'
+import { RoomScene } from './RoomScene'
+import { ROOM_TOTAL, nextRoomReward, roomStep } from '../lib/room'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
 const STREAK_STEPS = [3, 7, 14, 30, 50, 100, 200, 365, 500, 1000]
@@ -51,6 +53,19 @@ const Check = ({ color }: { color: string }) => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
 )
 
+/** Yuki, le chat d'Arnold (ragdoll seal point) — v1.15. */
+const Yuki = () => (
+  <div className="tama" aria-hidden="true">
+    <svg width="34" height="34" viewBox="0 0 40 40">
+      <path d="M9 15 L10.5 4 L17 11 Z M31 15 L29.5 4 L23 11 Z" fill="#4a3226" />
+      <ellipse cx="20" cy="22" rx="12.5" ry="11.5" fill="#efe3d0" />
+      <ellipse cx="20" cy="24" rx="7.5" ry="7" fill="#4a3226" />
+      <path d="M14 21 Q16.5 19.2 19 21 Q16.5 22.6 14 21Z M21 21 Q23.5 19.2 26 21 Q23.5 22.6 21 21Z" fill="#79c2ff" />
+      <path d="M19 26.5 h2 l-1 1.2z" fill="#f2a5b8" />
+    </svg>
+  </div>
+)
+
 /** Tama, le chat du village. */
 const Tama = () => (
   <div className="tama" aria-hidden="true">
@@ -71,6 +86,7 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
   const [questsOpen, setQuestsOpen] = useState(false)
   const now = Date.now()
   const day = dayKey(dayNumber(now))
+  const roomMode = (state.settings.home ?? 'chambre') === 'chambre'
   const due = useMemo(() => countDue(state, items, ALL, now), [state, items]) // eslint-disable-line
   const prog = useMemo(() => computeProgress(state, items), [state, items])
   const cities = useMemo(() => cityStatuses(state, items), [state, items])
@@ -112,7 +128,16 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
   const reviewN = due.review + due.learning
   const estXp = due.total * 10 + (due.total >= 5 ? XP_SESSION : 0)
   const streakUp = !st.todayDone && due.total >= goal - dt.n
-  const msg =
+  const words = prog.wordsKnownR
+  const roomN = roomStep(words)
+  const nextR = nextRoomReward(words)
+  const roomMsg =
+    due.total > 0
+      ? <><b>{due.total} cartes</b> t'attendent sur ton bureau. Environ {mins} minute{mins > 1 ? 's' : ''}{nextR ? <>, et la chambre se rapproche de <b>{nextR.name.toLowerCase()}</b>.</> : '.'}</>
+      : due.deferred > 0
+        ? <>Le quota du jour est atteint, bravo ✨ Tu peux encore faire <b>10 révisions</b>.</>
+        : <>Tout est révisé aujourd'hui ✨ Tu veux découvrir <b>10 nouveaux mots</b> ?{nextR ? <> Encore <b>{nextR.left} mots retenus</b> avant {nextR.name.toLowerCase()}.</> : null}</>
+  const villageMsg =
     due.total > 0
       ? dirty
         ? <>Les feuilles recouvrent <b className="jp">{dirty.sign}</b> ! Revois tes <b>{due.total} cartes</b> pour les balayer, ça te prendra environ {mins} minute{mins > 1 ? 's' : ''}.</>
@@ -120,12 +145,15 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
       : due.deferred > 0
         ? <>Le quota du jour est atteint et le village est tout propre ✨ Tu peux encore balayer <b>10 révisions</b>.</>
         : <>Tout est propre aujourd'hui ✨ Tu veux découvrir <b>10 nouveaux mots</b> pour agrandir le village ?</>
+  const msg = roomMode ? roomMsg : villageMsg
 
   return (
     <motion.div className="home2" variants={container} initial="hidden" animate="show">
-      {/* 1 · Le village vivant */}
-      <motion.div variants={item} className="village-banner">
-        <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} decor={earnedDecorations(state.ach)} />
+      {/* 1 · La chambre d'étude (v1.15) ou le village vivant */}
+      <motion.div variants={item} className={roomMode ? 'village-banner room-banner' : 'village-banner'}>
+        {roomMode
+          ? <RoomScene words={words} sky={state.settings.sky} weather={state.settings.weather} />
+          : <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} decor={earnedDecorations(state.ach)} />}
         <div className="vb-top">
           <div className="vb-brand"><span className="jp-display">記憶</span><span>Kioku</span></div>
           <div className="glass-chip" title="Série de jours">
@@ -136,6 +164,17 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
       </motion.div>
 
       <div className="home2-body">
+        {roomMode ? (
+          <div className="vb-pill">
+            <span className="grow">
+              <b>Ta chambre <span className="muted tnum" style={{ fontWeight: 600 }}>· {roomN} / {ROOM_TOTAL}</span></b>
+              <small>{nextR ? <>Prochaine : {nextR.name} dans <span className="tnum">{nextR.left}</span> mot{nextR.left > 1 ? 's' : ''}</> : 'Toutes les améliorations sont là. De nouveaux tableaux arriveront.'}</small>
+            </span>
+            <span className="room-steps" aria-hidden="true">
+              {Array.from({ length: ROOM_TOTAL }, (_, i) => <i key={i} className={i < roomN ? 'on' : ''} />)}
+            </span>
+          </div>
+        ) : (
           <button className="vb-pill" onClick={() => setVillageOpen(true)}>
             <span className="grow">
               <b>{city.name} <span className="jp-display muted">{city.kanji}</span></b>
@@ -143,6 +182,7 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
             </span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
           </button>
+        )}
         {/* 2 · Niveau + route du JLPT */}
         <motion.div variants={item} className="glass-card lvl2">
           <div className="row" style={{ gap: 14 }}>
@@ -187,16 +227,16 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
             <span className="jp-display" style={{ color: '#ffe39a', fontWeight: 700, fontSize: 15 }}>今日の任務</span>
           </div>
           <div className="mission-talk">
-            <Tama />
+            {roomMode ? <Yuki /> : <Tama />}
             <div className="grow">
-              <div className="mission-who">Tama, le chat du village</div>
+              <div className="mission-who">{roomMode ? 'Yuki, ton chat' : 'Tama, le chat du village'}</div>
               <div className="mission-bubble">{msg}</div>
             </div>
           </div>
           {due.total > 0 && (
             <div className="mission-rewards">
               <div className="mr gold"><b className="tnum">+{estXp}</b><span>XP</span></div>
-              <div className="mr leaf"><b className="tnum">{reviewN}</b><span>feuille{reviewN > 1 ? 's' : ''} balayée{reviewN > 1 ? 's' : ''}</span></div>
+              <div className="mr leaf"><b className="tnum">{reviewN}</b><span>{roomMode ? `révision${reviewN > 1 ? 's' : ''}` : `feuille${reviewN > 1 ? 's' : ''} balayée${reviewN > 1 ? 's' : ''}`}</span></div>
               {streakUp ? (
                 <div className="mr fire"><b className="tnum">{st.current + 1} j</b><span>de série</span></div>
               ) : (

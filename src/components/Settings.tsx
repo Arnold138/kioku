@@ -315,10 +315,24 @@ export function Settings() {
           </div>
           <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
             <div>
-              <div style={{ fontWeight: 600 }}>Ciel du village</div>
-              <div className="muted small">Auto : l'aube le matin, le jour l'après-midi, la nuit le soir</div>
+              <div style={{ fontWeight: 600 }}>Accueil</div>
+              <div className="muted small">Ta chambre d'étude avec Yuki, ou le village</div>
+            </div>
+            <Segmented value={s.home ?? 'chambre'} onChange={(v) => updateSettings({ home: v })} options={[['chambre', 'Chambre'], ['village', 'Village']]} />
+          </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Ciel</div>
+              <div className="muted small">Auto : suit le soleil à Valence pour la chambre (jour, crépuscule, nuit), l'heure pour le village</div>
             </div>
             <Segmented value={s.sky ?? 'auto'} onChange={(v) => updateSettings({ sky: v })} options={[['auto', 'Auto'], ['aube', 'Aube'], ['jour', 'Jour'], ['nuit', 'Nuit']]} />
+          </div>
+          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+            <div>
+              <div style={{ fontWeight: 600 }}>Météo de la chambre</div>
+              <div className="muted small">Auto : la vraie météo à Valence (pluie sur la vitre seulement quand il pleut)</div>
+            </div>
+            <Segmented value={s.weather ?? 'auto'} onChange={(v) => updateSettings({ weather: v })} options={[['auto', 'Auto'], ['pluie', 'Pluie'], ['nuages', 'Nuages'], ['clair', 'Clair']]} />
           </div>
         </div>
       </div>
