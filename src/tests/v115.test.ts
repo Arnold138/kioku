@@ -1,51 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_SETTINGS, emptyState, mergeStates, sanitize } from '../lib/state'
 import {
-  ROOM_BULBS, ROOM_COUNTS, ROOM_EVERY, ROOM_REWARDS, ROOM_TOTAL, WEATHER,
-  fetchWeather, nextRoomReward, phaseFromElevation, roomPhase, roomPos, roomStep, roomWeather, sunElevation, weatherFromCode,
+  WEATHER, fetchWeather, phaseFromElevation, roomPhase, roomWeather, sunElevation, weatherFromCode,
 } from '../lib/room'
 
-describe('v1.15 — paliers de la chambre', () => {
-  it('une amélioration tous les 50 mots retenus, 16 en tout', () => {
-    expect(ROOM_EVERY).toBe(50)
-    expect(ROOM_TOTAL).toBe(16)
-    expect(ROOM_COUNTS.reduce((a, b) => a + b, 0)).toBe(ROOM_TOTAL)
-    expect(roomStep(0)).toBe(0)
-    expect(roomStep(49)).toBe(0)
-    expect(roomStep(50)).toBe(1)
-    expect(roomStep(600)).toBe(12)
-    expect(roomStep(800)).toBe(16)
-    expect(roomStep(5000)).toBe(16)
-    expect(roomStep(-10)).toBe(0)
-  })
-
-  it('le palier choisit le bon tableau et les objets déjà révélés', () => {
-    expect(roomPos(0)).toEqual({ k: 0, p: 0 })
-    expect(roomPos(7)).toEqual({ k: 0, p: 7 })
-    expect(roomPos(8)).toEqual({ k: 1, p: 0 })
-    expect(roomPos(9)).toEqual({ k: 1, p: 1 })
-    expect(roomPos(12)).toEqual({ k: 2, p: 0 })
-    expect(roomPos(16)).toEqual({ k: 3, p: 0 })
-    expect(roomPos(99)).toEqual({ k: 3, p: 0 })
-  })
-
-  it('annonce la prochaine amélioration (Arnold ≈ 600 mots → la calligraphie à 650)', () => {
-    expect(nextRoomReward(600)).toEqual({ name: ROOM_REWARDS[12], at: 650, left: 50 })
-    expect(nextRoomReward(612)?.left).toBe(38)
-    expect(nextRoomReward(0)).toEqual({ name: 'Guirlande lumineuse', at: 50, left: 50 })
-    expect(nextRoomReward(800)).toBeNull()
-  })
-
-  it('les ampoules qui scintillent pointent sur des objets existants', () => {
-    expect(ROOM_BULBS).toHaveLength(4)
-    ROOM_BULBS.forEach((list, k) => list.forEach(([x, y, obj]) => {
-      expect(x).toBeGreaterThan(0); expect(x).toBeLessThan(1136)
-      expect(y).toBeGreaterThan(0); expect(y).toBeLessThan(1408)
-      if (k < 3) expect(obj).toBeLessThanOrEqual(ROOM_COUNTS[k])
-      else expect(obj).toBe(0)
-    }))
-  })
-})
+// v1.16 : les paliers par objets (16 objets / 50 mots) sont remplacés par la pile de livres (voir v116.test.ts).
 
 describe('v1.15 — heure du soleil à Valence', () => {
   it('hauteur du soleil juste à ±1,5°', () => {

@@ -1,46 +1,47 @@
-// v1.15 — La chambre d'étude : paliers, heure du soleil et météo.
+// v1.15 / v1.16 — La chambre d'étude : livres, heure du soleil et météo.
 // Logique pure (testée) ; le rendu WebGL est dans roomGl.ts, le composant dans RoomScene.tsx.
 
-/** Une amélioration tous les ROOM_EVERY mots retenus (sens japonais → français). */
-export const ROOM_EVERY = 50
+/**
+ * v1.16 — Les livres de la chambre.
+ * Points : 1 par mot retenu, 3 par phrase retenue. Un livre de plus sur la pile tous les ROOM_EVERY points,
+ * comptés depuis l'installation de la v1.16 (repère `m:chambre16` dans `ach`).
+ */
+export const ROOM_EVERY = 25
+export const ROOM_SENTENCE_POINTS = 3
+/** Livres peints de la pile au pied du lit, révélés du bas vers le haut. */
+export const ROOM_TOTAL = 6
+export const ROOM_BASE_KEY = 'm:chambre16'
 
-/** Objets peints révélés entre deux tableaux (4 tableaux → 3 transitions). */
-export const ROOM_COUNTS = [8, 4, 4] as const
-export const ROOM_REWARDS = [
-  'Guirlande lumineuse', 'Grande plante', 'Plante sur le rebord', 'Deuxième plante sur le rebord',
-  'Plante près de la fenêtre', 'Pile de livres', 'Pot à crayons', 'Plante au premier plan',
-  "Bougie sur l'étagère", 'Plante suspendue', 'Étagère de livres', 'Plante près de la lampe',
-  'Calligraphie 七転八起', 'Livres sur le bureau', 'Livres au sol', 'Tapis',
-] as const
-export const ROOM_TOTAL = ROOM_REWARDS.length
+/** Ampoules et bougies qui scintillent (coordonnées dans la peinture 1136 × 1408). */
+export const ROOM_BULBS: Array<[number, number]> = [[882.8, 308.5], [1110.1, 63.5], [32.2, 83.3], [139.2, 135.0], [202.2, 163.6], [809.3, 178.4], [103.0, 99.5], [260.3, 194.2], [721.2, 175.0], [887.4, 214.3], [282.5, 440.3], [825.0, 389.0], [77.4, 66.2], [230.1, 161.1], [455.8, 177.4], [867.4, 147.9], [798.7, 179.4], [306.5, 210.2], [181.6, 140.8], [890.1, 149.3], [304.4, 281.4], [284.5, 389.9], [417.3, 193.5], [284.5, 335.3], [364.6, 200.6], [879.9, 215.3], [310.0, 237.0], [776.4, 172.7]]
 
-/** Ampoules et bougie qui scintillent, par tableau : [x, y, objet] (0 = déjà dans le tableau, n = n-ième objet révélé). */
-export const ROOM_BULBS: Array<Array<[number, number, number]>> = [
-  [[113.7, 408.2, 2], [131.9, 169.2, 1], [79.3, 489.7, 2], [180.1, 90.2, 1], [124.4, 250.6, 1]],
-  [[113.7, 408.2, 0], [131.9, 169.2, 0], [79.3, 489.7, 0], [180.1, 90.2, 0], [124.4, 250.6, 0], [1110.6, 112.4, 1], [1015.1, 240.7, 2]],
-  [[1110.6, 112.4, 0], [114, 407.5, 0], [132.1, 168.6, 0], [79.7, 488.4, 0], [180.3, 90, 0], [124.5, 249.7, 0], [1015.1, 240.7, 0]],
-  [[1110.5, 112.7, 0], [126, 408.5, 0], [80, 489.4, 0], [181.2, 90.3, 0], [1015.5, 241.2, 0], [142.9, 169.4, 0], [135.9, 250.8, 0]],
-]
-
-/** Nombre d'améliorations débloquées pour un nombre de mots retenus. */
-export function roomStep(words: number): number {
-  return Math.max(0, Math.min(ROOM_TOTAL, Math.floor(Math.max(0, words) / ROOM_EVERY)))
+/** Points d'apprentissage : mots retenus + 3 × phrases retenues. */
+export function roomPoints(p: { wordsKnownR: number; sentencesKnown: number }): number {
+  return Math.max(0, p.wordsKnownR) + ROOM_SENTENCE_POINTS * Math.max(0, p.sentencesKnown)
 }
 
-/** Tableau affiché (k) et nombre d'objets du tableau suivant déjà révélés (p). */
-export function roomPos(step: number): { k: number; p: number } {
-  let k = 0
-  let n = Math.max(0, Math.min(ROOM_TOTAL, Math.floor(step)))
-  while (k < ROOM_COUNTS.length && n >= ROOM_COUNTS[k]) { n -= ROOM_COUNTS[k]; k++ }
-  return { k, p: n }
+/** Repère enregistré dans `ach` : points au premier lancement de la v1.16, + 1 (une valeur 0 serait ignorée à la synchro). */
+export function roomBase(ach: Record<string, number>, points: number): number {
+  const v = ach[ROOM_BASE_KEY]
+  return v ? v - 1 : points
 }
 
-/** Prochaine amélioration : son nom et le nombre de mots retenus qu'il faut atteindre (null si tout est débloqué). */
-export function nextRoomReward(words: number): { name: string; at: number; left: number } | null {
-  const n = roomStep(words)
+/** Nombre de livres posés sur la pile. */
+export function roomBooks(points: number, base: number): number {
+  return Math.max(0, Math.min(ROOM_TOTAL, Math.floor((points - base) / ROOM_EVERY)))
+}
+
+/** Prochain livre : son numéro et les points qu'il manque (null si la pile est complète). */
+export function nextRoomBook(points: number, base: number): { n: number; left: number } | null {
+  const n = roomBooks(points, base)
   if (n >= ROOM_TOTAL) return null
-  const at = (n + 1) * ROOM_EVERY
-  return { name: ROOM_REWARDS[n], at, left: at - Math.max(0, words) }
+  return { n: n + 1, left: base + (n + 1) * ROOM_EVERY - points }
+}
+
+/** Pose le repère au premier lancement (ne change rien s'il existe déjà). */
+export function withRoomBase<T extends { ach: Record<string, number> }>(state: T, points: number): T {
+  if (state.ach[ROOM_BASE_KEY]) return state
+  return { ...state, ach: { ...state.ach, [ROOM_BASE_KEY]: Math.max(0, Math.floor(points)) + 1 } }
 }
 
 // ───────────── Heure du soleil ─────────────

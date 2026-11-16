@@ -4,6 +4,16 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.16 — Une chambre plus grande et plus vivante
+
+- **Nouvelle peinture**, plus large et plus réaliste : on voit **toute la chambre**, le bureau, le lit, la fenêtre et la ville.
+- **Elle est là** : allongée sur le lit, son téléphone à la main, **Yuki** blotti contre elle. **La nuit, l'écran éclaire son visage** ; le jour, non. Elle respire, son pouce fait défiler l'écran.
+- **Toi, plus vivant** : tu respires, ta main écrit, et de temps en temps **tu lèves la tête pour réfléchir**. **Touche-toi** dans la scène : tu écris plus vite (よし、もう一文！).
+- **Yuki** respire, bouge les oreilles et la queue. La nuit, il dort les yeux fermés. **Touche-le** : il lève la tête (にゃあ…).
+- **Récompenses : une pile de livres qui grandit** au pied du lit. **1 mot retenu = 1 point, 1 phrase retenue = 3 points** ; **un livre de plus tous les 25 points**, comptés à partir de cette version. Le livre du dessus se soulève et le nouveau se glisse dessous. 6 livres pour l'instant, d'autres arriveront avec les prochains tableaux.
+- Toujours **l'heure réelle** (jour, crépuscule, nuit) et **la vraie météo** à Valence, comme en 1.15.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). Un seul repère optionnel ajouté dans les trophées (`m:chambre16`, tes points au premier lancement) ; à la synchro, c'est le plus ancien qui est gardé. Les livres déjà vus sont notés sur l'appareil seulement (`kioku:chambre:vus`). Copie `kioku:backup:avant-v1.16` à la première ouverture.
+
 ## Nouveautés de la version 1.15 — Ta chambre d'étude
 
 - **Nouvel accueil** : ta **chambre d'étude**, peinte et **animée**. Tu y travailles à ton bureau avec **Yuki**, ton chat ragdoll. Tu respires, ta tête suit la musique, ta main écrit ; Yuki respire et une oreille tressaille. La lampe, les guirlandes et la bougie vivent, la vapeur monte du café. **Rien n'est posé par-dessus** : c'est la peinture elle-même qui bouge.

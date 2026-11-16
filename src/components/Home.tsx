@@ -15,7 +15,7 @@ import { activeFestival, earnedDecorations } from '../lib/festivals'
 import { FestivalCard } from './Festival'
 import { VillageSheet } from './Village'
 import { RoomScene } from './RoomScene'
-import { ROOM_TOTAL, nextRoomReward, roomStep } from '../lib/room'
+import { ROOM_TOTAL, nextRoomBook, roomBase, roomBooks, roomPoints } from '../lib/room'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
 const STREAK_STEPS = [3, 7, 14, 30, 50, 100, 200, 365, 500, 1000]
@@ -128,15 +128,16 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
   const reviewN = due.review + due.learning
   const estXp = due.total * 10 + (due.total >= 5 ? XP_SESSION : 0)
   const streakUp = !st.todayDone && due.total >= goal - dt.n
-  const words = prog.wordsKnownR
-  const roomN = roomStep(words)
-  const nextR = nextRoomReward(words)
+  const pts = roomPoints(prog)
+  const base = roomBase(state.ach, pts)
+  const roomN = roomBooks(pts, base)
+  const nextR = nextRoomBook(pts, base)
   const roomMsg =
     due.total > 0
-      ? <><b>{due.total} cartes</b> t'attendent sur ton bureau. Environ {mins} minute{mins > 1 ? 's' : ''}{nextR ? <>, et la chambre se rapproche de <b>{nextR.name.toLowerCase()}</b>.</> : '.'}</>
+      ? <><b>{due.total} cartes</b> t'attendent sur ton bureau. Environ {mins} minute{mins > 1 ? 's' : ''}{nextR ? <>. Encore <b>{nextR.left} point{nextR.left > 1 ? 's' : ''}</b> pour un nouveau livre.</> : '.'}</>
       : due.deferred > 0
         ? <>Le quota du jour est atteint, bravo ✨ Tu peux encore faire <b>10 révisions</b>.</>
-        : <>Tout est révisé aujourd'hui ✨ Tu veux découvrir <b>10 nouveaux mots</b> ?{nextR ? <> Encore <b>{nextR.left} mots retenus</b> avant {nextR.name.toLowerCase()}.</> : null}</>
+        : <>Tout est révisé aujourd'hui ✨ Tu veux découvrir <b>10 nouveaux mots</b> ?{nextR ? <> Encore <b>{nextR.left} point{nextR.left > 1 ? 's' : ''}</b> pour un nouveau livre.</> : null}</>
   const villageMsg =
     due.total > 0
       ? dirty
@@ -152,7 +153,7 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
       {/* 1 · La chambre d'étude (v1.15) ou le village vivant */}
       <motion.div variants={item} className={roomMode ? 'village-banner room-banner' : 'village-banner'}>
         {roomMode
-          ? <RoomScene words={words} sky={state.settings.sky} weather={state.settings.weather} />
+          ? <RoomScene books={roomN} sky={state.settings.sky} weather={state.settings.weather} />
           : <VillageScene city={city} buildings={buildings} sky={sky} streak={st.current} height={300} decor={earnedDecorations(state.ach)} />}
         <div className="vb-top">
           <div className="vb-brand"><span className="jp-display">記憶</span><span>Kioku</span></div>
@@ -167,8 +168,8 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
         {roomMode ? (
           <div className="vb-pill">
             <span className="grow">
-              <b>Ta chambre <span className="muted tnum" style={{ fontWeight: 600 }}>· {roomN} / {ROOM_TOTAL}</span></b>
-              <small>{nextR ? <>Prochaine : {nextR.name} dans <span className="tnum">{nextR.left}</span> mot{nextR.left > 1 ? 's' : ''}</> : 'Toutes les améliorations sont là. De nouveaux tableaux arriveront.'}</small>
+              <b>Ta pile de livres <span className="muted tnum" style={{ fontWeight: 600 }}>· {roomN} / {ROOM_TOTAL}</span></b>
+              <small>{nextR ? <>Livre suivant dans <span className="tnum">{nextR.left}</span> point{nextR.left > 1 ? 's' : ''} · 1 mot = 1, 1 phrase = 3</> : 'La pile est complète. De nouveaux livres arriveront avec les prochains tableaux.'}</small>
             </span>
             <span className="room-steps" aria-hidden="true">
               {Array.from({ length: ROOM_TOTAL }, (_, i) => <i key={i} className={i < roomN ? 'on' : ''} />)}
