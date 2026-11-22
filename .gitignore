@@ -3,3 +3,4 @@ dist
 .env
 .env.local
 *.tsbuildinfo
+scripts/blocks/blocks-auto.json

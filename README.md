@@ -4,6 +4,22 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.17 — Les phrases par blocs
+
+- Chaque phrase est découpée en **blocs** qui ont du sens : **今日は / 今から / 買い物に / 行きます**. Les kanji ne sont jamais coupés en deux.
+- **Une nouvelle phrase passe par 4 étapes**, dans tes révisions :
+  1. **Découvre** : les blocs avec leur lecture et la traduction. Touche un bloc pour l'écouter.
+  2. **Reconstruis** : les blocs sont mélangés, tu les remets dans l'ordre à partir du français.
+  3. **Change un bloc** : la même phrase avec un bloc différent (ex. **電車で → バスで**), tu choisis le bon bloc.
+  4. **Dis-la de mémoire** : tu dis la phrase **au micro**, ou tu l'écris (kanji, kana ou rōmaji) avec **⌨️ Écrire plutôt**.
+- **Ensuite, aux révisions** : tant que la phrase est récente, tu la **reconstruis** (avec un bloc intrus en plus) ; quand elle tient **une semaine**, tu la **dis de mémoire**.
+- À la fin, la carte se retourne avec **une note proposée** (Bien si c'est juste, Hésitant avec des erreurs) : tu peux toujours en choisir une autre.
+- Le micro se trompe parfois sur un mot : à partir de 4 blocs, **un bloc manqué est pardonné**, et un bouton **« En fait, je l'ai bien dite »** est là si besoin.
+- **430 phrases** ont une variante écrite à la main pour l'étape « Change un bloc » (phrases du deck et des vidéos). Pour les formules toutes faites (おはようございます…) et quelques bouts de phrases des vidéos, cette étape est sautée.
+- Les points de ta pile de livres ne changent pas : **1 phrase retenue = 3 points**. Le nombre de phrases par jour ne change pas non plus.
+- **Réglages → Objectifs → Phrases par blocs** : tu peux revenir aux anciennes cartes de phrase.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`) et **mêmes cartes de phrase** qu'avant : un ancien appareil peut toujours les réviser. Un seul réglage optionnel ajouté (`sentenceBlocks`). Ton choix micro / clavier reste sur l'appareil (`kioku:blocs:clavier`). Copie `kioku:backup:avant-v1.17` à la première ouverture.
+
 ## Nouveautés de la version 1.16 — Une chambre plus grande et plus vivante
 
 - **Nouvelle peinture**, plus large et plus réaliste : on voit **toute la chambre**, le bureau, le lit, la fenêtre et la ville.
@@ -179,7 +195,7 @@ Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**.
 ## Ce qu'elle contient
 
 - **1 995 mots** classés par fréquence : N5 complet (676), N4 complet (637) et les 682 mots N3 les plus fréquents.
-- **158 phrases** à traduire dans la tête (salutations, quotidien, voyage, travail, oral/YouTube…) + **272 phrases de vidéos** (decks optionnels).
+- **158 phrases** apprises par blocs (salutations, quotidien, voyage, travail, oral/YouTube…) + **272 phrases de vidéos** (decks optionnels).
 - Chaque carte affiche **kanji + hiragana + rōmaji** ; prononciation audio (voix japonaise du téléphone).
 - **5 boutons de réponse** : Oublié · Difficile · Hésitant · Bien · Facile, avec l'intervalle affiché sur chaque bouton.
 - **Deux sens** par mot : reconnaissance (JP → FR) puis production (FR → JP, débloquée quand tu reconnais le mot).

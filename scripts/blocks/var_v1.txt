@@ -1,0 +1,118 @@
+v1-0|こんにちは|こんばんは|こんにちは|こんばんは|Bonsoir à tous ! Moi, c'est Ken !
+v1-1|買い物|散歩|かいもの|さんぽ|Aujourd'hui, je vais me promener dès maintenant.
+v1-2|日本語|英語|にほんご|えいご|Je vais en ville et je parle en anglais en me promenant dans les rues.
+v1-3|買い物|旅行|かいもの|りょこう|Aujourd'hui, je pars en voyage avec vous tous.
+v1-4|電車|バス|でんしゃ|バス|D'ici jusqu'à la ville, il faut environ une heure en bus.
+v1-5|台北|東京|たいぺい|とうきょう|Aujourd'hui, je vais dans le centre de Tokyo.
+v1-7|きれいな|有名な|きれいな|ゆうめいな|Taïwan aussi a beaucoup d'endroits célèbres.
+v1-8|日本|フランス|にほん|フランス|Cette année, en 2025, j'ai l'intention de rentrer en France.
+v1-9|動画|写真|どうが|しゃしん|Si je rentre au Japon en voyage, je prendrai aussi beaucoup de photos du Japon.
+v1-10|動画|写真|どうが|しゃしん|Attendez-vous aussi avec impatience aux photos du Japon !
+v1-11|電車|バス|でんしゃ|バス|Bon, d'abord, je prends le bus.
+v1-12|10分|5分|じゅっぷん|ごふん|C'est à environ 5 minutes à pied d'ici. Il y a une gare.
+v1-13|駅|入口|えき|いりぐち|Allons d'abord à l'entrée du train !
+v1-14|電車|バス|でんしゃ|バス|Je monte dans le bus maintenant.
+v1-15|駅|家|えき|いえ|Je viens de sortir de la maison.
+v1-16|電車|車|でんしゃ|くるま|Comme prévu, ça a pris environ une heure en voiture.
+v1-17|台北|東京|たいぺい|とうきょう|Ici, c'est le centre de Tokyo.
+v1-18|人|猫|ひと|ねこ|Il y a beaucoup de chats.
+v1-19|お店|レストラン|おみせ|レストラン|Il y a beaucoup de restaurants dans ce quartier.
+v1-20|高級な|安い|こうきゅうな|やすい|Les magasins du coin sont souvent assez bon marché.
+v1-23|お店|場所|おみせ|ばしょ|Ce sont des endroits qui ne me concernent pas vraiment.
+v1-25|この|あの|この|あの|Je suis déjà venu dans ce quartier-là.
+v1-26|2回|3回|にかい|さんかい|Je crois que je suis venu environ trois fois.
+v1-29|一緒に見に|一緒に写真を撮りに|いっしょにみに|いっしょにしゃしんをとりに|On verra aussi ce bâtiment plus tard, allons le prendre en photo ensemble !
+v1-30|新しい|古い|あたらしい|ふるい|C'est un des endroits les plus anciens de Taipei.
+v1-31|きれい|広い|きれい|ひろい|Les bâtiments sont neufs et les rues sont larges.
+v1-32|おしゃれな|若い|おしゃれな|わかい|Parmi les gens qui se promènent, beaucoup sont assez jeunes.
+v1-33|クリスマス|お正月|クリスマス|おしょうがつ|Le Nouvel An vient de se terminer.
+v1-36|すごく|とても|すごく|とても|C'est beau, n'est-ce pas ! C'est très beau !
+v1-37|買い物|料理|かいもの|りょうり|Vous aimez cuisiner ?
+v1-38|買い物|散歩|かいもの|さんぽ|Aujourd'hui, je suis venu me promener.
+v1-40|パソコン|スマホ|パソコン|スマホ|Ce que j'achète aujourd'hui, c'est un smartphone.
+v1-45|パソコン|スマホ|パソコン|スマホ|Comme il est tombé en panne, j'ai cherché un nouveau smartphone ces derniers temps.
+v1-46|買いに|見に|かいに|みに|Aujourd'hui, je vais voir ce nouvel ordinateur.
+v1-47|買いました|使いました|かいました|つかいました|En fait, je l'ai déjà utilisé.
+v1-48|クレジット / カード|現金|クレジット / カード|げんきん|Je l'ai cherché en ligne et je l'ai payé en liquide.
+v1-50|在庫|お客さん|ざいこ|おきゃくさん|Le magasin n'avait pas de clients.
+v1-51|パソコン|荷物|パソコン|にもつ|Alors aujourd'hui, je vais aller récupérer ce colis.
+v1-52|方向|道|ほうこう|みち|Attendez un instant. Je ne connais pas le chemin.
+v1-54|グーグル / マップ|地図|グーグル / マップ|ちず|Je m'arrête un instant et je regarde la carte.
+v1-55|グーグル / マップ|地図|グーグル / マップ|ちず|Je viens de regarder la carte.
+v1-58|まっすぐ|右に|まっすぐ|みぎに|Il paraît qu'en allant à droite, on le trouve.
+v1-60|仕事|勉強|しごと|べんきょう|Vous utilisez un ordinateur pour étudier ?
+v1-63|映画|ドラマ|えいが|ドラマ|Vous regardez des séries ou YouTube sur ordinateur, par exemple ?
+v1-64|パソコン|スマホ|パソコン|スマホ|J'utilise le smartphone tous les jours.
+v1-65|仕事|勉強|しごと|べんきょう|Je m'en sers tous les jours pour étudier.
+v1-66|パソコン|車|パソコン|くるま|Alors si la voiture tombe en panne, c'est assez embêtant.
+v1-68|買いました|食べました|かいました|たべました|Qu'avez-vous mangé récemment ?
+v1-69|1年前|2年前|いちねんまえ|にねんまえ|Mon ordinateur qui est tombé en panne, je l'ai acheté il y a environ deux ans.
+v1-70|1年前|1か月前|いちねんまえ|いっかげつまえ|Je l'avais acheté il y a tout juste un mois !
+v1-71|安かった|古かった|やすかった|ふるかった|Mais comme il était très vieux, on n'y peut rien.
+v1-74|パソコン|スマホ|パソコン|スマホ|Selon vous, quel smartphone ai-je acheté ?
+v1-75|有名な|高い|ゆうめいな|たかい|C'est un ordinateur super cher.
+v1-76|りんご|猫|りんご|ねこ|Il y a un chat dessiné sur l'ordinateur.
+v1-78|今から|明日|いまから|あした|Alors je vais à l'Apple Store demain.
+v1-80|パソコン|スマホ|パソコン|スマホ|Le smartphone que j'ai en ce moment est aussi un ordinateur Windows.
+v1-82|スマホ|携帯|スマホ|けいたい|j'utilisais un téléphone qui s'appelait iPhone 4S.
+v1-84|高校生|大学生|こうこうせい|だいがくせい|À ce moment-là j'étais étudiant, alors...
+v1-86|OK|十分|オーケー|じゅうぶん|Tant que je pouvais faire ça, c'était suffisant.
+v1-89|3年|5年|さんねん|ごねん|J'ai utilisé l'iPhone pendant cinq ou quatre ans.
+v1-92|ずっと|今も|ずっと|いまも|Depuis, j'utilise encore Android pour mon smartphone.
+v1-94|ここ|あそこ|ここ|あそこ|Ah, là-bas aussi il y a des illuminations.
+v1-95|木|家|き|いえ|Les maisons sont éclairées.
+v1-96|あっち|こっち|あっち|こっち|Ah, allons un peu par ici !
+v1-98|買い物|散歩|かいもの|さんぽ|Je suis venu me promener, mais...
+v1-99|おしゃれ|静か|おしゃれ|しずか|Ce quartier est vraiment calme, alors...
+v1-100|お店|カフェ|おみせ|カフェ|Ce café est chic, n'est-ce pas ?
+v1-102|大きい|きれいな|おおきい|きれいな|Ici, c'est vraiment la ville. Une belle ville.
+v1-103|高い|大きい|たかい|おおきい|Les bâtiments sont super grands !
+v1-105|大きい|静かな|おおきい|しずかな|Et vous ? Vous aimez les villes calmes comme celle-ci ?
+v1-109|オンライン|お店|オンライン|おみせ|Quand j'ai besoin de quelque chose, j'essaie d'acheter en magasin autant que possible.
+v1-112|サービス|お店|サービス|おみせ|Ce magasin est génial, n'est-ce pas !
+v1-113|便利|楽|べんり|らく|C'est super facile.
+v1-114|道|場所|みち|ばしょ|Je ne sais encore plus où je suis.
+v1-115|グーグル / マップ|地図|グーグル / マップ|ちず|Je regarde un peu la carte.
+v1-116|着きます|終わります|つきます|おわります|Ça se termine bientôt !
+v1-117|建物|お寺|たてもの|おてら|Là-bas, il y a un temple super célèbre de Taïwan.
+v1-118|見ましょう|行きましょう|みましょう|いきましょう|Allons-y un peu ensemble !
+v1-122|高い|古い|たかい|ふるい|Ce bâtiment est le plus ancien de Taïwan.
+v1-123|508|300|ごひゃくはち|さんびゃく|Il mesure 300 mètres de haut.
+v1-127|昔|去年|むかし|きょねん|Je suis déjà venu dans ce quartier l'an dernier.
+v1-129|見て|来て|みて|きて|Même en venant plusieurs fois, c'est impressionnant !
+v1-133|建物|お店|たてもの|おみせ|Je ne suis jamais entré dans ce magasin.
+v1-136|入って|行って|はいって|いって|Mais j'aimerais bien y aller un jour.
+v1-140|妻|友達|つま|ともだち|Je l'ai entendu d'un ami.
+v1-143|パソコン|荷物|パソコン|にもつ|Voilà, je viens de récupérer le colis !
+v1-145|開ける|使う|あける|つかう|J'ai trop hâte de l'utiliser en rentrant à la maison !
+v1-148|夜|朝|よる|あさ|Et du coup, le matin est arrivé.
+v1-149|6時|8時|ろくじ|はちじ|Il doit être environ 8 heures du soir.
+v1-150|7時|9時|ななじ|くじ|Il sera bientôt 9 heures du soir.
+v1-151|開けよう|使おう|あけよう|つかおう|Je vais rentrer à la maison maintenant et je compte utiliser cet ordinateur !
+v1-153|開けて|見て|あけて|みて|Maintenant, je voudrais le regarder avec vous tous.
+v1-154|仕事|勉強|しごと|べんきょう|Ici, c'est mon bureau pour étudier.
+v1-157|机|椅子|つくえ|いす|Ah, cette chaise est géniale !
+v1-158|上がります|下がります|あがります|さがります|Quand on appuie sur le bouton, il descend automatiquement.
+v1-163|まだ|もう|まだ|もう|2025 a déjà commencé, mais bon.
+v1-164|箱|袋|はこ|ふくろ|Bon, maintenant je vais ouvrir ce sac !
+v1-167|引っ張って|押して|ひっぱって|おして|On appuie ici pour l'ouvrir.
+v1-169|きれい|かわいい|きれい|かわいい|Génial, c'est super mignon !
+v1-172|小さくて|軽くて|ちいさくて|かるくて|C'est tout léger et mignon !
+v1-176|説明書|保証書|せつめいしょ|ほしょうしょ|Ça, c'est la garantie.
+v1-181|買い物を|旅行を|かいものを|りょこうを|Avez-vous voyagé récemment ?
+v1-183|次の|明日の|つぎの|あしたの|Alors, on se retrouve dans la vidéo de demain !
+v2-0|綾野さん|田中さん|あやのさん|たなかさん|Aujourd'hui, j'ai invité Tanaka. Merci d'être venu.
+v2-1|お久しぶり|はじめまして|おひさしぶり|はじめまして|Bonjour. Enchanté.
+v2-4|元気|忙しかった|げんき|いそがしかった|Vous étiez occupé ?
+v2-5|元気|忙しかった|げんき|いそがしかった|J'étais très occupé.
+v2-8|ひな祭り|子供の日|ひなまつり|こどものひ|Récemment, il y a eu une fête qu'on appelle le Jour des enfants.
+v2-9|パーティー|お祭り|パーティー|おまつり|J'ai participé à une fête de Hinamatsuri (un festival).
+v2-13|スペイン|フランス|スペイン|フランス|Une famille japonaise qui vit en France m'a invité(e).
+v2-15|日本|中国|にほん|ちゅうごく|Même en Chine, on ne le fait pas beaucoup, n'est-ce pas ?
+v2-36|準備|片付け|じゅんび|かたづけ|Et puis le rangement est compliqué.
+v2-37|人形|花|にんぎょう|はな|À Hinamatsuri, on décore avec des fleurs, n'est-ce pas ?
+v2-60|スペイン|フランス|スペイン|フランス|Faire une fête japonaise en France, c'est plutôt bien.
+v2-86|ご飯|パン|ごはん|パン|Le simple pain blanc ordinaire est vraiment délicieux, n'est-ce pas ?
+v2-89|外国|旅行|がいこく|りょこう|En voyage, quand on mange de la nourriture japonaise ordinaire, on la trouve délicieuse, n'est-ce pas ?
+v2-126|才能|努力|さいのう|どりょく|C'est le fruit des efforts.
+v2-145|寝たい|休みたい|ねたい|やすみたい|Aujourd'hui je voudrais prendre mon temps et me reposer, mais je n'arrive pas à dormir.

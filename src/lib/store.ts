@@ -37,7 +37,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.16.0'
+export const APP_VERSION = '1.17.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -51,6 +51,7 @@ const LS_BACKUP13 = 'kioku:backup:avant-v1.13'
 const LS_BACKUP14 = 'kioku:backup:avant-v1.14'
 const LS_BACKUP15 = 'kioku:backup:avant-v1.15'
 const LS_BACKUP16 = 'kioku:backup:avant-v1.16'
+const LS_BACKUP17 = 'kioku:backup:avant-v1.17'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -121,9 +122,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP15)) safeSet(LS_BACKUP15, raw)
   // v1.16 : copie avant la chambre vue de loin
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP16)) safeSet(LS_BACKUP16, raw)
+  // v1.17 : copie avant les phrases par blocs
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP17)) safeSet(LS_BACKUP17, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)

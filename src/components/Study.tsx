@@ -9,6 +9,8 @@ import { countDue } from '../lib/queue'
 import { aidLevel, type Aid } from '../lib/aid'
 import { contextFor, contextIndex } from '../lib/context'
 import { naturalSentences, sentencesForWords } from '../lib/natural'
+import { blockMode, blocksFor, useBlocksReady } from '../lib/blocks'
+import { BlockCard, type BlockResult } from './BlockCard'
 import { ALL } from '../lib/queue'
 import { LEECH_AT } from '../lib/insights'
 import { dayKey } from '../lib/scheduler'
@@ -212,7 +214,7 @@ function Front({ it, dir, reading, typing, aid, memo }: { it: Item; dir: 'r' | '
   )
 }
 
-function Back({ it, dir, typed, tr, extras }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null; extras: JSX.Element }) {
+function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null; extras: JSX.Element; banner?: BlockResult | null }) {
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
     return (
@@ -238,6 +240,7 @@ function Back({ it, dir, typed, tr, extras }: { it: Item; dir: 'r' | 'p'; typed:
       <div className="jp" style={{ fontSize: long ? 20 : 30, fontWeight: 700 }}>{it.jp}</div>
       <Reading it={it} long={long} />
       <div className="divider" />
+      {banner && <div className={'typed-result ' + (banner.rating >= 4 ? 'good' : banner.rating >= 2 ? 'tr close' : 'bad')}>{banner.note}</div>}
       {tr && tr.verdict !== 'vide' && (
         <div className={'typed-result tr ' + tr.verdict}>
           <b>{tr.verdict === 'ok' ? '✓ Très proche' : tr.verdict === 'close' ? '≈ En partie' : '✗ Assez loin'}</b>
@@ -354,6 +357,16 @@ export function Study() {
   const aid = item ? aidLevel(state.cards[`${item.id}:r`], item, state.settings.fade) : 'full'
   const ctx = useMemo(() => (item && item.kind === 'word' ? contextFor(item, items) : []), [item, items])
   const lapses = misses(card ?? undefined)
+  // v1.17 : phrase en blocs (nouvelle : 4 étapes ; révision : Reconstruis ou De mémoire)
+  const blocksReady = useBlocksReady()
+  const sb = useMemo(
+    () => (blocksReady && item && item.kind === 'sentence' && parsed?.dir === 'r' && (state.settings.sentenceBlocks ?? true) ? blocksFor(item.id) : null),
+    [blocksReady, item, parsed?.dir, state.settings.sentenceBlocks],
+  )
+  const bMode = blockMode(cardKey ? state.cards[cardKey] : undefined)
+  const [blockRes, setBlockRes] = useState<BlockResult | null>(null)
+  const blockOn = useRef(false)
+  blockOn.current = !!sb
 
   // Gestes (iPhone) : une fois la carte retournée, glisser à droite = Bien, à gauche = Oublié.
   const [dx, setDx] = useState(0)
@@ -396,12 +409,14 @@ export function Study() {
     if (!useStore.getState().session?.revealed) {
       setTyped(null)
       setTr(null)
+      setBlockRes(null)
     }
   }, [cardKey]) // eslint-disable-line
   useEffect(() => {
     if (!s?.revealed) {
       setTyped(null)
       setTr(null)
+      setBlockRes(null)
     }
   }, [s?.revealed]) // eslint-disable-line
 
@@ -410,7 +425,7 @@ export function Study() {
     if (!item || !parsed) return
     if (s?.revealed) {
       if (state.settings.speakBack ?? true) void speak(parsed.dir === 'c' && cloze ? cloze.sentence.kana : parsed.dir === 'f' && formC ? formC.kana : item.kana || item.jp)
-    } else if (parsed.dir === 'r' && state.settings.autoPlay) void speak(item.kana || item.jp)
+    } else if (parsed.dir === 'r' && state.settings.autoPlay && !blockOn.current) void speak(item.kana || item.jp)
   }, [cardKey, s?.revealed]) // eslint-disable-line
 
   // Raccourcis clavier (PC) : espace = retourner, 1-5 = noter, Z = annuler
@@ -430,7 +445,7 @@ export function Study() {
       }
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault()
-        if (!st.revealed) reveal()
+        if (!st.revealed && !blockOn.current) reveal()
       } else if (st.revealed && '12345'.includes(e.key) && e.key.length === 1) rate(Number(e.key) as Rating)
       else if (e.key.toLowerCase() === 'z') undo()
       else if (e.key === 'Escape') endSession()
@@ -590,7 +605,7 @@ export function Study() {
   const remaining = s.queue.length + s.learn.length
   // note suggérée par la vérification d'une réponse écrite
   const suggested: Rating | null =
-    typed && typed.script !== 'vide' ? (typed.ok ? 4 : 1) : tr && tr.verdict !== 'vide' ? (tr.verdict === 'ok' ? 4 : tr.verdict === 'close' ? 3 : 1) : null
+    blockRes ? blockRes.rating : typed && typed.script !== 'vide' ? (typed.ok ? 4 : 1) : tr && tr.verdict !== 'vide' ? (tr.verdict === 'ok' ? 4 : tr.verdict === 'close' ? 3 : 1) : null
 
   return (
     <motion.div className="study" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ type: 'spring', stiffness: 320, damping: 32 }}>
@@ -618,7 +633,7 @@ export function Study() {
 
       <div
         className={'stage' + (swipeOn ? ' swipeable' : '')}
-        onClick={() => !s.revealed && reveal()}
+        onClick={() => !s.revealed && !sb && reveal()}
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}
@@ -651,6 +666,11 @@ export function Study() {
                 <FormFront it={item} c={formC} />
                 <FormBack it={item} c={formC} typed={typed} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={[]} lapses={lapses} />} />
               </>
+            ) : sb ? (
+              <>
+                {!s.revealed ? <BlockCard key={cardKey} it={item} sb={sb} mode={bMode} onDone={(r) => { setBlockRes(r); reveal() }} /> : <div className="face front" />}
+                <Back it={item} dir="r" typed={null} tr={null} banner={blockRes} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
+              </>
             ) : (
               <>
                 <Front it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
@@ -663,7 +683,7 @@ export function Study() {
       </div>
 
       <div className="study-bottom">
-        {!s.revealed && cloze ? (
+        {!s.revealed && sb ? null : !s.revealed && cloze ? (
           <form
             className="typing-form"
             onSubmit={(e) => {
