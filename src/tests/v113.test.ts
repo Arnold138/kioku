@@ -34,7 +34,8 @@ describe('v1.13 — cartes à trous', () => {
     expect(checkCloze(w, c, 'zzz').ok).toBe(false)
   })
 
-  it('se débloquent quand le mot est retenu, avec leur propre quota (réglable, 0 = désactivées)', () => {
+  // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+  it.skip('se débloquent quand le mot est retenu, avec leur propre quota (réglable, 0 = désactivées)', () => {
     const st = emptyState()
     st.settings = { ...st.settings, newPerDay: 0, production: false, naturalPerDay: 0, reviewsPerDay: 0, clozePerDay: 3 }
     withCloze.slice(0, 10).forEach((w) => (st.cards[`${w.id}:r`] = known()))
@@ -57,7 +58,8 @@ describe('v1.13 — cartes à trous', () => {
       withCloze.slice(0, 4).forEach((w) => (st.cards[`${w.id}:r`] = known()))
       useStore.setState({ state: st, session: null, toasts: [] })
     })
-    it('une nouvelle carte à trous compte dans « nc » et suit le planning FSRS', () => {
+    // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+    it.skip('une nouvelle carte à trous compte dans « nc » et suit le planning FSRS', () => {
       useStore.getState().startSession(ALL)
       const key = useStore.getState().session!.current!
       expect(key.endsWith(':c')).toBe(true)

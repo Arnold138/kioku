@@ -190,3 +190,69 @@ export function suggestRating(r: { mode: BlockMode; mistakes: number; recall?: R
   // Reconstruis seul (révision)
   return r.mistakes === 0 ? 4 : r.mistakes === 1 ? 3 : 2
 }
+
+// ───────── v1.19 : texte à trous par blocs ─────────
+/** Blocs d'autres phrases, pour servir d'intrus. */
+export function blockPool(exceptId: string, n = 400): Block[] {
+  if (!data) return []
+  const out: Block[] = []
+  for (const [id, r] of Object.entries(data)) {
+    if (id === exceptId) continue
+    for (const [jp, kana] of r.b) out.push({ jp, kana })
+    if (out.length >= n) break
+  }
+  return out
+}
+
+export interface GapPuzzle {
+  /** places des blocs cachés (dans l'ordre de la phrase) */
+  gaps: number[]
+  /** blocs proposés : les bons + des intrus, mélangés */
+  choices: Array<Block & { key: string; ok: boolean }>
+}
+
+const bare = (s: string) => s.replace(/[、。！？!?，．]/g, '')
+
+/**
+ * Phrase à trous : 1 bloc caché (2 à partir de 4 blocs), choisis différemment à chaque révision (`seed`).
+ * Les intrus : la variante de la phrase si elle existe (un bloc qui ressemble), sinon des blocs d'autres phrases.
+ */
+export function gapPuzzle(sb: SentenceBlocks, seed: number, pool: Block[], rnd = Math.random): GapPuzzle {
+  const n = sb.blocks.length
+  const count = n >= 4 ? 2 : 1
+  // on évite de cacher deux blocs identiques et les tout petits blocs quand on a le choix
+  const cand = sb.blocks.map((b, i) => i).filter((i) => bare(sb.blocks[i].jp).length >= 2)
+  const list = cand.length >= count ? cand : sb.blocks.map((_, i) => i)
+  const gaps: number[] = []
+  let k = Math.abs(Math.floor(seed)) % list.length
+  while (gaps.length < count) {
+    if (!gaps.includes(list[k])) gaps.push(list[k])
+    k = (k + Math.max(1, Math.floor(list.length / count))) % list.length
+    if (gaps.length < count && gaps.length === list.length) break
+  }
+  gaps.sort((a, b) => a - b)
+  const right = gaps.map((i) => ({ ...sb.blocks[i], key: `g${i}`, ok: true }))
+  const taken = new Set(right.map((c) => bare(c.jp)))
+  sb.blocks.forEach((b) => taken.add(bare(b.jp)))
+  const decoys: Array<Block & { key: string; ok: boolean }> = []
+  const v = sb.variant
+  if (v && v.i === v.j && gaps.includes(v.i) && !taken.has(bare(v.jp))) {
+    decoys.push({ jp: v.jp, kana: v.kana, key: 'xv', ok: false })
+    taken.add(bare(v.jp))
+  }
+  const want = count + 1
+  const others = pool.filter((b) => !taken.has(bare(b.jp)) && bare(b.jp).length >= 2)
+  for (let t = 0; decoys.length < want && others.length && t < 40; t++) {
+    const b = others[Math.floor(rnd() * others.length)]
+    if (taken.has(bare(b.jp))) continue
+    taken.add(bare(b.jp))
+    decoys.push({ ...b, key: `x${decoys.length}`, ok: false })
+  }
+  return { gaps, choices: shuffled([...right, ...decoys], rnd) }
+}
+
+/** Note proposée pour une phrase à trous : sans erreur Bien, 1 erreur Hésitant, plus Difficile, abandon Oublié. */
+export function gapRating(mistakes: number, gaveUp = false): Rating {
+  if (gaveUp) return 1
+  return mistakes === 0 ? 4 : mistakes === 1 ? 3 : 2
+}

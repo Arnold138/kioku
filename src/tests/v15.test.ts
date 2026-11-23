@@ -117,7 +117,8 @@ describe('phrases naturelles', () => {
     expect(nat.length).toBeGreaterThan(0)
     expect(nat.every((s) => isNaturalId(s.id))).toBe(true)
   })
-  it('« À étudier » reçoit les phrases du jour, hors quota de mots, et le réglage les coupe', () => {
+  // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+  it.skip('« À étudier » reçoit les phrases du jour, hors quota de mots, et le réglage les coupe', () => {
     const st = stateKnowing(676)
     st.settings.naturalPerDay = 2
     st.settings.clozePerDay = 0 // v1.13 : on isole les phrases naturelles des cartes à trous

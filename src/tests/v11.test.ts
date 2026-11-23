@@ -212,7 +212,8 @@ describe('séances dans le store', () => {
     expect(s.queue.filter((k) => k === first).length).toBe(0)
     expect(s.answered).toBe(0)
   })
-  it('séance normale : les phrases d\'échauffement arrivent en premier et une seule fois', () => {
+  // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+  it.skip('séance normale : les phrases d\'échauffement arrivent en premier et une seule fois', () => {
     useStore.getState().startSession(ALL, 0, { warm: 2 })
     const s = useStore.getState().session!
     expect(s.warm.length).toBe(2)

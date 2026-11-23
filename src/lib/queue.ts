@@ -3,9 +3,12 @@ import type { AppState } from './state'
 import { dayTotal } from './state'
 import { dayKey, dayNumber, isDue, type CardState } from './scheduler'
 import { inTheme } from './themes'
-import { naturalSentences } from './natural'
+import { isNaturalId, naturalSentences } from './natural'
 import { clozeFor } from './cloze'
 import { formsFor } from './conjugate'
+
+/** v1.19 : plus de phrases de vidéos glissées chaque jour. */
+const NATURAL_ON = false as boolean
 
 export type PosGroup = 'all' | 'verbs' | 'adjs' | 'nouns' | 'others'
 /** normal = révisions dues + nouvelles (planning habituel) · new = nouvelles seulement · practice = entraînement libre sans toucher au planning */
@@ -86,11 +89,12 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   const freshProd: string[] = []
   const freshCloze: string[] = []
   // v1.13 : cartes à trous, avec leur propre quota (0 = désactivées)
-  const clozeOn = (state.settings.clozePerDay ?? 0) > 0
+  // v1.19 : plus de cartes à trous de mots ni de cartes de forme dans les séances (seulement mots + phrases à trous par blocs)
+  const clozeOn = false
   const clozeLeft = !clozeOn ? 0 : f.free ? cap : Math.max(0, (state.settings.clozePerDay ?? 0) - (dt.nc ?? 0))
   // v1.14 : cartes de forme (verbes, adjectifs), avec leur propre quota (0 = désactivées)
   const freshForm: string[] = []
-  const formOn = (state.settings.formsPerDay ?? 0) > 0
+  const formOn = false
   const formLeft = !formOn ? 0 : f.free ? cap : Math.max(0, (state.settings.formsPerDay ?? 0) - (dt.nf ?? 0))
 
   const list = items.filter((it) => passes(it, f)).sort((a, b) => a.order - b.order)
@@ -105,7 +109,9 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
     const p = state.cards[`${it.id}:p`]
     const cz = it.kind === 'word' ? state.cards[`${it.id}:c`] : undefined
     const fm = it.kind === 'word' ? state.cards[`${it.id}:f`] : undefined
-    const all = [[`${it.id}:r`, r], [`${it.id}:p`, p], [`${it.id}:c`, cz], [`${it.id}:f`, fm]] as const
+    // v1.19 : les phrases des vidéos ne sont plus proposées (sauf si tu choisis toi-même le deck de la vidéo)
+    if (isNaturalId(it.id) && !(f.deck === it.deck || f.ids || f.keys)) continue
+    const all = ([[`${it.id}:r`, r], [`${it.id}:p`, p]] as const).filter(([k]) => it.kind !== 'sentence' || k.endsWith(':r'))
     const seenToday = all.some(([, c]) => touched(c))
     if (scope !== 'new') {
       const lrn = all.filter(([, c]) => c && c.s !== 'new' && c.s !== 'review' && isDue(c, now, today) && c.d <= now + 20 * 60_000)
@@ -179,7 +185,7 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
   // Phrases naturelles (vidéos) : quelques-unes par jour, choisies parmi ce que tu sais déjà lire
   let freshNat: string[] = []
   const natLeft = Math.max(0, (state.settings.naturalPerDay ?? 0) - (dt.nv ?? 0))
-  if (natLeft > 0 && !f.free && scope === 'normal' && f.deck === 'all' && f.pos === 'all' && !f.theme && !f.ids) {
+  if (NATURAL_ON && natLeft > 0 && !f.free && scope === 'normal' && f.deck === 'all' && f.pos === 'all' && !f.theme && !f.ids) {
     freshNat = naturalSentences(state, items, natLeft).map((it) => `${it.id}:r`)
   }
   return {
@@ -291,10 +297,6 @@ export function buildPractice(state: AppState, items: Item[], f: Filter, extraNe
     const started = !!r && r.s !== 'new'
     if (started) out.push(`${it.id}:r`)
     if (it.kind !== 'sentence' && (started || (!!p && p.s !== 'new'))) out.push(`${it.id}:p`)
-    const cz = state.cards[`${it.id}:c`]
-    if (cz && cz.s !== 'new') out.push(`${it.id}:c`)
-    const fm = state.cards[`${it.id}:f`]
-    if (fm && fm.s !== 'new') out.push(`${it.id}:f`)
   }
   shuffle(out)
   return f.limit != null ? out.slice(0, f.limit + extraNew) : out
