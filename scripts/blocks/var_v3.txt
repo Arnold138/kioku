@@ -1,0 +1,86 @@
+v3-70|息子|娘|むすこ|むすめ|Ah, au fait, ma fille vient d'arriver.
+v3-72|妻|弟|つま|おとうと|Mon petit frère est là aussi. Ma mère aussi, d'ailleurs, mais…
+v3-73|お店|カフェ|おみせ|カフェ|ma mère et ma femme regardent tranquillement dans le café.
+v3-74|後で|明日|あとで|あした|Donc je pense qu'elles viendront demain.
+v3-77|商店街|お寺|しょうてんがい|おてら|Dans cette ville, il y a plusieurs temples.
+v3-81|初めて|よく|はじめて|よく|celle-ci, je m'y promène souvent.
+v3-82|面白い|おいしい|おもしろい|おいしい|Si vous voyez quelque chose de délicieux, dites-le-moi.
+v3-83|服|靴|ふく|くつ|Cette rue commerçante a beaucoup de magasins de chaussures.
+v3-84|カフェ|本屋|カフェ|ほんや|Tout à l'heure, il y avait une librairie. Y a-t-il autre chose ?
+v3-85|服|お茶|ふく|おちゃ|Ici, c'est fermé. Là, c'est un magasin de thé.
+v3-86|フィリピン|タイ|フィリピン|タイ|Ça, c'est le drapeau de la Thaïlande.
+v3-89|パン|料理|パン|りょうり|De la cuisine philippine ?
+v3-91|フィリピン|日本|フィリピン|にほん|Il y a un magasin japonais ici.
+v3-92|カフェ|パン屋|カフェ|パンや|Il y a aussi une boulangerie.
+v3-93|あっち|こっち|あっち|こっち|Allons voir de ce côté-ci.
+v3-97|入って|見て|はいって|みて|Regardons un peu.
+v3-99|動画 / 撮影|写真|どうが / さつえい|しゃしん|les photos étaient interdites à l'intérieur du magasin.
+v3-102|動画を / 撮る|食べる|どうがを / とる|たべる|Donc c'était interdit de manger à l'intérieur du magasin.
+v3-104|買いました|食べました|かいました|たべました|Mais j'ai mangé quelque chose dans le magasin.
+v3-105|買って|食べて|かって|たべて|J'ai mangé quelque chose au magasin.
+v3-106|後で|今|あとで|いま|On l'ouvre maintenant !
+v3-107|買った|食べた|かった|たべた|Qu'est-ce que j'ai mangé, à votre avis ?
+v3-109|買った|見た|かった|みた|Qu'est-ce que j'ai vu, à votre avis ?
+v3-110|散歩|買い物|さんぽ|かいもの|Bon, continuons les courses !
+v3-113|歩道橋|川の近く|ほどうきょう|かわのちかく|Marchons près de la rivière !
+v3-115|山|海|やま|うみ|On voit un joli paysage. Un paysage de mer et de ville.
+v3-116|山|川|やま|かわ|De ce côté, on voit une rivière. On voit aussi des bâtiments.
+v3-117|川|公園|かわ|こうえん|Et puis il y a aussi un parc.
+v3-121|地元|猫|じもと|ねこ|J'adore mon chat.
+v3-123|鳥居|木|とりい|き|Il y a un grand arbre ici.
+v3-125|商店街|お寺|しょうてんがい|おてら|Il y a aussi un temple par ici.
+v3-126|４時|５時|よじ|ごじ|Il sera bientôt environ 17 h.
+v3-131|レストラン|パン屋|レストラン|パンや|Ici, c'est une boulangerie.
+v3-133|やってない|開いてない|やってない|あいてない|Ce n'est pas encore ouvert (porte fermée).
+v3-134|夜|夕方|よる|ゆうがた|Mais plus tard, en fin d'après-midi, ça ouvrira, je pense.
+v3-135|おなかが / すいて|眠く / なって|おなかが / すいて|ねむく / なって|J'ai un peu sommeil.
+v3-137|和菓子|洋菓子|わがし|ようがし|C'est une boutique de yōgashi.
+v3-141|ケーキ|チョコ|ケーキ|チョコ|Le chocolat, les biscuits, etc., on appelle ça des « yōgashi ».
+v3-145|買って|食べて|かって|たべて|Je vais manger quelque chose.
+v3-146|待って|座って|まって|すわって|Restez assis un instant, s'il vous plaît.
+v3-147|和菓子|お茶|わがし|おちゃ|Voilà, je viens d'acheter du thé.
+v3-150|陶器|服|とうき|ふく|Il y a aussi une boutique de vêtements ici.
+v3-151|お皿|コップ|おさら|コップ|Il y a plein de verres et d'autres choses !
+v3-153|野球|サッカー|やきゅう|サッカー|Avant, je jouais au football.
+v3-154|野球|テニス|やきゅう|テニス|Quand j'étais enfant, je jouais au tennis.
+v3-157|スポーツ / ショップ|本屋|スポーツ / ショップ|ほんや|Je suis allé dans plein de librairies différentes.
+v3-158|横断歩道|橋|おうだんほどう|はし|En ce moment, je traverse un pont.
+v3-161|電車の / 駅|バス停|でんしゃの / えき|バスてい|Ici, c'est l'arrêt de bus.
+v3-162|電車|バス|でんしゃ|バス|Ah, quelle nostalgie. Avant, je prenais souvent ce bus.
+v3-163|名古屋|東京|なごや|とうきょう|D'ici, on peut aller en ville à Tokyo.
+v3-164|４０分|３０分|よんじゅっぷん|さんじゅっぷん|Environ 30 minutes, je dirais.
+v3-167|電車の / 駅|空港|でんしゃの / えき|くうこう|Y a-t-il aussi un aéroport dans votre ville ?
+v3-168|電車|バス|でんしゃ|バス|Prenez-vous souvent le bus ?
+v3-170|大きい|小さい|おおきい|ちいさい|Il y a un petit panneau. Un panneau de taxi.
+v3-171|タクシー|バス|タクシー|バス|Prenez-vous le bus ?
+v3-172|タクシー|電車|タクシー|でんしゃ|Moi, ces derniers temps, je ne prends pas beaucoup le train.
+v3-173|タクシー|電車|タクシー|でんしゃ|Quand j'étais enfant, je ne prenais jamais le train.
+v3-174|田舎|山の中|いなか|やまのなか|Comme j'habitais dans les montagnes, pour aller en ville depuis la maison,
+v3-178|川|公園|かわ|こうえん|Il y a un parc ici. Vous le voyez ?
+v3-179|川|海|かわ|うみ|Quand je regarde la mer, je me sens très apaisé.
+v3-180|川|空|かわ|そら|Regarder le ciel me met de bonne humeur.
+v3-183|川|山|かわ|やま|Vous aussi, vous vous sentez bien en regardant la montagne ?
+v3-185|スーパー|本屋|スーパー|ほんや|Il y a une grande librairie ici.
+v3-186|家族|友達|かぞく|ともだち|En ce moment, mon ami fait les courses dans ce supermarché.
+v3-188|スーパー|お店|スーパー|おみせ|Donc, je vais aller dans ce magasin maintenant.
+v3-189|家|ホテル|いえ|ホテル|On fera les courses, puis on rentrera à l'hôtel.
+v3-193|家|駅|いえ|えき|Je suis rentré ! Maintenant, je suis à la gare.
+v3-197|２つ|３つ|ふたつ|みっつ|Aujourd'hui, pendant ma promenade en ville, j'ai acheté trois choses.
+v3-200|一つ|二つ|ひとつ|ふたつ|Vous voyez ? J'ai acheté deux wagashi.
+v3-202|柔らかい|固い|やわらかい|かたい|C'est peut-être un manjū ? C'est dur.
+v3-203|甘い|しょっぱい|あまい|しょっぱい|C'est une sucrerie salée. Itadakimasu !
+v3-204|あんこ|クリーム|あんこ|クリーム|Il y a de la crème à l'intérieur. C'est délicieux.
+v3-205|食べ物を / 食べません|コーヒーを / 飲みません|たべものを / たべません|コーヒーを / のみません|Ces derniers temps, je ne bois pas de café tard le soir.
+v3-209|今日|明日|きょう|あした|Demain, c'est exceptionnel.
+v3-213|いい|かわいい|いい|かわいい|J'ai trouvé quelque chose de mignon au magasin.
+v3-216|嬉しい|楽しい|うれしい|たのしい|Génial ! Je m'amuse.
+v3-217|猫|犬|ねこ|いぬ|Tadam ! C'est un chien !
+v3-218|猫|犬|ねこ|いぬ|J'ai acheté une figurine de chien. Elle est mignonne, non ?
+v3-220|猫|犬|ねこ|いぬ|Dans ce magasin, il y avait plein de figurines de chiens.
+v3-221|猫|犬|ねこ|いぬ|Aimez-vous les chiens ?
+v3-224|面白い|きれい|おもしろい|きれい|Je trouve ma ville natale vraiment belle.
+v3-226|有名|おいしい|ゆうめい|おいしい|Qu'est-ce qui est bon à manger dans votre ville natale ?
+v3-229|名前|写真|なまえ|しゃしん|Montrez-moi aussi des photos de votre ville natale.
+v3-232|山|海|やま|うみ|Dans la prochaine vidéo, on ira vers la mer.
+v3-233|ハイキング|キャンプ|ハイキング|キャンプ|Je pense faire du camping. On va camper !
+v3-234|次の|明日の|つぎの|あしたの|Venez avec moi aussi dans la vidéo de demain !

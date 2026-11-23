@@ -1,3 +1,4 @@
+import { TapSentence } from './TapSentence'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '../lib/store'
 import { DECKS, matchesSearch, POS_LABEL, type Item } from '../lib/deck'
@@ -148,7 +149,8 @@ function WordSheet({ item, onClose, onEdit }: { item: Item | null; onClose: () =
       {it && (
         <div className="stack">
           <div style={{ textAlign: 'center' }}>
-            <div className="jp" style={{ fontSize: it.jp.length > 8 ? 30 : 54, fontWeight: 700, lineHeight: 1.2 }}>{it.jp}</div>
+            {it.kind === 'sentence' ? <TapSentence id={it.id} jp={it.jp} className="jp lib-sent" />
+              : <div className="jp" style={{ fontSize: it.jp.length > 8 ? 30 : 54, fontWeight: 700, lineHeight: 1.2 }}>{it.jp}</div>}
             {it.kana !== it.jp && <div className="kana-line jp" style={{ marginTop: 6 }}>{it.kana}</div>}
             <div className="romaji-line">{it.romaji}</div>
             {canSpeak() && (

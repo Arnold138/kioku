@@ -1,0 +1,135 @@
+s4|おやすみ>おかえり|おやすみ>おかえり|Bon retour.
+s5|ありがとう>おめでとう|ありがとう>おめでとう|Félicitations.
+s8|ごめん>おかえり|ごめん>おかえり|Bon retour.
+s10|どうぞ>これから|どうぞ>これから|À partir de maintenant, je compte sur vous.
+s12|元気>大丈夫|げんき>だいじょうぶ|Oui, ça va.
+s13|明日>来週|あした>らいしゅう|À la semaine prochaine.
+s17|いって>いって|いって>いって|
+s19|おかえり>おやすみ|おかえり>おやすみ|Bonne nuit.
+s21|田中>山田|たなか>やまだ|Je m'appelle Yamada.
+s22|フランス人>日本人|フランスじん>にほんじん|Je suis japonais.
+s23|学生>会社員|がくせい>かいしゃいん|Je suis employé de bureau.
+s24|二十五歳>三十歳|にじゅうごさい>さんじゅっさい|J'ai 30 ans.
+s25|パリ>東京|パリ>とうきょう|J'habite à Tokyo.
+s26|音楽>料理|おんがく>りょうり|Mon passe-temps est la cuisine.
+s27|日本語>英語|にほんご>えいご|J'étudie l'anglais.
+s28|下手>上手じゃない|へた>じょうずじゃない|Mon japonais n'est pas encore bon.
+s29|ご兄弟>お子さん|ごきょうだい>おこさん|Avez-vous des enfants ?
+s30|お名前>ご趣味|おなまえ>ごしゅみ|Quel est votre passe-temps ?
+s31|お仕事>休みの日|おしごと>やすみのひ|Que faites-vous pendant vos jours de congé ?
+s32|ご出身>お住まい|ごしゅっしん>おすまい|Où habitez-vous ?
+s33|一度>少し|いちど>すこし|Encore un peu, s'il vous plaît.
+s34|話して>書いて|はなして>かいて|Écrivez lentement, s'il vous plaît.
+s35|分かりません>知りません|わかりません>しりません|Je ne sais pas.
+s36|分かりました>疲れました|わかりました>つかれました|Je suis fatigué.
+s37|日本語>英語|にほんご>えいご|Comment dit-on ça en anglais ?
+s38|言葉>漢字|ことば>かんじ|Que signifie ce kanji ?
+s39|英語>フランス語|えいご>フランスご|Parlez-vous français ?
+s40|日本語>英語|にほんご>えいご|Je parle un peu anglais.
+s41|読めません>書けません|よめません>かけません|Je ne sais pas écrire les kanji.
+s42|書いて>読んで|かいて>よんで|Vous pouvez le lire, s'il vous plaît ?
+s43|六時>七時|ろくじ>しちじ|Je me lève à 7 h tous les matins.
+s44|朝ご飯>晩ご飯|あさごはん>ばんごはん|Je prends mon dîner.
+s45|電車>バス|でんしゃ>バス|Je vais au travail en bus.
+s46|今日>明日|きょう>あした|À quelle heure rentrez-vous demain ?
+s47|家>図書館|いえ>としょかん|Hier, j'ai étudié à la bibliothèque.
+s48|明日>土曜日|あした>どようび|Samedi, c'est jour de congé.
+s49|週末>明日|しゅうまつ>あした|Que faites-vous demain ?
+s50|映画>テレビ|えいが>テレビ|Je regarde la télé avec un ami.
+s51|何時>何曜日|なんじ>なんようび|Quel jour sommes-nous ?
+s52|三時半>四時半|さんじはん>よじはん|Il est quatre heures et demie.
+s53|天気>日|てんき>ひ|C'est une belle journée aujourd'hui, hein.
+s54|雨>雪|あめ>ゆき|Il neige.
+s55|寒い>暑い|さむい>あつい|Il fait vraiment chaud aujourd'hui.
+s56|お風呂>シャワー|おふろ>シャワー|Je prends une douche.
+s57|テレビ>スマホ|テレビ>スマホ|Je mange en regardant mon téléphone.
+s58|犬>猫|いぬ>ねこ|Je m'occupe du chat.
+s59|部屋>台所|へや>だいどころ|J'ai nettoyé la cuisine.
+s60|手紙>メール|てがみ>メール|J'ai écrit un e-mail.
+s61|本>漫画|ほん>まんが|Je suis en train de lire un manga.
+s62|音楽>ラジオ|おんがく>ラジオ|J'écoute la radio.
+s63|お水>お茶|おみず>おちゃ|Du thé, s'il vous plaît.
+s64|一つ>二つ|ひとつ>ふたつ|Deux cafés, s'il vous plaît.
+s65|メニュー>地図|メニュー>ちず|Vous pouvez me montrer le plan ?
+s66|おいしい>かわいい|おいしい>かわいい|C'est mignon, ça !
+s67|魚>肉|さかな>にく|J'aime la viande.
+s68|肉>魚|にく>さかな|Je ne mange pas beaucoup de poisson.
+s69|すきました>いっぱいです|すきました>いっぱいです|J'ai bien mangé (je n'ai plus faim).
+s70|のどが>口が|のどが>くちが|J'ai la bouche sèche.
+s71|お会計>お水|おかいけい>おみず|De l'eau, s'il vous plaît.
+s72|辛い>甘い|からい>あまい|Je supporte mal le sucré.
+s73|味噌汁>魚|みそしる>さかな|J'ai mangé du riz et du poisson.
+s74|これ>それ|これ>それ|Combien coûte cela ?
+s75|高い>安い|たかい>やすい|Ce n'est pas cher, dites donc.
+s76|安い>大きい|やすい>おおきい|Vous avez quelque chose d'un peu plus grand ?
+s77|これ>それ|これ>それ|Je prends cela.
+s78|カード>現金|カード>げんきん|Je peux payer en liquide ?
+s79|袋>レシート|ふくろ>レシート|Pas besoin du ticket, merci.
+s80|見て>探して|みて>さがして|Je cherche seulement.
+s81|駅>出口|えき>でぐち|Où est la sortie ?
+s82|まっすぐ>ゆっくり|まっすぐ>ゆっくり|Allez doucement.
+s83|右>左|みぎ>ひだり|Tournez à gauche au prochain coin.
+s84|トイレ>入口|トイレ>いりぐち|Où est l'entrée ?
+s85|東京>京都|とうきょう>きょうと|Combien coûte le trajet jusqu'à Kyoto ?
+s86|大阪>京都|おおさか>きょうと|Ce train va-t-il à Kyoto ?
+s87|一枚>二枚|いちまい>にまい|Deux billets, s'il vous plaît.
+s88|座って>入って|すわって>はいって|Puis-je entrer ici ?
+s89|写真を撮って>ここで食べて|しゃしんをとって>ここでたべて|Puis-je manger ici ?
+s90|日本>京都|にほん>きょうと|Je veux aller à Kyoto.
+s91|京都>大阪|きょうと>おおさか|Osaka était très beau.
+s92|日本>猫|にほん>ねこ|J'adore les chats.
+s93|楽しかった>おいしかった|たのしかった>おいしかった|C'était très bon.
+s94|つまらなかった>楽しかった|つまらなかった>たのしかった|C'était amusant.
+s95|眠い>寒い|ねむい>さむい|J'ai un peu froid.
+s96|疲れました>分かりました|つかれました>わかりました|J'ai compris.
+s97|うれしい>楽しい|うれしい>たのしい|Je m'amuse.
+s98|悲しい>さびしい|かなしい>さびしい|Je me sens seul.
+s99|心配>遠慮|しんぱい>えんりょ|Ne vous gênez pas.
+s100|大丈夫>元気|だいじょうぶ>げんき|Je vais bien.
+s101|本当>大丈夫|ほんとう>だいじょうぶ|Ça va ?
+s102|雨>雪|あめ>ゆき|Comme il a neigé hier, je suis resté à la maison.
+s103|映画を見に>買い物に|えいがをみに>かいものに|Si j'ai le temps, j'aimerais aller faire les courses.
+s104|日本語>漢字|にほんご>かんじ|J'ai décidé d'étudier les kanji tous les jours.
+s105|電車>バス|でんしゃ>バス|Il paraît que le bus a du retard.
+s106|起きる>走る|おきる>はしる|Je n'aime pas courir tôt le matin.
+s107|宿題>傘|しゅくだい>かさ|J'ai oublié mon parapluie (malheureusement).
+s108|晩ご飯>昼ご飯|ばんごはん>ひるごはん|As-tu déjà déjeuné ?
+s109|食べて>飲んで|たべて>のんで|Je n'ai pas encore bu.
+s110|テレビ>電気|テレビ>でんき|Je me suis endormi avec la lumière allumée.
+s111|来週>明日|らいしゅう>あした|Demain, je compte aller chez un ami.
+s112|早く>すぐ|はやく>すぐ|Si on passe par cette route, on arrive tout de suite.
+s113|薬を飲んだ>早く寝た|くすりをのんだ>はやくねた|Vous devriez vous coucher tôt.
+s114|会社>学校|かいしゃ>がっこう|J'étais enrhumé, alors j'ai manqué l'école.
+s115|難しいけど>大変だけど|むずかしいけど>たいへんだけど|Le japonais, c'est dur mais intéressant.
+s116|漢字>名前|かんじ>なまえ|J'ai du mal à retenir les noms.
+s117|上手に>元気に|じょうずに>げんきに|Je veux être en meilleure forme.
+s118|いい>面白い|いい>おもしろい|Je pense que c'est une idée intéressante.
+s119|こっち>あっち|こっち>あっち|Personnellement, je trouve celui-là mieux.
+s120|言われて>聞いて|いわれて>きいて|Maintenant que j'y pense (en entendant ça), c'est vrai.
+s121|晴れる>雨が降る|はれる>あめがふる|Demain, il pleuvra probablement.
+s122|きっと>すぐ|きっと>すぐ|Avec des efforts, vous y arriverez tout de suite.
+s123|道に迷って>財布をなくして|みちにまよって>さいふをなくして|Excusez-moi, j'ai perdu mon portefeuille.
+s124|銀行>コンビニ|ぎんこう>コンビニ|Y a-t-il une supérette près d'ici ?
+s125|予約を>キャンセルを|よやくを>キャンセルを|Je voudrais annuler.
+s126|荷物を>傘を|にもつを>かさを|Vous pouvez garder mon parapluie ?
+s127|チェックイン>朝ご飯|チェックイン>あさごはん|À partir de quelle heure est le petit-déjeuner ?
+s128|バス>電車|バス>でんしゃ|À quelle heure passe le prochain train ?
+s129|乗り換え>エレベーター|のりかえ>エレベーター|Est-ce qu'il y a un ascenseur ?
+s130|忘れ物を>失敗を|わすれものを>しっぱいを|J'ai fait une erreur.
+s131|待って>来て|まって>きて|Viens un peu.
+s134|おいしい>かわいい|おいしい>かわいい|Trop mignon !
+s135|すごい>きれい|すごい>きれい|C'est beau, hein.
+s136|どう>何|どう>なに|Qu'est-ce que tu as fait ?
+s138|知らなかった>分からなかった|しらなかった>わからなかった|Je n'ai pas compris.
+s139|いい>かわいい|いい>かわいい|Ça, c'est mignon.
+s142|大丈夫>問題ない|だいじょうぶ>もんだいない|C'est bon, pas de problème.
+s143|難しい>高い|むずかしい>たかい|C'est peut-être un peu cher.
+s144|分からない>聞こえない|わからない>きこえない|Je n'entends pas bien.
+s145|言って>見せて|いって>みせて|Montre-le une fois de plus.
+s146|何>どこ|なに>どこ|C'est où, ça ?
+s147|行こう>食べよう|いこう>たべよう|Mangeons ensemble.
+s151|三時>二時|さんじ>にじ|La réunion commence à 14 h.
+s152|メール>ファックス|メール>ファックス|Envoyez-moi les documents par fax.
+s153|明日>金曜日|あした>きんようび|Je dois finir d'ici vendredi.
+s155|お願い>お願い|おねがい>おねがい|
+s156|お待ち>お座り|おまち>おすわり|Veuillez vous asseoir.

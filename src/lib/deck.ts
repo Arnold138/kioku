@@ -55,7 +55,7 @@ export const DECKS: DeckInfo[] = [
   { id: 'N5', name: 'Essentiels N5', sub: 'Les mots de base', emoji: '🌱', hue: 145 },
   { id: 'N4', name: 'Courants N4', sub: 'Vie quotidienne', emoji: '🌿', hue: 175 },
   { id: 'N3', name: 'Fréquents N3', sub: 'Vers l\'intermédiaire', emoji: '🌳', hue: 215 },
-  { id: 'phrases', name: 'Phrases', sub: 'À traduire dans la tête', emoji: '💬', hue: 280, sentences: true },
+  { id: 'phrases', name: 'Phrases', sub: 'Par blocs, à dire de mémoire', emoji: '💬', hue: 280, sentences: true },
   { id: 'vid1', name: 'Vidéo · Shopping', sub: 'Ken, balade à Taipei', emoji: '🛍️', hue: 340, sentences: true, optIn: true },
   { id: 'vid2', name: 'Vidéo · Loisirs', sub: 'Conversation avec Ayano', emoji: '🎧', hue: 195, sentences: true, optIn: true },
   { id: 'vid3', name: 'Vidéo · Seto', sub: 'Ken, balade dans sa ville natale', emoji: '🐱', hue: 20, sentences: true, optIn: true },

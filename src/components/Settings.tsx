@@ -269,6 +269,7 @@ export function Settings() {
             </div>
             <Segmented value={String(s.naturalPerDay ?? 2)} onChange={(v) => updateSettings({ naturalPerDay: Number(v) })} options={[['0', 'Aucune'], ['1', '1'], ['2', '2'], ['3', '3'], ['5', '5']]} />
           </div>
+          <Row title="Phrases par blocs" sub="Une nouvelle phrase : Découvre, Reconstruis, Change un bloc, Dis-la de mémoire. Ensuite tu la reconstruis, puis tu la dis de mémoire"><Toggle on={s.sentenceBlocks ?? true} onChange={(v) => updateSettings({ sentenceBlocks: v })} /></Row>
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
           <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}

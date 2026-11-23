@@ -1,0 +1,92 @@
+v2-149|日曜日|土曜日|にちようび|どようび|Je dors le samedi. Je rattrape tout d'un coup à ce moment-là.
+v2-150|平日|週末|へいじつ|しゅうまつ|Alors le week-end, vous ne pouvez pas beaucoup dormir ?
+v2-187|起きた|寝る|おきた|ねる|Comment vous sentez-vous au moment de dormir ? D'habitude.
+v2-217|後悔|感謝|こうかい|かんしゃ|Il y a aussi un sentiment de gratitude, n'est-ce pas ?
+v2-225|自由な|休みの|じゆうな|やすみの|Que faites-vous pendant vos congés ?
+v2-244|静かな|楽しい|しずかな|たのしい|C'est bien, ça. Un moment agréable.
+v2-245|ベッド|テレビ|ベッド|テレビ|Y a-t-il une télé dans la chambre ?
+v2-253|テレビを / 見て|本を / 読んで|テレビを / みて|ほんを / よんで|Alors vous vous endormez en lisant un livre dans le salon.
+v2-256|ご飯|カラオケ|ごはん|カラオケ|Il arrive parfois qu'on décide d'aller au karaoké avec des amis, n'est-ce pas ?
+v2-277|出かける|料理する|でかける|りょうりする|J'aime cuisiner.
+v2-284|行った|食べた|いった|たべた|Qu'avez-vous mangé récemment ?
+v2-286|お酒を / 飲み|ご飯を / 食べ|おさけを / のみ|ごはんを / たべ|J'aime aller manger dans un izakaya, ce genre de choses.
+v2-288|居酒屋|ラーメン|いざかや|ラーメン|Les ramen japonais, c'est génial, n'est-ce pas ?
+v2-301|踊る|歌う|おどる|うたう|On boit et on chante, c'est l'ambiance.
+v2-312|飲みながら|食べながら|のみながら|たべながら|C'est un style où l'on discute en mangeant, n'est-ce pas ?
+v2-322|クラブ|カラオケ|クラブ|カラオケ|On ne va pas au karaoké, n'est-ce pas ?
+v2-327|出かける|寝る|でかける|ねる|Moi, j'aime dormir.
+v2-336|仕事|勉強|しごと|べんきょう|Parce que si on étudie tout le temps, on se fatigue.
+v2-382|うどん|カレー|うどん|カレー|Je prépare du curry et je le mange.
+v2-384|生姜|はちみつ|しょうが|はちみつ|Ça réchauffe, et le miel est bon pour la gorge, n'est-ce pas ?
+v2-406|日本|フランス|にほん|フランス|Si vous étiez en France, que mangeriez-vous ?
+v2-414|便利|きれい|べんり|きれい|J'ai senti que le Japon est vraiment propre.
+v2-421|チキン / スープ|おかゆ|チキン / スープ|おかゆ|Quand j'ai un rhume, on me prépare de la bouillie de riz.
+v2-429|塩|砂糖|しお|さとう|On met juste du sucre.
+v2-446|飲む|食べる|のむ|たべる|Quand on la mange, elle est super bonne.
+v2-461|旅行|キャンプ|りょこう|キャンプ|J'aime aller camper. Je ne peux pas le faire souvent, cela dit.
+v2-466|町|国|まち|くに|Aimez-vous aller dans de nouveaux pays ?
+v2-471|スペイン|日本|スペイン|にほん|Êtes-vous déjà allé(e) dans pas mal d'endroits, au Japon ?
+v2-499|スノボ|スキー|スノボ|スキー|Le ski, c'est cool, n'est-ce pas ?
+v2-501|ウィンター / スポーツ|サーフィン|ウィンター / スポーツ|サーフィン|Je n'en ai jamais fait. Le surf.
+v2-523|趣味|仕事|しゅみ|しごと|Je me suis dit que c'est bien d'avoir un travail.
+v2-529|3月|4月|さんがつ|しがつ|On peut skier jusqu'à la fin avril.
+v2-544|今年|今週|ことし|こんしゅう|Je ne pourrai peut-être plus y aller cette semaine.
+v2-577|疲れる|楽しい|つかれる|たのしい|Mais c'est super amusant.
+v2-582|スキー|仕事|スキー|しごと|Après le travail, on dort beaucoup.
+v2-586|趣味|仕事|しゅみ|しごと|C'est un bon travail.
+v2-628|スペイン語|日本語|スペインご|にほんご|Par exemple, essayer de parler en japonais sans trop compter sur l'anglais.
+v2-637|聞いて|読んで|きいて|よんで|Parce que vous lisez beaucoup, la quantité d'input est grande.
+v2-639|喋る|書く|しゃべる|かく|Il ne reste plus qu'à écrire, mais...
+v2-651|会話|ゲーム|かいわ|ゲーム|C'est le plus amusant : s'entraîner avec des jeux.
+v2-662|早く|上手に|はやく|じょうずに|Je voudrais pouvoir le faire bien.
+v2-667|言語|スポーツ|げんご|スポーツ|Y a-t-il un sport qui vous intéresse ?
+v2-684|フランス語|日本語|フランスご|にほんご|Parce que je trouve ça cool de parler japonais.
+v2-687|韓国語|中国語|かんこくご|ちゅうごくご|Moi aussi, si ce n'était pas l'espagnol, j'aimerais étudier le chinois.
+v2-696|韓国|日本|かんこく|にほん|C'est peut-être un loisir. Regarder des dramas japonais, par exemple.
+v2-697|韓国語|日本語|かんこくご|にほんご|Comprenez-vous le japonais maintenant ?
+v2-708|ドラマ|アニメ|ドラマ|アニメ|Incroyable. Donc vous apprenez avec les animes.
+v2-711|インプット|練習|インプット|れんしゅう|Je trouve que la pratique est vraiment importante.
+v2-716|早い|遅い|はやい|おそい|Vous apprendrez peut-être lentement.
+v2-731|携帯|パソコン|けいたい|パソコン|J'aime lire des shôjo manga sur l'ordinateur.
+v2-735|少女漫画|アニメ|しょうじょまんが|アニメ|Même à mon âge, j'adore toujours les animes.
+v2-788|漫画|小説|まんが|しょうせつ|Vous ne lisez pas beaucoup de romans ?
+v2-804|見つけて|選んで|みつけて|えらんで|Comment les choisissez-vous ?
+v2-810|アプリ|漫画|アプリ|まんが|Il y a vraiment beaucoup de types de mangas.
+v2-826|絵|話|え|はなし|Je pense que l'histoire aussi, on aime ou on n'aime pas.
+v2-864|楽しみ|勉強の|たのしみ|べんきょうの|Il y a plein de façons d'étudier.
+v2-869|少女漫画|アニメ|しょうじょまんが|アニメ|Je ne sais pas ce que c'est, alors dites-moi plus tard quels animes vous recommandez.
+v2-892|見た|読んだ|みた|よんだ|J'en ai entendu parler, mais je ne l'ai pas encore lu.
+v2-898|見て|読んで|みて|よんで|Alors, je vais peut-être le lire.
+v2-904|ミステリー|恋愛|ミステリー|れんあい|Si vous aimez les histoires d'amour, vous aimerez peut-être.
+v2-912|趣味|旅行|しゅみ|りょこう|Aujourd'hui, nous avons un peu parlé de voyages.
+v2-924|今日|今年|きょう|ことし|Alors, merci pour cette année.
+v2-928|次の|明日の|つぎの|あしたの|Rendez-vous dans la vidéo de demain. Alors, à bientôt.
+v3-0|こんにちは|こんばんは|こんにちは|こんばんは|Bonsoir à tous ! Moi, c'est Ken !
+v3-1|地元|家|じもと|いえ|Ça va ? En ce moment, je suis chez moi.
+v3-3|大きい|有名な|おおきい|ゆうめいな|Dans la préfecture d'Aichi, il y a une ville célèbre qu'on appelle Nagoya.
+v3-5|生まれて / 育った|よく / 遊んだ|うまれて / そだった|よく / あそんだ|C'est l'endroit où je jouais souvent.
+v3-7|面白い|きれいな|おもしろい|きれいな|Il y a plein de beaux endroits, alors promenons-nous ensemble !
+v3-8|壁|木|かべ|き|Vous voyez ? Il y a un arbre derrière moi.
+v3-11|街|国|まち|くに|Et dans votre pays, quelles sont les choses célèbres ?
+v3-14|猫ちゃん|ワンちゃん|ねこちゃん|わんちゃん|Petit chien ! Bonjour !
+v3-16|招き猫|お茶|まねきねこ|おちゃ|Ah oui, cette ville est aussi connue pour son thé.
+v3-18|日本|台湾|にほん|たいわん|Êtes-vous déjà venus à Taïwan ?
+v3-20|レストラン|ホテル|レストラン|ホテル|Dans les magasins ou les hôtels japonais, il y a parfois des maneki-neko.
+v3-24|きれい|古い|きれい|ふるい|Les bâtiments sont aussi de style japonais, ils sont anciens !
+v3-26|今日|明日|きょう|あした|Mais demain, c'est fermé. Dommage.
+v3-29|こっち|あっち|こっち|あっち|Allons voir par là-bas !
+v3-30|細い|広い|ほそい|ひろい|La rue est un peu large. J'aime bien.
+v3-35|紫色|黄色|むらさきいろ|きいろ|Des fleurs sont écloses. Des fleurs jaunes sont écloses.
+v3-37|猫|犬|ねこ|いぬ|Hein ?! Il y a un chien.
+v3-38|お昼寝|散歩|おひるね|さんぽ|Bonjour, monsieur le chat. Tu te promènes ?
+v3-39|気持ちよさそう|眠そう|きもちよさそう|ねむそう|Il a l'air d'avoir sommeil.
+v3-42|食べ物|場所|たべもの|ばしょ|Monsieur le chat, as-tu un endroit préféré ?
+v3-46|やきそば|ラーメン|やきそば|ラーメン|Dans cette ville, il y a de délicieux ramen.
+v3-48|動画|写真|どうが|しゃしん|Avez-vous vu cette photo ?
+v3-55|昼寝|食事|ひるね|しょくじ|Le chat était en train de manger.
+v3-57|店員さん|お客さん|てんいんさん|おきゃくさん|Il y a un magasin ici. Mais il n'y a pas de client.
+v3-61|コップ|お茶碗|コップ|おちゃわん|Il y a des assiettes. Il y a aussi des bols.
+v3-63|安い|高い|やすい|たかい|C'est cher ! C'est beaucoup trop cher !
+v3-64|お茶|コーヒー|おちゃ|コーヒー|Ça, c'est fait pour boire du café.
+v3-68|陶器|服|とうき|ふく|On voit des boutiques de vêtements.
+v3-69|あっち|こっち|あっち|こっち|Allons voir de ce côté-ci !

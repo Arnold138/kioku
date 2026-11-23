@@ -43,6 +43,8 @@ export interface Settings {
   home?: 'chambre' | 'village'
   /** Météo de la chambre : vraie météo à Valence ('auto') ou figée. Ajouté en v1.15. */
   weather?: 'auto' | 'pluie' | 'nuages' | 'clair'
+  /** Phrases apprises par blocs (Découvre → Reconstruis → Change un bloc → De mémoire). Ajouté en v1.17 — absent = oui. */
+  sentenceBlocks?: boolean
   _t: number
 }
 
@@ -94,6 +96,7 @@ export const DEFAULT_SETTINGS: Settings = {
   formsPerDay: 5,
   home: 'chambre',
   weather: 'auto',
+  sentenceBlocks: true,
   _t: 0
 }
 
