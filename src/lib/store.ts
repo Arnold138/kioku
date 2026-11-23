@@ -18,7 +18,7 @@ import {
 import { type CardState, type Rating, answer, answerPractice, dayKey, dayNumber, newCard } from './scheduler'
 import { isNaturalId } from './natural'
 import { type CustomCard, type Item, buildCatalog, parseCardId } from './deck'
-import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup } from './queue'
+import { ALL, type Filter, buildPractice, buildQueue, interleave, pickWarmup, withUnlimitedReviews } from './queue'
 import { ACHIEVEMENTS, TIERS, buildStats, newlyUnlocked, type Achievement } from './achievements'
 import { ALL_CHALLENGES_BONUS, cardComboBonus, challengeProgress, comboKey, comboStepsReached, listenKey, listenReward, rewardStats, type ListenMode, type ListenReward } from './rewards'
 import { examKey, examStats, type ExamMode, type ExamLevel } from './exam'
@@ -37,7 +37,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.17.0'
+export const APP_VERSION = '1.18.0'
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -52,6 +52,7 @@ const LS_BACKUP14 = 'kioku:backup:avant-v1.14'
 const LS_BACKUP15 = 'kioku:backup:avant-v1.15'
 const LS_BACKUP16 = 'kioku:backup:avant-v1.16'
 const LS_BACKUP17 = 'kioku:backup:avant-v1.17'
+const LS_BACKUP18 = 'kioku:backup:avant-v1.18'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -124,9 +125,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP16)) safeSet(LS_BACKUP16, raw)
   // v1.17 : copie avant les phrases par blocs
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP17)) safeSet(LS_BACKUP17, raw)
+  // v1.18 : copie avant les révisions variées
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP18)) safeSet(LS_BACKUP18, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -478,7 +481,7 @@ export const useStore = create<Store>((set, get) => {
       const st0 = applyCatchUp(loadState(), Date.now()).state
       const cat = buildCatalog(st0.custom)
       // v1.16 : repère des livres de la chambre (points au premier lancement)
-      const st = withRoomBase(st0, roomPoints(computeProgress(st0, cat.items)))
+      const st = withUnlimitedReviews(withRoomBase(st0, roomPoints(computeProgress(st0, cat.items))), Date.now())
       set({ state: st, items: cat.items, byId: cat.byId, device: deviceId(), ready: true })
     },
 
@@ -487,7 +490,7 @@ export const useStore = create<Store>((set, get) => {
     applyRemote: (remote) => {
       const merged0 = applyCatchUp(mergeStates(get().state, remote), Date.now()).state
       const cat = buildCatalog(merged0.custom)
-      const merged = withRoomBase(merged0, roomPoints(computeProgress(merged0, cat.items)))
+      const merged = withUnlimitedReviews(withRoomBase(merged0, roomPoints(computeProgress(merged0, cat.items))), Date.now())
       set({ state: merged, items: cat.items, byId: cat.byId })
     },
 

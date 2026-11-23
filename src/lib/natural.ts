@@ -76,7 +76,18 @@ export function naturalSentences(state: AppState, items: Item[], n: number): Ite
     if (sc.known >= 2 && sc.unknown <= 1) out.push(sc)
   }
   out.sort((a, b) => a.unknown - b.unknown || b.known - a.known || a.item.order - b.item.order)
-  return out.slice(0, n).map((x) => x.item)
+  // v1.18 : on tourne entre les vidéos (shopping, loisirs, Seto…) et on saute les phrases voisines de la même scène
+  const byVideo = new Map<string, NaturalScore[]>()
+  for (const x of out) {
+    const v = x.item.id.split('-')[0]
+    const l = byVideo.get(v) ?? []
+    if (!l.some((y) => Math.abs(Number(y.item.id.split('-')[1]) - Number(x.item.id.split('-')[1])) < 8)) l.push(x)
+    byVideo.set(v, l)
+  }
+  const lists = [...byVideo.values()]
+  const picked: Item[] = []
+  for (let k = 0; picked.length < n && lists.some((l) => l[k]); k++) for (const l of lists) if (l[k] && picked.length < n) picked.push(l[k].item)
+  return picked
 }
 
 /** Phrases naturelles à retenir après une séance : elles reprennent des mots que tu viens de voir. */

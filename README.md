@@ -4,6 +4,17 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.18 — Des révisions qui varient
+
+- **Une seule fois par jour** : un mot ou une phrase ne revient **qu'une fois par jour**, tous exercices confondus (carte, écriture, texte à trous, forme). Fini la même phrase 50 fois avec des exercices différents.
+- **Si tu te trompes**, la carte revient **une seule fois en fin de séance**, puis on passe à demain. Une nouvelle carte « Hésitant » revient **demain** (plus de boucle 1 min → 10 min). Une phrase réussie aux 4 étapes revient demain.
+- **Toutes tes révisions dues, chaque jour** : la limite de 30 révisions par jour est retirée (tu peux la remettre dans Réglages). Si tu remets une limite, ce sont **les cartes que tu risques le plus d'oublier** qui passent d'abord, souvent **des mots appris il y a longtemps**, plus toujours les mêmes mots difficiles (頼む…).
+- **Révisions mélangées** : jamais deux cartes du même thème à la suite quand c'est possible.
+- **Texte à trous** : la phrase utilisée **change d'un jour à l'autre**, et une même phrase ne sert jamais à deux mots le même jour.
+- **150 nouvelles phrases de la vie quotidienne**, écrites à la main et apprises **en premier** : **commander** (二人です、これを一つお願いします、持ち帰りで…), **demander** (〜てもらえますか、〜が欲しいです、〜たいです), **courses / konbini**, **gare**, **hôtel**, **rencontres**, **maison**, **rendez-vous**. Chacune a ses blocs, ses variantes et le sens de chaque mot. Les sujets plus riches (opinions, émotions, travail) arrivent après.
+- **Nouvelles cartes du jour** : un mot, une phrase, un mot, une phrase… et les phrases **tournent entre les thèmes** (resto, puis demandes, puis courses, puis gare…). Les phrases des vidéos tournent aussi entre les vidéos.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), mêmes cartes ; les 150 phrases ont de nouveaux numéros (s159 à s308), les anciennes gardent les leurs. Un repère `m:revisions18` dans les trophées pour ne retirer la limite qu'une fois. Copie `kioku:backup:avant-v1.18` à la première ouverture.
+
 ## Nouveautés de la version 1.17 — Les phrases par blocs
 
 - Chaque phrase est découpée en **blocs** qui ont du sens : **今日は / 今から / 買い物に / 行きます**. Les kanji ne sont jamais coupés en deux.
@@ -211,14 +222,14 @@ Depuis la v1.10, chaque carte a une **stabilité** (le nombre de jours au bout d
 
 | Réponse | Effet |
 |---|---|
-| Nouvelle carte | étapes **1 min → 10 min** ; reconnue du premier coup : **Bien** ≥ 3 jours, **Facile** ≥ 7 jours |
+| Nouvelle carte | reconnue du premier coup : **Bien** ≥ 3 jours, **Facile** ≥ 7 jours ; **Hésitant** → demain ; ratée → revient **une fois** en fin de séance, puis demain (v1.18) |
 | Hésitant | la stabilité augmente un peu, la carte devient plus difficile |
 | Bien | la stabilité augmente (plus la carte est facile et plus tu étais près de l'oublier, plus elle augmente) · au moins 3 jours |
 | Facile | grosse hausse de la stabilité, la carte devient plus facile · au moins 7 jours |
-| Difficile | demi-raté : réapprentissage (10 min), la carte garde au moins la moitié de sa stabilité |
-| Oublié | réapprentissage (10 min), la stabilité repart de ce que tu as retenu |
+| Difficile | demi-raté : réapprentissage (une fois en fin de séance), la carte garde au moins la moitié de sa stabilité |
+| Oublié | réapprentissage (une fois en fin de séance, puis demain), la stabilité repart de ce que tu as retenu |
 
-Le « jour » change à 4 h du matin (comme Anki). Raccourcis clavier sur PC : `Espace` retourne, `1`–`5` notent, `Z` annule.
+Un mot ou une phrase ne revient **qu'une fois par jour** (v1.18). Le « jour » change à 4 h du matin (comme Anki). Raccourcis clavier sur PC : `Espace` retourne, `1`–`5` notent, `Z` annule.
 
 ---
 

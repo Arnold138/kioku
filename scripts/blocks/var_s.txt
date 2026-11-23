@@ -133,3 +133,148 @@ s152|メール>ファックス|メール>ファックス|Envoyez-moi les documen
 s153|明日>金曜日|あした>きんようび|Je dois finir d'ici vendredi.
 s155|お願い>お願い|おねがい>おねがい|
 s156|お待ち>お座り|おまち>おすわり|Veuillez vous asseoir.
+s159|二人>四人|ふたり>よにん|On est quatre.
+s160|三人>五人|さんにん>ごにん|On est cinq, vous avez de la place ?
+s161|禁煙席>カウンター席|きんえんせき>カウンターせき|Une place au comptoir, s'il vous plaît.
+s162|窓側>奥|まどがわ>おく|Une place au fond est libre ?
+s163|注文>お会計|ちゅうもん>おかいけい|Excusez-moi, l'addition s'il vous plaît.
+s164|一つ>二つ|ひとつ>ふたつ|Deux de ceux-ci, s'il vous plaît.
+s165|ラーメン>ぎょうざ|ラーメン>ぎょうざ|Deux gyozas, s'il vous plaît.
+s166|ビール>お茶|ビール>おちゃ|Un thé, s'il vous plaît.
+s167|おすすめ>人気のもの|おすすめ>にんきのもの|Qu'est-ce qui est populaire ?
+s168|それ>これ|それ>これ|Bon, je prends celui-ci.
+s169|私>友達|わたし>ともだち|La même chose pour mon ami, s'il vous plaît.
+s170|サラダ>みそ汁|サラダ>みそしる|Un curry et une soupe miso, s'il vous plaît.
+s171|大盛り>少なめ|おおもり>すくなめ|Je peux avoir moins de riz ?
+s172|氷>砂糖|こおり>さとう|Sans sucre, s'il vous plaît.
+s173|辛さ>量|からさ>りょう|Une petite quantité, s'il vous plaît.
+s174|お水>お茶|おみず>おちゃ|Je peux avoir un autre verre de thé ?
+s175|取り皿>スプーン|とりざら>スプーン|Vous pouvez me donner une cuillère ?
+s176|決まって>食べて|きまって>たべて|Je n'ai pas encore mangé.
+s177|待って>考えさせて|まって>かんがえさせて|Laissez-moi réfléchir encore un peu.
+s178|英語>フランス語|えいご>フランスご|Vous avez un menu en français ?
+s179|何>肉|なん>にく|Est-ce qu'il y a de la viande dedans ?
+s180|豚肉>生魚|ぶたにく>なまざかな|Je ne peux pas manger de poisson cru.
+s181|食べます>待ちます|たべます>まちます|J'attends ici.
+s182|持ち帰り>カード|もちかえり>カード|Par carte, s'il vous plaît.
+s183|ホット>アイス|ホット>アイス|Le café glacé, s'il vous plaît.
+s184|Mサイズ>Lサイズ|エムサイズ>エルサイズ|Un café glacé taille L, s'il vous plaît.
+s185|来て>届いて|きて>とどいて|Excusez-moi, ce que j'ai commandé n'est pas encore livré.
+s186|おいしかった>楽しかった|おいしかった>たのしかった|C'était vraiment très sympa.
+s187|別々>一緒|べつべつ>いっしょ|On paie ensemble, s'il vous plaît.
+s188|カード>現金|カード>げんきん|Je peux payer en liquide ?
+s189|いい>待って|いい>まって|Attendez un peu.
+s190|聞いても>座っても|きいても>すわっても|Excusez-moi, je peux m'asseoir un instant ?
+s191|これ>あれ|これ>あれ|Qu'est-ce que c'est, là-bas ?
+s192|これ>それ|これ>それ|Je voudrais celui-là.
+s193|水>時間|みず>じかん|Je voudrais du temps.
+s194|スマホ>パソコン|スマホ>パソコン|Je voudrais un nouvel ordinateur.
+s195|料理>お菓子|りょうり>おかし|J'ai envie de manger des sucreries japonaises.
+s196|お寺>お城|おてら>おしろ|J'aimerais aller voir un château.
+s197|ゆっくり>大きい声で|ゆっくり>おおきいこえで|Vous pouvez parler un peu plus fort ?
+s198|撮って>見せて|とって>みせて|Vous pouvez me montrer la photo ?
+s199|名前>住所|なまえ>じゅうしょ|Je dois écrire mon adresse ici ?
+s200|手伝って>待って|てつだって>まって|Vous pouvez attendre un peu ?
+s201|窓>ドア|まど>ドア|Je peux ouvrir la porte ?
+s202|使って>食べて|つかって>たべて|Je peux manger ça ?
+s203|トイレ>ペン|トイレ>ペン|Je peux emprunter un stylo ?
+s205|言って>書いて|いって>かいて|Vous pouvez l'écrire encore une fois ?
+s207|使います>読みます|つかいます>よみます|Comment on lit ça ?
+s208|何時まで>いつまで|なんじまで>いつまで|C'est ouvert jusqu'à quand ?
+s209|予約>現金|よやく>げんきん|Il faut payer en liquide ?
+s210|待ちます>かかります|まちます>かかります|Ça prend combien de temps ?
+s211|子供>犬|こども>いぬ|Les chiens peuvent entrer aussi ?
+s212|充電>電話|じゅうでん>でんわ|Je peux téléphoner ?
+s213|手伝いましょう>持ちましょう|てつだいましょう>もちましょう|Ça va ? Je vous le porte ?
+s214|袋>お箸|ふくろ>おはし|Des baguettes, s'il vous plaît.
+s215|温めて>切って|あたためて>きって|Vous pouvez le couper ?
+s216|お箸>スプーン|おはし>スプーン|Deux cuillères, s'il vous plaît.
+s217|レシート>袋|レシート>ふくろ|Je n'ai pas besoin de sac.
+s218|ポイントカード>現金|ポイントカード>げんきん|Je n'ai pas de liquide.
+s219|電子マネー>現金|でんしマネー>げんきん|Je paie en liquide.
+s220|これ>それ|これ>それ|Ça (près de vous), ça coûte combien ?
+s221|全部>一つ|ぜんぶ>ひとつ|Combien pour un seul ?
+s222|高い>安い|たかい>やすい|C'est un peu bon marché, hein.
+s223|小さい>大きい|ちいさい>おおきい|Vous avez une taille plus grande ?
+s224|色>デザイン|いろ>デザイン|Vous avez un autre modèle ?
+s225|試着>写真を撮って|しちゃく>しゃしんをとって|Je peux prendre une photo ?
+s226|これ>あれ|これ>あれ|Je prends celui-là.
+s227|やめて>買って|やめて>かって|Finalement, je vais le prendre.
+s228|包んで>送って|つつんで>おくって|Vous pouvez l'envoyer comme cadeau ?
+s229|免税>予約|めんぜい>よやく|C'est possible de réserver ?
+s230|電池>傘|でんち>かさ|Où sont les parapluies ?
+s231|ATM>トイレ|エーティーエム>トイレ|Il y a des toilettes ?
+s232|売り切れ>終わり|うりきれ>おわり|C'est déjà fini ?
+s233|一つ>二つ|ひとつ>ふたつ|Juste deux de ceux-ci, s'il vous plaît.
+s234|新宿>空港|しんじゅく>くうこう|Comment je fais pour aller à l'aéroport ?
+s235|渋谷>上野|しぶや>うえの|Ce train s'arrête à Ueno ?
+s236|何番線>何番|なんばんせん>なんばん|C'est quel numéro ?
+s237|駅>バス停|えき>バスてい|Je descends au prochain arrêt de bus.
+s238|乗り換え>改札|のりかえ>かいさつ|Où sont les portillons ?
+s239|切符>お弁当|きっぷ>おべんとう|Où est-ce qu'on peut acheter un bento ?
+s240|チャージ>お金を入れ|チャージ>おかねをいれ|Je voudrais mettre de l'argent sur ma carte IC.
+s241|東口>西口|ひがしぐち>にしぐち|La sortie ouest, c'est par où ?
+s242|歩いて>自転車で|あるいて>じてんしゃで|On peut y aller à vélo d'ici ?
+s243|タクシー>バス|タクシー>バス|Où est l'arrêt de bus ?
+s244|ホテル>駅|ホテル>えき|Jusqu'à cette gare, s'il vous plaît.
+s245|止めて>降ろして|とめて>おろして|Déposez-moi ici, s'il vous plaît.
+s246|終電>始発|しゅうでん>しはつ|À quelle heure est le premier train ?
+s247|遅れて>止まって|おくれて>とまって|Le train est à l'arrêt.
+s248|降ります>乗ります|おります>のります|Pardon, je monte.
+s249|田中>山田|たなか>やまだ|J'ai une réservation au nom de Yamada.
+s250|チェックイン>チェックアウト|チェックイン>チェックアウト|Je voudrais faire le check-out.
+s251|チェックアウト>朝ご飯|チェックアウト>あさごはん|Le petit-déjeuner, c'est à quelle heure ?
+s252|朝ご飯>Wi-Fi|あさごはん>ワイファイ|Le Wi-Fi est compris ?
+s253|部屋>タクシー|へや>タクシー|Vous pouvez porter les bagages jusqu'au taxi ?
+s254|タオル>枕|タオル>まくら|Je peux avoir un oreiller de plus ?
+s255|エアコン>電気|エアコン>でんき|La lumière ne s'allume pas.
+s256|鍵>カード|かぎ>カード|J'ai perdu la carte de la chambre.
+s257|一泊>二泊|いっぱく>にはく|Je voudrais rester deux nuits de plus.
+s258|コンビニ>駅|コンビニ>えき|Il y a une gare près d'ici ?
+s259|タクシー>救急車|タクシー>きゅうきゅうしゃ|Vous pouvez appeler une ambulance ?
+s261|アーノルド>田中|アーノルド>たなか|Enchanté, je m'appelle Tanaka.
+s262|フランス>パリ|フランス>パリ|Je viens de Paris.
+s263|日本語>英語|にほんご>えいご|J'apprends l'anglais. Je ne suis pas encore bon.
+s264|日本>京都|にほん>きょうと|C'est la première fois que je viens à Kyoto.
+s265|二週間>一か月|にしゅうかん>いっかげつ|Je compte rester un mois au Japon.
+s266|お仕事>ご趣味|おしごと>ごしゅみ|Quel est votre passe-temps ?
+s267|週末>休みの日|しゅうまつ>やすみのひ|Qu'est-ce que vous faites les jours de congé ?
+s268|ゲーム>読書|ゲーム>どくしょ|Mes passe-temps, c'est la lecture et la cuisine.
+s269|猫>犬|ねこ>いぬ|J'ai un chien.
+s270|ユキ>タマ|ユキ>タマ|Mon chat s'appelle Tama.
+s271|食べ物>アニメ|たべもの>アニメ|J'adore les animes japonais.
+s272|お寿司>ラーメン|おすし>ラーメン|Ma nourriture préférée, c'est les ramens.
+s273|住んで>働いて|すんで>はたらいて|Où est-ce que vous travaillez ?
+s274|LINE>連絡先|ライン>れんらくさき|On s'échange nos contacts ?
+s275|会いましょう>来ます|あいましょう>きます|Je reviendrai.
+s276|楽しかった>おいしかった|たのしかった>おいしかった|C'était délicieux aujourd'hui. Merci beaucoup.
+s278|聞こえません>分かりません|きこえません>わかりません|Pardon, je n'ai pas bien compris.
+s279|日本語>英語|にほんご>えいご|Comment on dit ça en anglais ?
+s280|英語>ゆっくり|えいご>ゆっくり|Je ne comprends pas trop. Vous pouvez parler lentement ?
+s281|疲れた>楽しかった|つかれた>たのしかった|Je suis rentré. C'était sympa aujourd'hui.
+s282|晩ご飯>お昼|ばんごはん>おひる|On mange quoi ce midi ?
+s283|食べたい>飲みたい|たべたい>のみたい|J'ai faim. J'ai envie de boire quelque chose.
+s284|家>カフェ|いえ>カフェ|Aujourd'hui, j'ai envie de me poser au café.
+s285|ご飯>おやつ|ごはん>おやつ|Tu as donné un goûter à Yuki ?
+s286|買い物>散歩|かいもの>さんぽ|Je vais faire un tour.
+s287|牛乳>卵|ぎゅうにゅう>たまご|Il n'y a plus d'œufs.
+s288|洗濯物>荷物|せんたくもの>にもつ|Tu peux rentrer les affaires ?
+s289|起きない>出かけない|おきない>でかけない|Demain, je dois sortir tôt.
+s290|寝る>帰る|ねる>かえる|Je rentre. Bonne nuit.
+s291|電気>テレビ|でんき>テレビ|Tu peux éteindre la télé ?
+s292|傘>上着|かさ>うわぎ|Il pleut aujourd'hui, prends une veste.
+s293|映画>ドラマ|えいが>ドラマ|On regarde cette série ensemble ?
+s294|コーヒー>お茶|コーヒー>おちゃ|Tu veux un thé ?
+s295|行く>終わる|いく>おわる|Attends, je finis tout de suite.
+s296|明日>今夜|あした>こんや|Tu as du temps ce soir ?
+s297|土曜日>日曜日|どようび>にちようび|Dimanche, ça vous va ?
+s298|会いましょう>出かけましょう|あいましょう>でかけましょう|On part à quelle heure ?
+s299|七時>六時半|ななじ>ろくじはん|Retrouvons-nous devant la gare à 6 h 30.
+s300|遅れます>遅くなります|おくれます>おそくなります|Je vais être un peu en retard, désolé.
+s301|今>明日|いま>あした|Vous serez où demain ?
+s302|着きます>出ます|つきます>でます|Je pars bientôt.
+s303|入って>食べて|はいって>たべて|Commencez à manger sans moi, je vous en prie.
+s304|都合が悪い>忙しい|つごうがわるい>いそがしい|Ce jour-là, je suis un peu occupé.
+s305|今度>来週|こんど>らいしゅう|Remettons ça à la semaine prochaine.
+s307|連絡>電話|れんらく>でんわ|Appelez-moi quand vous arrivez.
+s308|雨>雪|あめ>ゆき|S'il neige, on annule.

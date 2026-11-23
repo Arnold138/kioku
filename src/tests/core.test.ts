@@ -32,12 +32,14 @@ describe('romaji', () => {
 describe('scheduler', () => {
   const now = Date.UTC(2026, 8, 29, 12)
   const today = dayNumber(now, 0)
-  it('nouvelle carte : Hésitant → 10 min → Bien → 10 min → Bien → retenue (3 jours)', () => {
-    let o = answer(newCard(now), 3, now, today)
+  // v1.18 : règle changée — une carte ne revient qu'une fois par jour (plus de boucle 1 min → 10 min → 10 min)
+  it('nouvelle carte : Hésitant → demain ; ratée → une fois en fin de séance → Bien → retenue (3 jours)', () => {
+    const h = answer(newCard(now), 3, now, today)
+    expect(h.nextDays).toBe(1)
+    expect(h.card.s).toBe('review')
+    let o = answer(newCard(now), 1, now, today)
     expect(o.nextMinutes).toBe(10)
     o = answer(o.card, 4, now + 600_000, today)
-    expect(o.nextMinutes).toBe(10)
-    o = answer(o.card, 4, now + 1_200_000, today)
     expect(o.nextDays).toBe(3)
     expect(o.card.s).toBe('review')
   })
