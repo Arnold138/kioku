@@ -262,39 +262,10 @@ export function Settings() {
             </div>
             <Segmented value={String(s.chunk ?? 10)} onChange={(v) => updateSettings({ chunk: Number(v) })} options={[['5', '5'], ['10', '10'], ['15', '15'], ['20', '20'], ['0', 'Tout']]} />
           </div>
-          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
-            <div>
-              <div style={{ fontWeight: 600 }}>Phrases naturelles / jour</div>
-              <div className="muted small">Des phrases de tes vidéos (japonais parlé) glissées dans « À étudier », avec des mots que tu connais déjà</div>
-            </div>
-            <Segmented value={String(s.naturalPerDay ?? 2)} onChange={(v) => updateSettings({ naturalPerDay: Number(v) })} options={[['0', 'Aucune'], ['1', '1'], ['2', '2'], ['3', '3'], ['5', '5']]} />
-          </div>
-          <Row title="Phrases par blocs" sub="Une nouvelle phrase : Découvre, Reconstruis, Change un bloc, Dis-la de mémoire. Ensuite tu la reconstruis, puis tu la dis de mémoire"><Toggle on={s.sentenceBlocks ?? true} onChange={(v) => updateSettings({ sentenceBlocks: v })} /></Row>
+          <Row title="Phrases à trous" sub="Une phrase avec 1 ou 2 blocs manquants : tu choisis les bons blocs. Désactivé : la phrase en japonais, tu retournes la carte"><Toggle on={s.sentenceBlocks ?? true} onChange={(v) => updateSettings({ sentenceBlocks: v })} /></Row>
           <Row title="Objectif quotidien" sub="Cartes à réviser pour garder ta série"><Stepper value={s.goal} min={5} max={200} step={5} onChange={(v) => updateSettings({ goal: v })} /></Row>
-          <Row title="Cartes de production" sub="Dire le mot en japonais (FR → JP), débloqué quand tu le reconnais"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
+          <Row title="Cartes dans l'autre sens" sub="Le sens en français → le mot en japonais (carte à retourner), débloqué quand tu reconnais le mot"><Toggle on={s.production} onChange={(v) => updateSettings({ production: v })} /></Row>
           {s.production && <Row title="Production / jour"><Stepper value={s.prodPerDay} min={0} max={40} step={2} onChange={(v) => updateSettings({ prodPerDay: v })} /></Row>}
-          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
-            <div>
-              <div style={{ fontWeight: 600 }}>Cartes à trous / jour</div>
-              <div className="muted small">Une vraie phrase avec un mot que tu connais caché : tu écris le mot. Elles entrent dans tes révisions</div>
-            </div>
-            <Segmented value={String(s.clozePerDay ?? 5)} onChange={(v) => updateSettings({ clozePerDay: Number(v) })} options={[['0', 'Aucune'], ['3', '3'], ['5', '5'], ['10', '10'], ['20', '20']]} />
-          </div>
-          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
-            <div>
-              <div style={{ fontWeight: 600 }}>Cartes de forme / jour</div>
-              <div className="muted small">Un verbe ou un adjectif que tu connais, une forme à écrire (passé, ている, causatif…). Elles entrent dans tes révisions</div>
-            </div>
-            <Segmented value={String(s.formsPerDay ?? 5)} onChange={(v) => updateSettings({ formsPerDay: Number(v) })} options={[['0', 'Aucune'], ['3', '3'], ['5', '5'], ['10', '10'], ['20', '20']]} />
-          </div>
-          <Row title="Écrire les réponses" sub="Sur les cartes de production, tape le mot en rōmaji ou en kana au lieu de le penser"><Toggle on={s.typing} onChange={(v) => updateSettings({ typing: v })} /></Row>
-          <div className="list-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
-            <div>
-              <div style={{ fontWeight: 600 }}>Phrases à traduire avant la séance</div>
-              <div className="muted small">Une ou deux phrases à décortiquer quand tu appuies sur « Commencer »</div>
-            </div>
-            <Segmented value={String(s.preSentences)} onChange={(v) => updateSettings({ preSentences: Number(v) as 0 | 1 | 2 })} options={[['0', 'Aucune'], ['1', '1 phrase'], ['2', '2 phrases']]} />
-          </div>
         </div>
       </div>
 

@@ -37,7 +37,9 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.18.0'
+export const APP_VERSION = '1.19.0'
+/** v1.19 : l'échauffement en début de séance est retiré (séances plus courtes : mots + phrases à trous). */
+const WARMUP = false as boolean
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
 const LS_BACKUP5 = 'kioku:backup:avant-v1.5'
 const LS_BACKUP6 = 'kioku:backup:avant-v1.6'
@@ -53,6 +55,7 @@ const LS_BACKUP15 = 'kioku:backup:avant-v1.15'
 const LS_BACKUP16 = 'kioku:backup:avant-v1.16'
 const LS_BACKUP17 = 'kioku:backup:avant-v1.17'
 const LS_BACKUP18 = 'kioku:backup:avant-v1.18'
+const LS_BACKUP19 = 'kioku:backup:avant-v1.19'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -127,9 +130,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP17)) safeSet(LS_BACKUP17, raw)
   // v1.18 : copie avant les révisions variées
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP18)) safeSet(LS_BACKUP18, raw)
+  // v1.19 : copie avant la version simplifiée
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP19)) safeSet(LS_BACKUP19, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -540,7 +545,8 @@ export const useStore = create<Store>((set, get) => {
       } else {
         const q = buildQueue(state, items, f, now, extra)
         // phrases d'échauffement : en tête de séance, retirées du reste de la file pour ne pas les voir deux fois
-        if (opts?.warm && !f.free) {
+        // v1.19 : plus d'échauffement en début de séance
+        if (WARMUP && opts?.warm && !f.free) {
           warm = pickWarmup(state, items, opts.warm, now)
           const w = new Set(warm)
           q.learning = q.learning.filter((k) => !w.has(k))

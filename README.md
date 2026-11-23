@@ -4,6 +4,17 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.19 — Simple et rapide
+
+- **Tes séances ne contiennent plus que deux choses** :
+  1. **Les mots**, en cartes classiques à retourner (comme Anki), **dans les deux sens** : japonais → sens, puis sens → japonais quand tu reconnais bien le mot. **Rien à écrire.**
+  2. **Les phrases à trous par blocs** : la traduction, la phrase avec **1 trou** (**2** pour les phrases de 4 blocs ou plus), et des blocs à choisir. Tu touches les bons blocs, la carte se retourne toute seule. Les trous changent à chaque révision.
+- **Retiré des séances** : les 4 étapes (Découvre, Reconstruis, Change un bloc, Dis-la de mémoire), le micro, les cartes « écris le mot », les cartes à trous de mots, les cartes de forme, l'échauffement, les phrases des vidéos glissées chaque jour et les phrases proposées en fin de séance. Les pages Oral, Écoute, Examens et Conjugaison restent accessibles à part.
+- **Les phrases du quotidien commencent par les plus courtes** : 二人です, ここで食べます, これは何ですか, これにします, 何番線ですか…
+- Toucher un mot d'une phrase au verso donne toujours son sens. Toujours **une seule fois par jour** par mot ou phrase (v1.18).
+- **Réglages** : « Phrases à trous » (désactivé : la phrase en japonais, tu retournes la carte) et « Cartes dans l'autre sens ». Les réglages des exercices retirés ont disparu.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`). **Rien n'est effacé** : tes cartes à trous de mots, de forme et de vidéos restent dans ta sauvegarde, simplement plus proposées (un ancien appareil peut toujours les réviser). Copie `kioku:backup:avant-v1.19` à la première ouverture.
+
 ## Nouveautés de la version 1.18 — Des révisions qui varient
 
 - **Une seule fois par jour** : un mot ou une phrase ne revient **qu'une fois par jour**, tous exercices confondus (carte, écriture, texte à trous, forme). Fini la même phrase 50 fois avec des exercices différents.

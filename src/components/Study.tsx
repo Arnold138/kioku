@@ -7,10 +7,9 @@ import { dayTotal, streaks, levelFromXp, totalXp, computeProgress } from '../lib
 import { estimateLevel } from '../lib/level'
 import { countDue } from '../lib/queue'
 import { aidLevel, type Aid } from '../lib/aid'
-import { contextFor, contextIndex } from '../lib/context'
-import { naturalSentences, sentencesForWords } from '../lib/natural'
-import { blockMode, blocksFor, useBlocksReady } from '../lib/blocks'
-import { BlockCard, type BlockResult } from './BlockCard'
+import { contextFor } from '../lib/context'
+import { blocksFor, useBlocksReady } from '../lib/blocks'
+import { GapCard, type GapResult as BlockResult } from './GapCard'
 import { TapSentence } from './TapSentence'
 import { ALL } from '../lib/queue'
 import { LEECH_AT } from '../lib/insights'
@@ -289,54 +288,11 @@ function Missed({ keys, onRetry }: { keys: string[]; onRetry: () => void }) {
 }
 
 /** Phrases naturelles (vidéos) qui reprennent les mots de la séance : « Compris » / « À revoir » les ajoute à tes révisions. */
-function Natural({ session }: { session: NonNullable<ReturnType<typeof useStore.getState>['session']> }) {
-  const { items, state, rateSentence } = useStore()
-  const [list] = useState<Item[]>(() => {
-    const idx = contextIndex(items)
-    const st = useStore.getState().state
-    const first = sentencesForWords(st, items, session.seen, idx, 3)
-    const ids = new Set(first.map((x) => x.id))
-    const more = first.length < 3 ? naturalSentences(st, items, 3 - first.length + 3).filter((x) => !ids.has(x.id)).slice(0, 3 - first.length) : []
-    return [...first, ...more]
-  })
-  const [shown, setShown] = useState<Record<string, boolean>>({})
-  const [res, setRes] = useState<Record<string, boolean>>({})
-  if (!list.length) return null
-  void state
-  return (
-    <div className="nat">
-      <div className="nat-title">🗣️ Dans la vraie vie</div>
-      <div className="nat-sub">Des phrases que disent les Japonais, avec des mots que tu connais.</div>
-      {list.map((it) => (
-        <div key={it.id} className="nat-row">
-          <div className="row spread" style={{ alignItems: 'flex-start', gap: 8 }}>
-            <TapSentence id={it.id} jp={it.jp} className="nat-jp jp" />
-            {canSpeak() && <button className="icon-btn" aria-label="Écouter" onClick={() => speak(it.kana || it.jp)}>{Icon.speaker()}</button>}
-          </div>
-          {!shown[it.id] ? (
-            <button className="btn plain" style={{ marginTop: 8, padding: '8px 14px', fontSize: 14 }} onClick={() => setShown({ ...shown, [it.id]: true })}>Voir la traduction</button>
-          ) : (
-            <>
-              <div className="kana-line jp" style={{ fontSize: 14, marginTop: 4 }}>{it.kana.replace(/\s+/g, '')}</div>
-              <div className="nat-fr">{it.fr}</div>
-              {res[it.id] === undefined ? (
-                <div className="nat-btns">
-                  <button className="btn plain" onClick={() => { rateSentence(it.id, false); setRes({ ...res, [it.id]: false }) }}>À revoir</button>
-                  <button className="btn" onClick={() => { rateSentence(it.id, true); setRes({ ...res, [it.id]: true }) }}>Compris ✓</button>
-                </div>
-              ) : (
-                <div className="nat-done">{res[it.id] ? '✓ Compris · +15 XP, elle reviendra dans tes révisions' : '↺ À revoir · ajoutée à tes points faibles'}</div>
-              )}
-            </>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
+const hashId = (id: string) => { let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 97 }
+
 
 export function Study() {
-  const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, updateSettings, continueRound, stopRounds } = useStore()
+  const { session: s, byId, items, state, endSession, reveal, rate, markKnown, undo, startSession, continueRound, stopRounds } = useStore()
   const now = Date.now()
   const today = dayNumber(now)
 
@@ -367,7 +323,6 @@ export function Study() {
     () => (blocksReady && item && item.kind === 'sentence' && parsed?.dir === 'r' && (state.settings.sentenceBlocks ?? true) ? blocksFor(item.id) : null),
     [blocksReady, item, parsed?.dir, state.settings.sentenceBlocks],
   )
-  const bMode = blockMode(cardKey ? state.cards[cardKey] : undefined)
   const [blockRes, setBlockRes] = useState<BlockResult | null>(null)
   const blockOn = useRef(false)
   blockOn.current = !!sb
@@ -540,7 +495,6 @@ export function Study() {
               </div>
               {(s.bestCombo ?? 0) >= 5 && <p className="combo-line">🔥 Meilleur combo : <b className="tnum">{s.bestCombo}</b> bonnes réponses d'affilée</p>}
               <Missed keys={s.missed} onRetry={() => startSession({ ...ALL, scope: 'practice', keys: s.missed }, 0)} />
-              <Natural session={s} />
               <button className="btn block" style={{ marginTop: 14 }} onClick={endSession}>Terminer</button>
               <button className="btn plain block" onClick={() => startSession(s.filter, s.extra, { typeTr: s.typeTr })}>Recommencer</button>
             </>
@@ -583,7 +537,6 @@ export function Study() {
                 {est.next && <div className="bar thin"><i style={{ width: `${Math.round(est.pct * 100)}%` }} /></div>}
               </div>
               <Missed keys={s.missed} onRetry={() => startSession({ ...ALL, scope: 'practice', keys: s.missed }, 0)} />
-              <Natural session={s} />
               <p className="muted small" style={{ margin: 0 }}>
                 {mins} min{s.newSeen > 0 ? ` · ${s.newSeen} nouvelle${s.newSeen > 1 ? 's' : ''} carte${s.newSeen > 1 ? 's' : ''} découverte${s.newSeen > 1 ? 's' : ''}` : ''}
                 {deferred > 0 ? ` · ${deferred} révision${deferred > 1 ? 's' : ''} reportée${deferred > 1 ? 's' : ''} à demain` : ''}
@@ -604,7 +557,7 @@ export function Study() {
   const isNew = card!.s === 'new'
   const shiny = shinyBefore(state.ach, cardKey!, dayKey(today), isNew)
   const stageLabel = s.practice ? 'Entraînement' : isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
-  const typingOn = state.settings.typing && parsed!.dir === 'p'
+  const typingOn = false // v1.19 : cartes à retourner, rien à écrire
   const trOn = s.typeTr && parsed!.dir === 'r'
   const remaining = s.queue.length + s.learn.length
   // note suggérée par la vérification d'une réponse écrite
@@ -625,11 +578,6 @@ export function Study() {
         <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
         {lapses > 0 && <span className={'chip tnum ' + (lapses >= 3 ? 'warn' : 'miss-chip')}>🔥 raté {lapses} fois</span>}
         <ComboBadge combo={s.combo ?? 0} extra={cardComboBonus((s.combo ?? 0) + 1) ? `+${cardComboBonus((s.combo ?? 0) + 1)} XP` : undefined} />
-        {parsed!.dir === 'p' && !s.revealed && (
-          <button className="known-btn" onClick={() => updateSettings({ typing: !state.settings.typing })}>
-            {state.settings.typing ? '✋ Je réponds dans ma tête' : '⌨️ Écrire la réponse'}
-          </button>
-        )}
         {isNew && !s.practice && parsed!.dir === 'r' && !s.revealed && (
           <button className="known-btn" onClick={markKnown}>Je connais déjà</button>
         )}
@@ -672,7 +620,7 @@ export function Study() {
               </>
             ) : sb ? (
               <>
-                {!s.revealed ? <BlockCard key={cardKey} it={item} sb={sb} mode={bMode} onDone={(r) => { setBlockRes(r); reveal() }} /> : <div className="face front" />}
+                {!s.revealed ? <GapCard key={cardKey} it={item} sb={sb} seed={(state.cards[cardKey!]?.r ?? 0) + hashId(item.id)} onDone={(r) => { setBlockRes(r); reveal() }} /> : <div className="face front" />}
                 <Back it={item} dir="r" typed={null} tr={null} banner={blockRes} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
               </>
             ) : (

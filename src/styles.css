@@ -932,3 +932,11 @@ a { color: var(--accent); }
 .back-sent { font-size: 22px; font-weight: 700; line-height: 1.5; text-align: center; }
 .lib-sent { font-size: 26px; font-weight: 700; line-height: 1.5; text-align: center; }
 .tap-help { text-align: center; margin-top: -2px; }
+
+/* ───────── v1.19 : phrase à trous ───────── */
+.gap-face .blk-body { gap: 18px; }
+.gap-face .blk-line { gap: 4px 2px; font-size: 22px; font-weight: 700; line-height: 1.6; }
+.gap-txt { color: var(--text); }
+.gap-fill { padding: 2px 8px; font-size: 20px; }
+.blk-slot.next { background: var(--accent-soft); }
+.blk-line.gap-ok .gap-fill { border-color: var(--green); background: rgba(48, 209, 88, 0.14); }

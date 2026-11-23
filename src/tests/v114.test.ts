@@ -103,7 +103,8 @@ describe('v1.14 — cartes de forme', () => {
     expect(pickForm(v, { i: 30, r: 2 })!.id).toBe(pickForm(v, { i: 30, r: 2 })!.id)
   })
 
-  it('se débloquent quand le mot est retenu, avec leur propre quota (0 = désactivées)', () => {
+  // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+  it.skip('se débloquent quand le mot est retenu, avec leur propre quota (0 = désactivées)', () => {
     const st = emptyState()
     st.settings = { ...st.settings, newPerDay: 0, production: false, naturalPerDay: 0, reviewsPerDay: 0, clozePerDay: 0, formsPerDay: 3 }
     verbs.slice(0, 10).forEach((w) => (st.cards[`${w.id}:r`] = known()))
@@ -119,7 +120,8 @@ describe('v1.14 — cartes de forme', () => {
     expect(buildQueue(st2, baseItems, ALL, now).freshForm).toHaveLength(0)
   })
 
-  it('une carte de forme commencée revient en révision et dans l\'entraînement libre', () => {
+  // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+  it.skip('une carte de forme commencée revient en révision et dans l\'entraînement libre', () => {
     const st = emptyState()
     st.cards[`${v.id}:r`] = known()
     st.cards[`${v.id}:f`] = known({ d: today - 1 })
@@ -135,7 +137,8 @@ describe('v1.14 — cartes de forme', () => {
       st.cards[`${v.id}:r`] = known()
       useStore.setState({ state: st, session: null, toasts: [] })
     })
-    it('une nouvelle carte de forme compte dans « nf » (pas dans les nouveaux mots) et suit FSRS', () => {
+    // v1.19 : retiré des séances (Arnold ne garde que les mots + les phrases à trous par blocs)
+    it.skip('une nouvelle carte de forme compte dans « nf » (pas dans les nouveaux mots) et suit FSRS', () => {
       useStore.getState().startSession(ALL)
       const key = useStore.getState().session!.current!
       expect(key).toBe(`${v.id}:f`)
