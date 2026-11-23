@@ -8,12 +8,13 @@ import { normalizeJa } from './oral'
 import { canon } from './typing'
 import { isKana, katakanaToHiragana, toRomaji } from './romaji'
 
-export interface Block { jp: string; kana: string }
+/** `sp` (v1.20) : la lecture avec des espaces entre les mots (« これ は »), pour un rōmaji lisible. */
+export interface Block { jp: string; kana: string; sp?: string }
 /** Variante : les blocs i à j remplacés par un nouveau bloc, avec la traduction de la nouvelle phrase. */
-export interface Variant { i: number; j: number; jp: string; kana: string; fr: string }
+export interface Variant { i: number; j: number; jp: string; kana: string; fr: string; sp?: string }
 export interface SentenceBlocks { blocks: Block[]; variant?: Variant }
 
-type Raw = Record<string, { b: Array<[string, string]>; v?: Variant }>
+type Raw = Record<string, { b: Array<[string, string] | [string, string, string]>; v?: Variant }>
 
 /** Les phrases durcissent en « de mémoire » à partir d'une semaine d'intervalle. */
 export const RECALL_FROM_DAYS = 7
@@ -34,7 +35,7 @@ export function setBlocksData(d: Raw | null) { data = d }
 export function blocksFor(itemId: string): SentenceBlocks | null {
   const r = data?.[itemId]
   if (!r || !r.b.length) return null
-  return { blocks: r.b.map(([jp, kana]) => ({ jp, kana })), variant: r.v }
+  return { blocks: r.b.map(([jp, kana, sp]) => (sp ? { jp, kana, sp } : { jp, kana })), variant: r.v }
 }
 
 /** Rafraîchit l'écran quand les blocs arrivent. */
@@ -198,7 +199,7 @@ export function blockPool(exceptId: string, n = 400): Block[] {
   const out: Block[] = []
   for (const [id, r] of Object.entries(data)) {
     if (id === exceptId) continue
-    for (const [jp, kana] of r.b) out.push({ jp, kana })
+    for (const [jp, kana, sp] of r.b) out.push(sp ? { jp, kana, sp } : { jp, kana })
     if (out.length >= n) break
   }
   return out
@@ -237,7 +238,7 @@ export function gapPuzzle(sb: SentenceBlocks, seed: number, pool: Block[], rnd =
   const decoys: Array<Block & { key: string; ok: boolean }> = []
   const v = sb.variant
   if (v && v.i === v.j && gaps.includes(v.i) && !taken.has(bare(v.jp))) {
-    decoys.push({ jp: v.jp, kana: v.kana, key: 'xv', ok: false })
+    decoys.push({ jp: v.jp, kana: v.kana, ...(v.sp ? { sp: v.sp } : {}), key: 'xv', ok: false })
     taken.add(bare(v.jp))
   }
   const want = count + 1

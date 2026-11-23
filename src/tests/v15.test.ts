@@ -29,8 +29,7 @@ describe('compteur de ratés (v1.4)', () => {
     c = answer(c, 1, NOW, today).card
     expect(c.s).toBe('learning')
     c = answer(c, 1, NOW + 600_000, today).card
-    expect(c.s).toBe('review') // sortie de la journée : revient demain
-    expect(c.d).toBe(today + 1)
+    expect(c.s).toBe('learning') // v1.20 : reste à apprendre tant que ce n'est pas « Bien »
     expect(misses(c)).toBe(2)
     expect(c.l).toBe(0) // le planning (oublis de révision) est inchangé
   })

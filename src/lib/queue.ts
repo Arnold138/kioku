@@ -133,7 +133,8 @@ export function buildQueue(state: AppState, items: Item[], f: Filter, now: numbe
       if (!(f.deck === 'all' && isOptIn(it.deck))) (it.kind === 'sentence' ? freshSentences : freshWords).push(it)
       continue
     }
-    if (it.kind !== 'sentence' && state.settings.production && (!p || p.s === 'new') && r.s === 'review' && r.i >= 3 && freshProd.length < prodLeft) {
+    // v1.20 : l'autre sens (FR → JP) attend au moins une semaine après ta dernière révision du mot
+    if (it.kind !== 'sentence' && state.settings.production && (!p || p.s === 'new') && r.s === 'review' && r.i >= 3 && today - (r.d - r.i) >= 7 && freshProd.length < prodLeft) {
       // la production se débloque quand la reconnaissance est solide (≥ 3 jours)
       freshProd.push(`${it.id}:p`)
       continue

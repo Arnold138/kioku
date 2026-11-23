@@ -940,3 +940,10 @@ a { color: var(--accent); }
 .gap-fill { padding: 2px 8px; font-size: 20px; }
 .blk-slot.next { background: var(--accent-soft); }
 .blk-line.gap-ok .gap-fill { border-color: var(--green); background: rgba(48, 209, 88, 0.14); }
+
+/* v1.20 : rōmaji sous les blocs des phrases à trous */
+.gap-txt { display: inline-flex; flex-direction: column; align-items: center; }
+.gap-ro { display: block; font-size: 10.5px; font-weight: 500; color: var(--muted); line-height: 1.2; letter-spacing: 0.01em; }
+.gap-fill { flex-direction: column; }
+.gap-face .blk-line { align-items: flex-start; }
+.gap-face .blk-slot { margin-top: 2px; }

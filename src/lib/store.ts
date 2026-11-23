@@ -37,7 +37,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.19.0'
+export const APP_VERSION = '1.20.0'
 /** v1.19 : l'échauffement en début de séance est retiré (séances plus courtes : mots + phrases à trous). */
 const WARMUP = false as boolean
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
@@ -56,6 +56,7 @@ const LS_BACKUP16 = 'kioku:backup:avant-v1.16'
 const LS_BACKUP17 = 'kioku:backup:avant-v1.17'
 const LS_BACKUP18 = 'kioku:backup:avant-v1.18'
 const LS_BACKUP19 = 'kioku:backup:avant-v1.19'
+const LS_BACKUP20 = 'kioku:backup:avant-v1.20'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -132,9 +133,11 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP18)) safeSet(LS_BACKUP18, raw)
   // v1.19 : copie avant la version simplifiée
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP19)) safeSet(LS_BACKUP19, raw)
+  // v1.20 : copie avant « la manche jusqu'à Bien »
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP20)) safeSet(LS_BACKUP20, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP20) ?? safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -196,6 +199,8 @@ export interface Session {
   practice: boolean
   /** cartes ratées pendant cette séance (elles rejoignent tes points faibles) */
   missed: string[]
+  /** v1.20 : cartes déjà répondues dans cette séance (pour ne pas re-planifier une carte revue plusieurs fois) */
+  answeredKeys?: string[]
   /** mots (ids) vus pendant la séance — servent à choisir les phrases naturelles de fin de séance */
   seen: string[]
   /** cartes « échauffement » (phrases à traduire en début de séance) */
@@ -639,7 +644,10 @@ export const useStore = create<Store>((set, get) => {
       const natural = isNaturalId(itemId)
       // entraînement : un raté compte comme une vraie révision, une réussite ne repousse pas la date de révision
       const ret = state.settings.retention ?? 0.9
-      const out = s.practice ? answerPractice(card, r, now, dn, ret) : answer(card, r, now, dn, ret)
+      // v1.20 : une carte déjà répondue dans cette séance et déjà « retenue » (Hésitant) se révise sans toucher au planning ;
+      // seul un raté le modifie. Le planning a été fixé à sa première réponse.
+      const repeat = !s.practice && (s.answeredKeys ?? []).includes(key) && card.s === 'review'
+      const out = s.practice || repeat ? answerPractice(card, r, now, dn, ret) : answer(card, r, now, dn, ret)
 
       const beforeLevel = levelFromXp(totalXp(state)).level
       const goalBefore = dayTotal(state, day).n >= state.settings.goal
@@ -687,6 +695,11 @@ export const useStore = create<Store>((set, get) => {
         requeued = r <= 2 // Oublié / Difficile : la carte revient en fin de séance
         if (requeued) queue = [...s.queue, key]
         else doneInc = 1
+      } else if (r <= 3) {
+        // v1.20 : pas encore « Bien » → la carte revient dans cette manche, jusqu'à ce que tu la connaisses
+        requeued = true
+        queue = [...s.queue, key]
+        learn = s.learn.filter((l) => l.id !== key)
       } else if (out.nextMinutes !== undefined) learn = [...s.learn, { id: key, due: now + out.nextMinutes * 60_000 }]
       else doneInc = 1
       const newMissed = r <= 2 && !s.missed.includes(key) // Difficile compte aussi comme un raté
@@ -702,6 +715,7 @@ export const useStore = create<Store>((set, get) => {
         xp: s.xp + xp,
         newSeen: s.newSeen + (wasNew ? 1 : 0),
         missed: newMissed ? [...s.missed, key] : s.missed,
+        answeredKeys: (s.answeredKeys ?? []).includes(key) ? s.answeredKeys : [...(s.answeredKeys ?? []), key],
         seen: newSeen ? [...s.seen, itemId] : s.seen,
         combo,
         bestCombo: Math.max(s.bestCombo ?? 0, combo),
@@ -805,7 +819,12 @@ export const useStore = create<Store>((set, get) => {
         return
       }
       // remet la carte actuelle en tête de file et la carte annulée à l'écran
-      const queue = s.current ? [s.current, ...s.queue] : s.queue
+      let queue = s.current ? [s.current, ...s.queue] : s.queue
+      if (u.requeued) {
+        // v1.20 : retire la copie remise en fin de manche
+        const idx = queue.lastIndexOf(u.cardKey)
+        if (idx >= 0) queue = queue.filter((_, i) => i !== idx)
+      }
       const learn = s.learn.filter((l) => l.id !== u.cardKey)
       set({
         session: {
@@ -821,7 +840,7 @@ export const useStore = create<Store>((set, get) => {
             hard: Math.max(0, (s.hard ?? 0) - (u.hard ? 1 : 0)),
           xp: Math.max(0, s.xp - u.xp),
           newSeen: Math.max(0, s.newSeen - (u.wasNew ? 1 : 0)),
-          done: Math.max(0, s.done - (s.learn.some((l) => l.id === u.cardKey) ? 0 : 1)),
+          done: Math.max(0, s.done - (u.requeued || s.learn.some((l) => l.id === u.cardKey) ? 0 : 1)),
           missed,
           seen,
           combo: u.prevCombo ?? 0,

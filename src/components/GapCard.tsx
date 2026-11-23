@@ -4,11 +4,14 @@ import type { Item } from '../lib/deck'
 import type { Rating } from '../lib/scheduler'
 import { canSpeak, speak } from '../lib/tts'
 import { blockPool, gapPuzzle, gapRating, type SentenceBlocks } from '../lib/blocks'
+import { toRomaji } from '../lib/romaji'
 
 export interface GapResult { rating: Rating; note: string }
 
 const clean = (s: string) => s.replace(/[、。！？!?]$/, '')
 const say = (t: string) => { if (canSpeak()) void speak(t) }
+/** v1.20 : le rōmaji en tout petit sous chaque morceau, pour reconnaître un mot dont on ne connaît pas les kanji. */
+const Ro = ({ kana }: { kana: string }) => <small className="gap-ro">({toRomaji(kana.replace(/\s+/g, ' ').trim())})</small>
 
 /**
  * v1.19 — Phrase à trous par blocs : la traduction, la phrase avec 1 ou 2 blocs manquants, et des blocs à choisir.
@@ -51,8 +54,8 @@ export function GapCard({ it, sb, seed, onDone }: { it: Item; sb: SentenceBlocks
         <div className={'blk-line' + (done ? ' gap-ok' : '')}>
           {sb.blocks.map((b, i) => {
             const g = pz.gaps.indexOf(i)
-            if (g < 0) return <span key={i} className="gap-txt jp">{clean(b.jp)}</span>
-            if (g < filled) return <span key={i} className="blk in gap-fill jp">{clean(b.jp)}</span>
+            if (g < 0) return <span key={i} className="gap-txt"><span className="jp">{clean(b.jp)}</span><Ro kana={b.sp ?? b.kana} /></span>
+            if (g < filled) return <span key={i} className="blk in gap-fill"><span className="jp">{clean(b.jp)}</span><Ro kana={b.sp ?? b.kana} /></span>
             return <span key={i} className={'blk-slot' + (g === filled ? ' next' : '')} aria-label="bloc manquant">？</span>
           })}
         </div>
@@ -61,7 +64,7 @@ export function GapCard({ it, sb, seed, onDone }: { it: Item; sb: SentenceBlocks
             <motion.div key={c.key} animate={shake === c.key ? { x: [0, -8, 8, -5, 5, 0] } : { x: 0 }} transition={{ duration: 0.35 }}>
               <button type="button" className={'blk choice' + (used.includes(c.key) ? ' used' : '') + (bad.includes(c.key) ? ' bad' : '')} disabled={done || used.includes(c.key) || bad.includes(c.key)} onClick={() => pick(c)}>
                 <span className="jp">{clean(c.jp)}</span>
-                {c.kana && c.kana !== clean(c.jp) && <small className="jp">{c.kana}</small>}
+                {c.kana && <Ro kana={c.sp ?? c.kana} />}
               </button>
             </motion.div>
           ))}
