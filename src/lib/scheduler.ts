@@ -1,6 +1,7 @@
 // Moteur de répétition espacée avec 5 niveaux de réponse.
 //
 // Étapes d'apprentissage : 1 min → 10 min → (jour 1)
+// v1.18 : une carte ne revient qu'UNE fois le même jour (ratée → fin de séance, puis demain). Plus de boucle sur la même carte.
 // v1.10 : les intervalles viennent de FSRS-5 (voir fsrs.ts) au lieu de « intervalle × facilité » (SM-2).
 // Oubli : la carte repart en réapprentissage (10 min), puis revient selon sa nouvelle stabilité FSRS.
 // Difficile = demi-raté (vague souvenir, mot pas trouvé) : réapprentissage (10 min), garde au moins la moitié de sa stabilité.
@@ -36,6 +37,8 @@ export const RECOVER_AT = 3 // réussites d'affilée pour sortir des « points f
 
 export const LEARN_STEPS = [1, 10] // minutes
 export const RELEARN_STEPS = [10] // minutes
+/** v1.18 : délai avant la seule nouvelle apparition du jour d'une carte ratée (elle revient en fin de séance). */
+export const REPEAT_ONCE_MIN = 10
 export const START_EASE = 2.5
 export const MIN_EASE = 1.3
 export const MAX_INTERVAL = 3650
@@ -167,6 +170,20 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number,
 
     // v1.9 : reconnue du premier coup, sans hésiter → retenue directement, elle sort de la séance
     if (card.s === 'new' && rating >= 4) return graduate(Math.max(rating === 5 ? FIRST_EASY_INTERVAL : FIRST_GOOD_INTERVAL, ivlFsrs))
+
+    // v1.18 : une carte ne revient qu'une fois par jour. Nouvelle carte « Hésitant » → demain. Ratée → une seule fois
+    // en fin de séance (10 min), puis, quelle que soit la réponse, elle sort de la journée.
+    if (card.s === 'new') {
+      if (rating === 3) return graduate(GRADUATE_INTERVAL)
+      return stay(REPEAT_ONCE_MIN, 0)
+    }
+    if (dayNumber(card.t) === today) {
+      if (rating <= 2) return graduate(GRADUATE_INTERVAL)
+      if (rating === 3) return graduate(Math.max(GRADUATE_INTERVAL, c.s === 'relearning' ? Math.ceil(c.li / 2) : 1))
+      if (rating === 4) return graduate(Math.max(lapseIvl, FIRST_GOOD_INTERVAL, ivlFsrs))
+      return graduate(Math.max(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL, FIRST_EASY_INTERVAL, ivlFsrs))
+    }
+    if (rating <= 2) return stay(REPEAT_ONCE_MIN, step)
 
     switch (rating) {
       case 1:

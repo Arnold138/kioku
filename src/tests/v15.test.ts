@@ -23,10 +23,15 @@ describe('compteur de ratés (v1.4)', () => {
     expect(o.w).toBe(0)
     expect(o.mt).toBe(NOW)
   })
-  it('un raté pendant l\'apprentissage compte aussi (30 fois pour « bleu »)', () => {
+  // v1.18 : une carte ratée ne revient qu'une fois le même jour ; le compteur de ratés compte chaque raté
+  it('un raté pendant l\'apprentissage compte aussi (deux ratés le même jour)', () => {
     let c = newCard(NOW)
-    for (let i = 0; i < 30; i++) c = answer(c, 1, NOW + i, today).card
-    expect(misses(c)).toBe(30)
+    c = answer(c, 1, NOW, today).card
+    expect(c.s).toBe('learning')
+    c = answer(c, 1, NOW + 600_000, today).card
+    expect(c.s).toBe('review') // sortie de la journée : revient demain
+    expect(c.d).toBe(today + 1)
+    expect(misses(c)).toBe(2)
     expect(c.l).toBe(0) // le planning (oublis de révision) est inchangé
   })
   it('le suivi ne change jamais le planning', () => {

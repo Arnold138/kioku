@@ -33,11 +33,13 @@ describe('quota de révisions par jour (v1.3)', () => {
     expect(q.deferred).toBe(0)
   })
 
-  it('les cartes les plus difficiles passent en premier', () => {
+  // v1.18 : règle changée — les cartes les plus à risque d'oubli (les plus en retard par rapport à leur intervalle) d'abord
+  it('les cartes les plus à risque d\'oubli passent en premier', () => {
     const st = backlog(120)
     st.settings.reviewsPerDay = 10
-    const hardest = `${baseItems[119].id}:r`
-    expect(buildQueue(st, baseItems, ALL, NOW).review).toContain(hardest)
+    const old = `${baseItems[60].id}:r`
+    st.cards[old] = { ...st.cards[old], i: 30, d: dayNumber(NOW) - 60 }
+    expect(buildQueue(st, baseItems, ALL, NOW).review).toContain(old)
   })
 
   it('tient compte des révisions déjà faites aujourd\'hui', () => {

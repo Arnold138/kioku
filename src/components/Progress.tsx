@@ -140,7 +140,7 @@ export function Progress() {
         </div>
         {state.settings.reviewsPerDay > 0 && fc[0].n > state.settings.reviewsPerDay && (
           <p className="muted small" style={{ margin: '12px 0 0' }}>
-            Aujourd'hui, {fc[0].n} cartes sont dues : ton quota est de {state.settings.reviewsPerDay} par jour, le reste glisse sur les jours suivants (les plus difficiles d'abord).
+            Aujourd'hui, {fc[0].n} cartes sont dues : ton quota est de {state.settings.reviewsPerDay} par jour, le reste glisse sur les jours suivants (celles que tu risques le plus d'oublier passent d'abord).
           </p>
         )}
       </div>

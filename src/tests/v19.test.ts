@@ -17,7 +17,9 @@ describe('v1.9 — cartes reconnues du premier coup', () => {
   it('les ratés gardent le fonctionnement habituel', () => {
     expect(answer(newCard(now), 1, now, today).card.s).toBe('learning')
     expect(answer(newCard(now), 2, now, today).card.s).toBe('learning')
-    expect(answer(newCard(now), 3, now, today).card.s).toBe('learning')
+    // v1.18 : Hésitant sur une nouvelle carte → revient demain (plus de répétition le même jour)
+    expect(answer(newCard(now), 3, now, today).card.s).toBe('review')
+    expect(answer(newCard(now), 3, now, today).nextDays).toBe(1)
   })
 })
 
