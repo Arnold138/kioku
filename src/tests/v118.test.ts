@@ -19,8 +19,9 @@ describe('v1.18 — une carte ne revient qu\'une fois par jour', () => {
     expect(answer(newCard(NOW), 3, NOW, today).nextDays).toBe(1)
     const miss = answer(newCard(NOW), 1, NOW, today)
     expect(miss.nextMinutes).toBe(10)
-    // revue en fin de séance : quelle que soit la réponse, elle sort de la journée
-    for (const r of [1, 2, 3, 4, 5] as const) {
+    // v1.20 : règle changée — elle revient dans la manche jusqu'à « Bien » ; « Bien » ou « Facile » la font sortir
+    for (const r of [1, 2, 3] as const) expect(answer(miss.card, r, NOW + 600_000, today).nextMinutes).toBe(10)
+    for (const r of [4, 5] as const) {
       const o = answer(miss.card, r, NOW + 600_000, today)
       expect(o.nextMinutes).toBeUndefined()
       expect(o.card.s).toBe('review')
@@ -31,9 +32,10 @@ describe('v1.18 — une carte ne revient qu\'une fois par jour', () => {
   it('révision ratée : réapprentissage une fois (10 min), puis demain au plus tard', () => {
     const lapse = answer(rev(), 1, NOW, today)
     expect(lapse.nextMinutes).toBe(10)
+    // v1.20 : règle changée — encore raté → elle reste à apprendre (la manche la remontre jusqu'à « Bien »)
     const again = answer(lapse.card, 1, NOW + 600_000, today)
-    expect(again.card.s).toBe('review')
-    expect(again.card.d).toBe(today + 1)
+    expect(again.card.s).toBe('relearning')
+    expect(again.nextMinutes).toBe(10)
     const ok = answer(lapse.card, 4, NOW + 600_000, today)
     expect(ok.card.s).toBe('review')
   })

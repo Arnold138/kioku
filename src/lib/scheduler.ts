@@ -46,7 +46,8 @@ export const GRADUATE_INTERVAL = 1
 export const EASY_INTERVAL = 4
 /** v1.9 : nouvelle carte reconnue du premier coup → retenue tout de suite (« Bien » 3 jours, « Facile » 7 jours). */
 export const FIRST_GOOD_INTERVAL = 3
-export const FIRST_EASY_INTERVAL = 7
+/** v1.20 : « Facile » → au moins 2 semaines (avant : 7 jours). */
+export const FIRST_EASY_INTERVAL = 14
 export const LAPSE_FACTOR = 0.25
 export const HARD_LAPSE_FACTOR = 0.5 // « Difficile » en révision : demi-raté, l'intervalle est divisé par 2
 /** Part d'une carte « Difficile » comptée comme retenue dans les pourcentages (35 %). */
@@ -177,9 +178,10 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number,
       if (rating === 3) return graduate(GRADUATE_INTERVAL)
       return stay(REPEAT_ONCE_MIN, 0)
     }
+    // v1.20 : dans la manche, une carte ratée revient jusqu'à « Bien » : tant que ce n'est pas « Bien », elle reste à apprendre.
+    // « Bien » = retenue (au moins 3 jours, règle de la v1.9.1).
     if (dayNumber(card.t) === today) {
-      if (rating <= 2) return graduate(GRADUATE_INTERVAL)
-      if (rating === 3) return graduate(Math.max(GRADUATE_INTERVAL, c.s === 'relearning' ? Math.ceil(c.li / 2) : 1))
+      if (rating <= 3) return stay(REPEAT_ONCE_MIN, step)
       if (rating === 4) return graduate(Math.max(lapseIvl, FIRST_GOOD_INTERVAL, ivlFsrs))
       return graduate(Math.max(c.s === 'relearning' ? c.li + 1 : EASY_INTERVAL, FIRST_EASY_INTERVAL, ivlFsrs))
     }
@@ -215,7 +217,8 @@ function answerCore(card: CardState, rating: Rating, now: number, today: number,
     return done({ card: c, nextMinutes: RELEARN_STEPS[0] })
   }
   // v1.9.1 : une révision réussie (Bien / Facile) rend la carte « retenue » (au moins 3 j, ou 7 j pour Facile)
-  const floor = rating === 4 ? FIRST_GOOD_INTERVAL : rating === 5 ? FIRST_EASY_INTERVAL : 1
+  // v1.20 : « Facile » → au moins 2 semaines et au moins le double de l'intervalle d'avant
+  const floor = rating === 4 ? FIRST_GOOD_INTERVAL : rating === 5 ? Math.max(FIRST_EASY_INTERVAL, 2 * card.i) : 1
   const ivl = Math.min(MAX_INTERVAL, Math.max(floor, ivlFsrs))
   c.i = ivl
   c.d = today + ivl

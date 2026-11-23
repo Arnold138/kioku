@@ -84,10 +84,11 @@ describe('v1.9 — trophées intermédiaires', () => {
 })
 
 describe('v1.9.1 — toute révision réussie rend la carte retenue', () => {
-  it('révision à 1 jour avec une facilité basse : Bien → 3 jours, Facile → 7 jours', () => {
+  // v1.20 : règle changée — « Facile » → au moins 2 semaines (avant : 7 jours)
+  it('révision à 1 jour avec une facilité basse : Bien → 3 jours, Facile → 14 jours', () => {
     const c: CardState = { ...newCard(now), s: 'review', i: 1, d: today, e: 1.3, r: 6, l: 2 }
     expect(answer(c, 4, now, today).nextDays).toBe(FIRST_GOOD_INTERVAL)
-    expect(answer(c, 5, now, today).nextDays).toBe(7)
+    expect(answer(c, 5, now, today).nextDays).toBe(14)
     expect(answer(c, 3, now, today).nextDays).toBe(1) // v1.10 (FSRS) : carte très difficile, Hésitant la garde à 1 jour
   })
   it('réapprentissage : Bien → retenue même si l\'ancien intervalle était court', () => {

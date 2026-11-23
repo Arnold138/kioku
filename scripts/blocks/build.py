@@ -8,7 +8,19 @@ for line in open('scripts/blocks/var_s.txt'):
 for f in ('scripts/blocks/var_v1.txt', 'scripts/blocks/var_v2.txt', 'scripts/blocks/var_v3.txt'):
     for line in open(f):
         p = line.rstrip('\n').split('|'); rows.append(tuple(p))
-out = {k: {'b': v} for k, v in B.items()}
+# v1.20 : lecture des blocs avec les espaces entre les mots (pour un rōmaji lisible : « kore wa », pas « koreha »)
+SENT = {('s%d' % x['id']): x['kana'] for x in json.load(open('src/data/sentences.json'))}
+SENT.update({x['id']: x['kana'] for x in json.load(open('src/data/video.json'))})
+def spaced(iid, bl):
+    toks = SENT.get(iid, '').split()
+    out, t = [], 0
+    for jp, ka in bl:
+        got = []
+        while t < len(toks) and ''.join(got) != ka and len(''.join(got)) < len(ka):
+            got.append(toks[t]); t += 1
+        out.append([jp, ka, ' '.join(got)] if ''.join(got) == ka and len(got) > 1 else [jp, ka])
+    return out
+out = {k: {'b': spaced(k, v)} for k, v in B.items()}
 bad = []
 for iid, o, n, ok, nk, fr in rows:
     o = o.replace(' / ', ''); ok = ok.replace(' / ', ''); n = n.replace(' / ', ''); nk = nk.replace(' / ', '')
@@ -29,7 +41,10 @@ for iid, o, n, ok, nk, fr in rows:
     if r1 != r2: bad.append((iid, 'blocs différents', r1, r2)); continue
     i, j = r1
     bj = ''.join(b[0] for b in bl[i:j + 1]); bk = ''.join(b[1] for b in bl[i:j + 1])
-    out[iid]['v'] = {'i': i, 'j': j, 'jp': bj.replace(o, n, 1), 'kana': bk.replace(ok, nk, 1), 'fr': fr}
+    sp = ' '.join(b[2] if len(b) > 2 else b[1] for b in out[iid]['b'][i:j + 1])
+    v = {'i': i, 'j': j, 'jp': bj.replace(o, n, 1), 'kana': bk.replace(ok, nk, 1), 'fr': fr}
+    if ok in sp: v['sp'] = sp.replace(ok, nk, 1)
+    out[iid]['v'] = v
 json.dump(out, open('src/data/blocks.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 print(len(rows), 'variantes', sum('v' in x for x in out.values()), 'phrases', len(out))
 for b in bad: print(b)

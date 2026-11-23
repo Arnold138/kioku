@@ -4,6 +4,14 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.20 — La manche jusqu'à « Bien »
+
+- **Dans une manche, une carte revient jusqu'à ce que tu dises « Bien »** : Oublié, Difficile ou Hésitant → elle repasse en fin de manche, encore et encore. La manche ne se termine que quand toutes ses cartes sont « Bien » (ou « Facile »). Seule ta première réponse fixe la date de la prochaine révision ; un nouveau raté la rapproche.
+- **« Facile » éloigne vraiment la carte** : au moins **2 semaines**, et au moins **le double** de son intervalle d'avant (avant : 7 jours).
+- **L'autre sens attend** : la carte français → japonais d'un mot n'arrive qu'**au moins une semaine** après ta dernière révision de ce mot (fini テレビ le lendemain dans l'autre sens).
+- **Phrases à trous : le rōmaji en tout petit** sous chaque morceau, entre parenthèses — ex. 漢字が (kanji ga) — pour reconnaître un mot dont tu ne connais pas les kanji.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), mêmes cartes. Copie `kioku:backup:avant-v1.20` à la première ouverture.
+
 ## Nouveautés de la version 1.19 — Simple et rapide
 
 - **Tes séances ne contiennent plus que deux choses** :
@@ -233,10 +241,10 @@ Depuis la v1.10, chaque carte a une **stabilité** (le nombre de jours au bout d
 
 | Réponse | Effet |
 |---|---|
-| Nouvelle carte | reconnue du premier coup : **Bien** ≥ 3 jours, **Facile** ≥ 7 jours ; **Hésitant** → demain ; ratée → revient **une fois** en fin de séance, puis demain (v1.18) |
+| Nouvelle carte | reconnue du premier coup : **Bien** ≥ 3 jours, **Facile** ≥ 7 jours ; **Hésitant** → demain ; pas encore « Bien » → revient dans la manche jusqu'à « Bien » (v1.20) |
 | Hésitant | la stabilité augmente un peu, la carte devient plus difficile |
 | Bien | la stabilité augmente (plus la carte est facile et plus tu étais près de l'oublier, plus elle augmente) · au moins 3 jours |
-| Facile | grosse hausse de la stabilité, la carte devient plus facile · au moins 7 jours |
+| Facile | grosse hausse de la stabilité, la carte devient plus facile · au moins **14 jours** et le double de l'intervalle d'avant (v1.20) |
 | Difficile | demi-raté : réapprentissage (une fois en fin de séance), la carte garde au moins la moitié de sa stabilité |
 | Oublié | réapprentissage (une fois en fin de séance, puis demain), la stabilité repart de ce que tu as retenu |
 
