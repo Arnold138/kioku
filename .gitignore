@@ -4,3 +4,4 @@ dist
 .env.local
 *.tsbuildinfo
 scripts/blocks/blocks-auto.json
+__pycache__/
