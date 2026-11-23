@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { Item } from '../lib/deck'
 import type { Rating } from '../lib/scheduler'
 import { speak, canSpeak, stopSpeaking } from '../lib/tts'
+import { glossInRange, useGlossReady, type Gloss } from '../lib/gloss'
+import { GlossSheet } from './TapSentence'
 import { canRecognize, recognizeJa, RECOGNIZE_MSG, type Listening, type RecognizeError } from '../lib/mic'
 import {
   changeChoices, checkRecall, originalPart, rebuildPieces, stepsFor, suggestRating, variantPool, variantSentence,
@@ -68,14 +70,32 @@ function Chip({ b, onClick, dim, cls = '' }: { b: { jp: string; kana: string }; 
   )
 }
 
+/** Mots d'un bloc, pour la bulle « sens des mots ». */
+function useBlockGloss(it: Item, sb: SentenceBlocks) {
+  useGlossReady()
+  const [open, setOpen] = useState<Gloss[]>([])
+  const [on, setOn] = useState(-1)
+  const show = (i: number) => {
+    const start = sb.blocks.slice(0, i).reduce((n, b) => n + b.jp.length, 0)
+    say(sb.blocks[i].kana)
+    if (on === i) { setOn(-1); setOpen([]); return }
+    setOn(i)
+    setOpen(glossInRange(it.id, it.jp, start, start + sb.blocks[i].jp.length))
+  }
+  const sheet = <GlossSheet words={open} onClose={() => { setOn(-1); setOpen([]) }} />
+  return { show, on, sheet }
+}
+
 function Discover({ it, sb, onNext }: { it: Item; sb: SentenceBlocks; onNext: () => void }) {
+  const gl = useBlockGloss(it, sb)
   return (
     <>
       <div className="blk-line">
-        {sb.blocks.map((b, i) => <Chip key={i} b={b} onClick={() => say(b.kana)} />)}
+        {sb.blocks.map((b, i) => <Chip key={i} b={b} cls={gl.on === i ? 'in' : ''} onClick={() => gl.show(i)} />)}
       </div>
+      {gl.sheet}
       <div className="meaning long">{it.fr}</div>
-      <div className="hint">Touche un bloc pour l'écouter. Chaque bloc est un morceau qui a du sens.</div>
+      <div className="hint">Touche un bloc pour l'écouter et voir le sens de ses mots.</div>
       <div className="blk-actions">
         {canSpeak() && <button type="button" className="btn plain" onClick={() => say(it.kana || it.jp)}>🔊 Toute la phrase</button>}
         <button type="button" className="btn" onClick={onNext}>Suivant</button>
@@ -179,6 +199,7 @@ function Recall({ it, sb, onDone }: { it: Item; sb: SentenceBlocks; onDone: (r: 
   const [draft, setDraft] = useState('')
   const lis = useRef<Listening | null>(null)
   useEffect(() => () => lis.current?.abort(), [])
+  const gl = useBlockGloss(it, sb)
 
   const toggleKb = () => {
     const v = !kb
@@ -248,8 +269,9 @@ function Recall({ it, sb, onDone }: { it: Item; sb: SentenceBlocks; onDone: (r: 
             {heard && <span>{kb ? 'Tu as écrit' : 'Le téléphone a compris'} : <b className="jp">{heard}</b></span>}
           </div>
           <div className="blk-line">
-            {sb.blocks.map((b, i) => <Chip key={i} b={b} cls={res.hits[i] ? 'in' : 'miss'} onClick={() => say(b.kana)} />)}
+            {sb.blocks.map((b, i) => <Chip key={i} b={b} cls={res.hits[i] ? 'in' : 'miss'} onClick={() => gl.show(i)} />)}
           </div>
+          {gl.sheet}
           <div className="blk-actions">
             {!res.ok && <button type="button" className="known-btn" onClick={() => onDone(null, true)}>En fait, je l'ai bien dite</button>}
             <button type="button" className="btn" onClick={() => onDone(res, null)}>Voir la carte</button>

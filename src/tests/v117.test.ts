@@ -1,5 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import blocksJson from '../data/blocks.json'
+import glossJson from '../data/gloss.json'
+import { glossInRange, glossPieces, setGlossData } from '../lib/gloss'
 import { buildCatalog } from '../lib/deck'
 import { DEFAULT_SETTINGS, emptyState, mergeStates, sanitize } from '../lib/state'
 import { answer, newCard, type CardState } from '../lib/scheduler'
@@ -9,7 +11,10 @@ import {
 } from '../lib/blocks'
 
 type Raw = Parameters<typeof setBlocksData>[0]
-beforeAll(() => setBlocksData(blocksJson as unknown as Raw))
+beforeAll(() => {
+  setBlocksData(blocksJson as unknown as Raw)
+  setGlossData(glossJson as unknown as Parameters<typeof setGlossData>[0])
+})
 
 const seq = (...xs: number[]) => { let i = 0; return () => xs[i++ % xs.length] }
 const review = (i: number): CardState => ({ ...newCard(0), s: 'review', i, d: 100, r: 3 })
@@ -162,5 +167,57 @@ describe('v1.17 — compatibilité', () => {
     const oldDevice = { ...emptyState(), settings: { ...DEFAULT_SETTINGS, _t: 100 } }
     delete (oldDevice.settings as Partial<typeof oldDevice.settings>).sentenceBlocks
     expect(mergeStates(oldDevice, a).settings.sentenceBlocks).toBe(false)
+  })
+})
+
+describe('v1.17 — toucher un mot', () => {
+  const sentences = buildCatalog({}).items.filter((it) => it.kind === 'sentence')
+
+  it('chaque phrase se découpe en mots qui recouvrent tout le texte (hors ponctuation)', () => {
+    let bad = 0
+    for (const it of sentences) {
+      const g = glossPieces(it.id, it.jp)
+      if (!g) { bad++; continue }
+      expect(g.pieces.map((p) => p.text).join('')).toBe(it.jp)
+      g.words.forEach((w) => { expect(w.r.length).toBeGreaterThan(0) })
+    }
+    expect(bad).toBe(0)
+  })
+
+  it('撮っても : forme de base 撮る, sens, et la tournure « puis-je… ? »', () => {
+    const g = glossPieces('s89', '写真を撮ってもいいですか。')!
+    expect(g.words.map((w) => w.s)).toEqual(['写真', 'を', '撮って', 'も', 'いい', 'です', 'か'])
+    const totte = g.words[2]
+    expect(totte.base).toBe('撮る')
+    expect(totte.baseR).toBe('とる')
+    expect(totte.fr).toContain('photo')
+    expect(totte.g).toContain('puis-je')
+    expect(g.words[1].fr).toContain('complément d\'objet')
+  })
+
+  it('presque tous les mots ont un sens, et les mots d\'un bloc se retrouvent', () => {
+    let n = 0, withFr = 0
+    for (const it of sentences) for (const w of glossPieces(it.id, it.jp)?.words ?? []) { n++; if (w.fr) withFr++ }
+    expect(withFr / n).toBeGreaterThan(0.97)
+    // bloc 行きます de 電車で会社に行きます。
+    expect(glossInRange('s45', '電車で会社に行きます。', 6, 11).map((w) => w.s)).toEqual(['行きます'])
+    expect(glossInRange('s45', '電車で会社に行きます。', 0, 3).map((w) => w.s)).toEqual(['電車', 'で'])
+  })
+
+  it('une phrase perso (sans données) s\'affiche simplement', () => {
+    expect(glossPieces('c-123', 'これはペンです。')).toBeNull()
+    // texte modifié : on n'invente pas de découpage
+    expect(glossPieces('s89', '写真をとってもいいですか。')).toBeNull()
+  })
+})
+
+describe('v1.17 — phrases du deck retravaillées', () => {
+  const deck = buildCatalog({}).items.filter((it) => it.kind === 'sentence' && /^s\d+$/.test(it.id))
+  it('japonais naturel : pas de 私は en tête, lecture découpée mot par mot', () => {
+    expect(deck).toHaveLength(158)
+    expect(deck.filter((it) => it.jp.startsWith('私は'))).toHaveLength(0)
+    const s89 = deck.find((it) => it.id === 's89')!
+    expect(s89.kana).toBe('しゃしん を とって も いい です か')
+    expect(deck.find((it) => it.id === 's79')!.jp).toBe('袋は大丈夫です。')
   })
 })

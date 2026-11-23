@@ -11,6 +11,7 @@ import { contextFor, contextIndex } from '../lib/context'
 import { naturalSentences, sentencesForWords } from '../lib/natural'
 import { blockMode, blocksFor, useBlocksReady } from '../lib/blocks'
 import { BlockCard, type BlockResult } from './BlockCard'
+import { TapSentence } from './TapSentence'
 import { ALL } from '../lib/queue'
 import { LEECH_AT } from '../lib/insights'
 import { dayKey } from '../lib/scheduler'
@@ -197,7 +198,8 @@ function Front({ it, dir, reading, typing, aid, memo }: { it: Item; dir: 'r' | '
     <div className="face front">
       <span className="chip kind">{it.kind === 'sentence' ? 'Phrase' : it.lvl}</span>
       <Speak text={it.kana || it.jp} />
-      <div className={'word-jp jp ' + sizeClass(it.jp, it.kind === 'sentence')}>{it.jp}</div>
+      {it.kind === 'sentence' ? <TapSentence id={it.id} jp={it.jp} className={'word-jp jp ' + sizeClass(it.jp, true)} />
+        : <div className={'word-jp jp ' + sizeClass(it.jp, false)}>{it.jp}</div>}
       {mode === 'full' ? (
         <Reading it={it} long={long} />
       ) : mode === 'kana' ? (
@@ -237,8 +239,10 @@ function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'
   return (
     <div className="face back">
       <Speak text={it.kana || it.jp} />
-      <div className="jp" style={{ fontSize: long ? 20 : 30, fontWeight: 700 }}>{it.jp}</div>
+      {it.kind === 'sentence' ? <TapSentence id={it.id} jp={it.jp} className="jp back-sent" />
+        : <div className="jp" style={{ fontSize: long ? 20 : 30, fontWeight: 700 }}>{it.jp}</div>}
       <Reading it={it} long={long} />
+      {it.kind === 'sentence' && <div className="muted small tap-help">Touche un mot pour voir son sens</div>}
       <div className="divider" />
       {banner && <div className={'typed-result ' + (banner.rating >= 4 ? 'good' : banner.rating >= 2 ? 'tr close' : 'bad')}>{banner.note}</div>}
       {tr && tr.verdict !== 'vide' && (
@@ -306,7 +310,7 @@ function Natural({ session }: { session: NonNullable<ReturnType<typeof useStore.
       {list.map((it) => (
         <div key={it.id} className="nat-row">
           <div className="row spread" style={{ alignItems: 'flex-start', gap: 8 }}>
-            <div className="nat-jp jp">{it.jp}</div>
+            <TapSentence id={it.id} jp={it.jp} className="nat-jp jp" />
             {canSpeak() && <button className="icon-btn" aria-label="Écouter" onClick={() => speak(it.kana || it.jp)}>{Icon.speaker()}</button>}
           </div>
           {!shown[it.id] ? (

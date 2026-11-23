@@ -14,20 +14,20 @@ s25|パリ>東京|パリ>とうきょう|J'habite à Tokyo.
 s26|音楽>料理|おんがく>りょうり|Mon passe-temps est la cuisine.
 s27|日本語>英語|にほんご>えいご|J'étudie l'anglais.
 s28|下手>上手じゃない|へた>じょうずじゃない|Mon japonais n'est pas encore bon.
-s29|兄弟>子供|きょうだい>こども|Avez-vous des enfants ?
+s29|ご兄弟>お子さん|ごきょうだい>おこさん|Avez-vous des enfants ?
 s30|お名前>ご趣味|おなまえ>ごしゅみ|Quel est votre passe-temps ?
-s31|お仕事>お国|おしごと>おくに|De quel pays êtes-vous ?
-s32|出身>お住まい|しゅっしん>おすまい|Où habitez-vous ?
+s31|お仕事>休みの日|おしごと>やすみのひ|Que faites-vous pendant vos jours de congé ?
+s32|ご出身>お住まい|ごしゅっしん>おすまい|Où habitez-vous ?
 s33|一度>少し|いちど>すこし|Encore un peu, s'il vous plaît.
 s34|話して>書いて|はなして>かいて|Écrivez lentement, s'il vous plaît.
 s35|分かりません>知りません|わかりません>しりません|Je ne sais pas.
 s36|分かりました>疲れました|わかりました>つかれました|Je suis fatigué.
-s37|日本語>英語|にほんご>えいご|Comment dit-on cela en anglais ?
+s37|日本語>英語|にほんご>えいご|Comment dit-on ça en anglais ?
 s38|言葉>漢字|ことば>かんじ|Que signifie ce kanji ?
 s39|英語>フランス語|えいご>フランスご|Parlez-vous français ?
 s40|日本語>英語|にほんご>えいご|Je parle un peu anglais.
 s41|読めません>書けません|よめません>かけません|Je ne sais pas écrire les kanji.
-s42|書いて>読んで|かいて>よんで|Lisez-le, s'il vous plaît.
+s42|書いて>読んで|かいて>よんで|Vous pouvez le lire, s'il vous plaît ?
 s43|六時>七時|ろくじ>しちじ|Je me lève à 7 h tous les matins.
 s44|朝ご飯>晩ご飯|あさごはん>ばんごはん|Je prends mon dîner.
 s45|電車>バス|でんしゃ>バス|Je vais au travail en bus.
@@ -38,20 +38,20 @@ s49|週末>明日|しゅうまつ>あした|Que faites-vous demain ?
 s50|映画>テレビ|えいが>テレビ|Je regarde la télé avec un ami.
 s51|何時>何曜日|なんじ>なんようび|Quel jour sommes-nous ?
 s52|三時半>四時半|さんじはん>よじはん|Il est quatre heures et demie.
-s53|天気>日|てんき>ひ|C'est une belle journée aujourd'hui.
+s53|天気>日|てんき>ひ|C'est une belle journée aujourd'hui, hein.
 s54|雨>雪|あめ>ゆき|Il neige.
-s55|寒い>暑い|さむい>あつい|Il fait très chaud aujourd'hui.
+s55|寒い>暑い|さむい>あつい|Il fait vraiment chaud aujourd'hui.
 s56|お風呂>シャワー|おふろ>シャワー|Je prends une douche.
 s57|テレビ>スマホ|テレビ>スマホ|Je mange en regardant mon téléphone.
-s58|犬>猫|いぬ>ねこ|Je me promène avec mon chat.
+s58|犬>猫|いぬ>ねこ|Je m'occupe du chat.
 s59|部屋>台所|へや>だいどころ|J'ai nettoyé la cuisine.
 s60|手紙>メール|てがみ>メール|J'ai écrit un e-mail.
 s61|本>漫画|ほん>まんが|Je suis en train de lire un manga.
 s62|音楽>ラジオ|おんがく>ラジオ|J'écoute la radio.
 s63|お水>お茶|おみず>おちゃ|Du thé, s'il vous plaît.
 s64|一つ>二つ|ひとつ>ふたつ|Deux cafés, s'il vous plaît.
-s65|メニュー>地図|メニュー>ちず|Montrez-moi le plan, s'il vous plaît.
-s66|おいしい>高い|おいしい>たかい|C'est cher.
+s65|メニュー>地図|メニュー>ちず|Vous pouvez me montrer le plan ?
+s66|おいしい>かわいい|おいしい>かわいい|C'est mignon, ça !
 s67|魚>肉|さかな>にく|J'aime la viande.
 s68|肉>魚|にく>さかな|Je ne mange pas beaucoup de poisson.
 s69|すきました>いっぱいです|すきました>いっぱいです|J'ai bien mangé (je n'ai plus faim).
@@ -61,10 +61,10 @@ s72|辛い>甘い|からい>あまい|Je supporte mal le sucré.
 s73|味噌汁>魚|みそしる>さかな|J'ai mangé du riz et du poisson.
 s74|これ>それ|これ>それ|Combien coûte cela ?
 s75|高い>安い|たかい>やすい|Ce n'est pas cher, dites donc.
-s76|安い>大きい|やすい>おおきい|Y a-t-il quelque chose d'un peu plus grand ?
+s76|安い>大きい|やすい>おおきい|Vous avez quelque chose d'un peu plus grand ?
 s77|これ>それ|これ>それ|Je prends cela.
-s78|クレジットカード>現金|クレジットカード>げんきん|Puis-je payer en liquide ?
-s79|袋>レシート|ふくろ>レシート|Je n'ai pas besoin du ticket.
+s78|カード>現金|カード>げんきん|Je peux payer en liquide ?
+s79|袋>レシート|ふくろ>レシート|Pas besoin du ticket, merci.
 s80|見て>探して|みて>さがして|Je cherche seulement.
 s81|駅>出口|えき>でぐち|Où est la sortie ?
 s82|まっすぐ>ゆっくり|まっすぐ>ゆっくり|Allez doucement.
@@ -104,17 +104,17 @@ s115|難しいけど>大変だけど|むずかしいけど>たいへんだけど
 s116|漢字>名前|かんじ>なまえ|J'ai du mal à retenir les noms.
 s117|上手に>元気に|じょうずに>げんきに|Je veux être en meilleure forme.
 s118|いい>面白い|いい>おもしろい|Je pense que c'est une idée intéressante.
-s119|この>あの|この>あの|À mon avis, celui-là est mieux.
+s119|こっち>あっち|こっち>あっち|Personnellement, je trouve celui-là mieux.
 s120|言われて>聞いて|いわれて>きいて|Maintenant que j'y pense (en entendant ça), c'est vrai.
 s121|晴れる>雨が降る|はれる>あめがふる|Demain, il pleuvra probablement.
 s122|きっと>すぐ|きっと>すぐ|Avec des efforts, vous y arriverez tout de suite.
 s123|道に迷って>財布をなくして|みちにまよって>さいふをなくして|Excusez-moi, j'ai perdu mon portefeuille.
 s124|銀行>コンビニ|ぎんこう>コンビニ|Y a-t-il une supérette près d'ici ?
 s125|予約を>キャンセルを|よやくを>キャンセルを|Je voudrais annuler.
-s126|荷物を預けても>ここで待っても|にもつをあずけても>ここでまっても|Puis-je attendre ici ?
+s126|荷物を>傘を|にもつを>かさを|Vous pouvez garder mon parapluie ?
 s127|チェックイン>朝ご飯|チェックイン>あさごはん|À partir de quelle heure est le petit-déjeuner ?
 s128|バス>電車|バス>でんしゃ|À quelle heure passe le prochain train ?
-s129|乗り換え>予約|のりかえ>よやく|Faut-il réserver ?
+s129|乗り換え>エレベーター|のりかえ>エレベーター|Est-ce qu'il y a un ascenseur ?
 s130|忘れ物を>失敗を|わすれものを>しっぱいを|J'ai fait une erreur.
 s131|待って>来て|まって>きて|Viens un peu.
 s134|おいしい>かわいい|おいしい>かわいい|Trop mignon !
