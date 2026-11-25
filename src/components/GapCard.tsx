@@ -11,13 +11,14 @@ export interface GapResult { rating: Rating; note: string }
 const clean = (s: string) => s.replace(/[、。！？!?]$/, '')
 const say = (t: string) => { if (canSpeak()) void speak(t) }
 /** v1.20 : le rōmaji en tout petit sous chaque morceau, pour reconnaître un mot dont on ne connaît pas les kanji. */
-const Ro = ({ kana }: { kana: string }) => <small className="gap-ro">({toRomaji(kana.replace(/\s+/g, ' ').trim())})</small>
+const Ro0 = ({ kana }: { kana: string }) => <small className="gap-ro">({toRomaji(kana.replace(/\s+/g, ' ').trim())})</small>
 
 /**
  * v1.19 — Phrase à trous par blocs : la traduction, la phrase avec 1 ou 2 blocs manquants, et des blocs à choisir.
  * Rapide : on touche les bons blocs, la carte se retourne toute seule.
  */
-export function GapCard({ it, sb, seed, onDone }: { it: Item; sb: SentenceBlocks; seed: number; onDone: (r: GapResult) => void }) {
+export function GapCard({ it, sb, seed, onDone, noRo }: { it: Item; sb: SentenceBlocks; seed: number; onDone: (r: GapResult) => void; noRo?: boolean }) {
+  const Ro = noRo ? () => null : Ro0
   const pz = useMemo(() => gapPuzzle(sb, seed, blockPool(it.id)), [sb, seed, it.id])
   const [filled, setFilled] = useState(0)
   const [errs, setErrs] = useState(0)
@@ -48,7 +49,6 @@ export function GapCard({ it, sb, seed, onDone }: { it: Item; sb: SentenceBlocks
 
   return (
     <div className="face front blk-face gap-face" onClick={(e) => e.stopPropagation()}>
-      <div className="blk-head"><span className="chip kind accent">Phrase à trous</span></div>
       <div className="blk-body">
         <div className="meaning long">{it.fr}</div>
         <div className={'blk-line' + (done ? ' gap-ok' : '')}>

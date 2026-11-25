@@ -6,7 +6,8 @@ import { RATING_LABELS, accuracyPct, dayNumber, misses, newCard, previewLabels, 
 import { dayTotal, streaks, levelFromXp, totalXp, computeProgress } from '../lib/state'
 import { estimateLevel } from '../lib/level'
 import { countDue } from '../lib/queue'
-import { aidLevel, type Aid } from '../lib/aid'
+import { aidLevel, romajiHidden, type Aid } from '../lib/aid'
+import { SayBack, SayFront, isSayCard } from './SayCard'
 import { contextFor } from '../lib/context'
 import { blocksFor, useBlocksReady } from '../lib/blocks'
 import { GapCard, type GapResult as BlockResult } from './GapCard'
@@ -176,26 +177,25 @@ function Hint({ memo }: { memo?: string }) {
   )
 }
 
-function Front({ it, dir, reading, typing, aid, memo }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean; aid: Aid; memo?: string }) {
+function Front({ it, dir, reading, typing, aid, memo, noRo }: { it: Item; dir: 'r' | 'p'; reading: 'always' | 'tap' | 'never'; typing: boolean; aid: Aid; memo?: string; noRo?: boolean }) {
   const [shown, setShown] = useState(false)
   const long = it.kind === 'sentence' || it.jp.length > 9
   if (dir === 'p') {
     return (
       <div className="face front">
-        <span className="chip kind accent">Dis-le en japonais</span>
         <div className={'meaning' + (it.fr.length > 22 ? ' long' : '')}>{it.fr}</div>
-        {it.kind === 'word' && <span className="chip">{POS_LABEL[it.pos] ?? it.pos}</span>}
         <div className="hint">{typing ? 'Écris la réponse en rōmaji ou en kana' : 'Pense à la réponse, puis retourne la carte'}</div>
         <Hint memo={memo} />
       </div>
     )
   }
   // Aide à la lecture : tout / sans rōmaji / sans rien (selon la solidité de la carte), un tap affiche tout.
-  const mode: Aid = shown ? 'full' : reading === 'always' ? aid : reading === 'tap' ? 'none' : 'none'
+  // v1.21 : réussie 2 fois de suite → seulement le japonais (pas de rōmaji, pas de bouton pour le revoir)
+  const mode0: Aid = shown ? 'full' : reading === 'always' ? aid : reading === 'tap' ? 'none' : 'none'
+  const mode: Aid = noRo && mode0 === 'full' ? 'kana' : mode0
   const fadedHelp = reading === 'always' && aid !== 'full'
   return (
     <div className="face front">
-      <span className="chip kind">{it.kind === 'sentence' ? 'Phrase' : it.lvl}</span>
       <Speak text={it.kana || it.jp} />
       {it.kind === 'sentence' ? <TapSentence id={it.id} jp={it.jp} className={'word-jp jp ' + sizeClass(it.jp, true)} />
         : <div className={'word-jp jp ' + sizeClass(it.jp, false)}>{it.jp}</div>}
@@ -204,19 +204,31 @@ function Front({ it, dir, reading, typing, aid, memo }: { it: Item; dir: 'r' | '
       ) : mode === 'kana' ? (
         <>
           <Reading it={it} long={long} romaji={false} />
-          <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir le rōmaji</button>
+          {!noRo && <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir le rōmaji</button>}
         </>
       ) : reading === 'tap' || fadedHelp ? (
         <button className="reading-hidden" onClick={(e) => { e.stopPropagation(); setShown(true) }}>Voir la lecture</button>
       ) : null}
-      {it.kind === 'sentence' && <div className="hint">Que veut dire cette phrase ?</div>}
+      {it.kind === 'sentence' ? <div className="hint">Que veut dire cette phrase ?</div> : <div className="tap-flip">touche la carte pour la retourner</div>}
       <Hint memo={memo} />
     </div>
   )
 }
 
-function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null; extras: JSX.Element; banner?: BlockResult | null }) {
-  const long = it.kind === 'sentence' || it.jp.length > 9
+/** v1.21 : le mot dans un cadre lumineux, sa lecture en dessous (le rōmaji disparaît quand la carte est bien sue). */
+function NeonWord({ it, noRo }: { it: Item; noRo?: boolean }) {
+  const sent = it.kind === 'sentence'
+  const w = sent ? '' : it.jp.length > 6 ? ' xs' : it.jp.length > 3 ? ' sm' : ''
+  return (
+    <div className={'nbox' + (sent ? ' sent' : '') + w}>
+      {sent ? <TapSentence id={it.id} jp={it.jp} className="jp w" /> : <span className="jp w">{it.jp}</span>}
+      {it.kana && it.kana !== it.jp && <span className="jp k">{it.kana}</span>}
+      {!noRo && <span className="r">{it.romaji}</span>}
+    </div>
+  )
+}
+
+function Back({ it, dir, typed, tr, extras, banner, noRo }: { it: Item; dir: 'r' | 'p'; typed: TypedResult | null; tr: TranslationResult | null; extras: JSX.Element; banner?: BlockResult | null; noRo?: boolean }) {
   if (dir === 'p') {
     return (
       <div className="face back">
@@ -227,8 +239,7 @@ function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'
             {!typed.ok && <span>Tu as écrit : <b className="jp">{typed.input}</b></span>}
           </div>
         )}
-        <div className={'word-jp jp ' + sizeClass(it.jp, it.kind === 'sentence')}>{it.jp}</div>
-        <Reading it={it} long={long} />
+        <NeonWord it={it} noRo={noRo} />
         <div className="divider" />
         <div className="hint">{it.fr}</div>
         {extras}
@@ -238,9 +249,7 @@ function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'
   return (
     <div className="face back">
       <Speak text={it.kana || it.jp} />
-      {it.kind === 'sentence' ? <TapSentence id={it.id} jp={it.jp} className="jp back-sent" />
-        : <div className="jp" style={{ fontSize: long ? 20 : 30, fontWeight: 700 }}>{it.jp}</div>}
-      <Reading it={it} long={long} />
+      <NeonWord it={it} noRo={noRo} />
       {it.kind === 'sentence' && <div className="muted small tap-help">Touche un mot pour voir son sens</div>}
       <div className="divider" />
       {banner && <div className={'typed-result ' + (banner.rating >= 4 ? 'good' : banner.rating >= 2 ? 'tr close' : 'bad')}>{banner.note}</div>}
@@ -252,11 +261,7 @@ function Back({ it, dir, typed, tr, extras, banner }: { it: Item; dir: 'r' | 'p'
         </div>
       )}
       <div className={'meaning' + (it.fr.length > 24 ? ' long' : '')}>{it.fr}</div>
-      <div className="row" style={{ justifyContent: 'center', flexWrap: 'wrap', gap: 6 }}>
-        {it.kind === 'word' && <span className="chip">{POS_LABEL[it.pos] ?? it.pos}</span>}
-        <span className="chip">{it.lvl}</span>
-        {it.note && <span className="chip accent">{it.note}</span>}
-      </div>
+      {it.note && <span className="chip accent">{it.note}</span>}
       {extras}
     </div>
   )
@@ -326,6 +331,11 @@ export function Study() {
   const [blockRes, setBlockRes] = useState<BlockResult | null>(null)
   const blockOn = useRef(false)
   blockOn.current = !!sb
+  // v1.21 : 1 phrase sur 3 (déjà vue) se dit de mémoire au lieu des trous
+  const sayOn = !!sb && !!item && isSayCard(item.id, state.cards[cardKey ?? '']?.r ?? 0)
+  const sayRef = useRef(false)
+  sayRef.current = sayOn
+  const noRo = romajiHidden(cardKey ? state.cards[cardKey] : undefined)
 
   // Gestes (iPhone) : une fois la carte retournée, glisser à droite = Bien, à gauche = Oublié.
   const [dx, setDx] = useState(0)
@@ -404,7 +414,7 @@ export function Study() {
       }
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault()
-        if (!st.revealed && !blockOn.current) reveal()
+        if (!st.revealed && (!blockOn.current || sayRef.current)) reveal()
       } else if (st.revealed && '12345'.includes(e.key) && e.key.length === 1) rate(Number(e.key) as Rating)
       else if (e.key.toLowerCase() === 'z') undo()
       else if (e.key === 'Escape') endSession()
@@ -424,7 +434,7 @@ export function Study() {
     const missedHere = s.missed.slice(s.roundFrom.missed)
     const left = s.later.length
     return (
-      <motion.div className="study" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div className="study neon" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="study-top">
           <button className="icon-btn" onClick={stopRounds} aria-label="Arrêter">{Icon.close()}</button>
           <div className="study-progress"><motion.i animate={{ width: `${pct * 100}%` }} /></div>
@@ -475,7 +485,7 @@ export function Study() {
     const est = estimateLevel(prog.wordsKnownR)
     const toNext = est.next ? Math.max(0, est.next.at - prog.wordsKnownR) : 0
     return (
-      <motion.div className="study" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div className="study neon" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="study-top">
           <button className="icon-btn" onClick={endSession} aria-label="Fermer">{Icon.close()}</button>
           <div className="study-progress"><i style={{ width: '100%' }} /></div>
@@ -557,25 +567,30 @@ export function Study() {
   const isNew = card!.s === 'new'
   const shiny = shinyBefore(state.ach, cardKey!, dayKey(today), isNew)
   const stageLabel = s.practice ? 'Entraînement' : isNew ? 'Nouvelle' : card!.s === 'review' ? 'Révision' : 'En cours'
+  const posName = item.kind === 'word' ? POS_LABEL[item.pos] ?? item.pos : 'Phrase'
+  const eyebrow = sayOn ? 'Dis-la de mémoire'
+    : sb ? (s.revealed ? `Phrase · ${item.lvl}` : 'Phrase à trous')
+    : s.revealed ? `${posName} · ${item.lvl}`
+    : parsed!.dir === 'p' ? `Dis-le en japonais${item.kind === 'word' ? ' · ' + posName : ''}`
+    : `${item.kind === 'sentence' ? 'Phrase' : 'Mot'} · ${stageLabel}`
   const typingOn = false // v1.19 : cartes à retourner, rien à écrire
-  const trOn = s.typeTr && parsed!.dir === 'r'
+  const trOn = s.typeTr && parsed!.dir === 'r' && !sb
   const remaining = s.queue.length + s.learn.length
   // note suggérée par la vérification d'une réponse écrite
   const suggested: Rating | null =
     blockRes ? blockRes.rating : typed && typed.script !== 'vide' ? (typed.ok ? 4 : 1) : tr && tr.verdict !== 'vide' ? (tr.verdict === 'ok' ? 4 : tr.verdict === 'close' ? 3 : 1) : null
 
   return (
-    <motion.div className="study" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ type: 'spring', stiffness: 320, damping: 32 }}>
+    <motion.div className="study neon" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ type: 'spring', stiffness: 320, damping: 32 }}>
       <div className="study-top">
         <button className="icon-btn" onClick={endSession} aria-label="Fermer">{Icon.close()}</button>
         <div className="study-progress"><motion.i animate={{ width: `${pct * 100}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} /></div>
+        <span className="study-count tnum">{remaining + 1}</span>
         <button className="icon-btn" onClick={undo} disabled={!s.undo} aria-label="Annuler">{Icon.undo()}</button>
       </div>
       <div className="study-meta">
         {s.warm.includes(cardKey!) && <span className="chip accent">📝 Échauffement</span>}
-        <span className={'chip ' + (isNew || s.practice ? 'accent' : '')}>{stageLabel}</span>
         {s.rounds > 1 && <span className="chip accent tnum">Manche {s.round}/{s.rounds}</span>}
-        <span className="chip tnum">{remaining + 1} restante{remaining ? 's' : ''}</span>
         {lapses > 0 && <span className={'chip tnum ' + (lapses >= 3 ? 'warn' : 'miss-chip')}>🔥 raté {lapses} fois</span>}
         <ComboBadge combo={s.combo ?? 0} extra={cardComboBonus((s.combo ?? 0) + 1) ? `+${cardComboBonus((s.combo ?? 0) + 1)} XP` : undefined} />
         {isNew && !s.practice && parsed!.dir === 'r' && !s.revealed && (
@@ -583,9 +598,11 @@ export function Study() {
         )}
       </div>
 
+      <div className="eyebrow">{eyebrow}</div>
+
       <div
         className={'stage' + (swipeOn ? ' swipeable' : '')}
-        onClick={() => !s.revealed && !sb && reveal()}
+        onClick={() => !s.revealed && (!sb || sayOn) && reveal()}
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}
@@ -618,15 +635,20 @@ export function Study() {
                 <FormFront it={item} c={formC} />
                 <FormBack it={item} c={formC} typed={typed} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={[]} lapses={lapses} />} />
               </>
+            ) : sb && sayOn ? (
+              <>
+                <SayFront it={item} />
+                <SayBack it={item} sb={sb} noRo={noRo} />
+              </>
             ) : sb ? (
               <>
-                {!s.revealed ? <GapCard key={cardKey} it={item} sb={sb} seed={(state.cards[cardKey!]?.r ?? 0) + hashId(item.id)} onDone={(r) => { setBlockRes(r); reveal() }} /> : <div className="face front" />}
-                <Back it={item} dir="r" typed={null} tr={null} banner={blockRes} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
+                {!s.revealed ? <GapCard key={cardKey} it={item} sb={sb} noRo={noRo} seed={(state.cards[cardKey!]?.r ?? 0) + hashId(item.id)} onDone={(r) => { setBlockRes(r); reveal() }} /> : <div className="face front" />}
+                <Back it={item} dir="r" typed={null} tr={null} banner={blockRes} noRo={noRo} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
               </>
             ) : (
               <>
-                <Front it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} reading={state.settings.reading} typing={typingOn} aid={aid} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
-                <Back it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} typed={typed} tr={tr} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
+                <Front it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} reading={state.settings.reading} typing={typingOn} aid={aid} noRo={noRo} memo={item.kind !== 'sentence' ? state.cards[`${item.id}:r`]?.m : undefined} />
+                <Back it={item} dir={parsed!.dir === 'r' ? 'r' : 'p'} typed={typed} tr={tr} noRo={noRo} extras={<Extras it={item} cardKey={`${item.id}:r`} ctx={ctx} lapses={lapses} />} />
               </>
             )}
           </motion.div>
@@ -635,7 +657,7 @@ export function Study() {
       </div>
 
       <div className="study-bottom">
-        {!s.revealed && sb ? null : !s.revealed && cloze ? (
+        {!s.revealed && sb && !sayOn ? null : !s.revealed && cloze ? (
           <form
             className="typing-form"
             onSubmit={(e) => {
@@ -741,17 +763,16 @@ export function Study() {
             <button className="known-btn" type="button" onClick={() => { setTyped(null); reveal() }}>Je ne sais pas — voir la réponse</button>
           </form>
         ) : !s.revealed ? (
-          <button className="btn show-btn" onClick={reveal}>Afficher la réponse</button>
+          <button className="pill-btn show-btn" onClick={reveal}>Afficher la réponse</button>
         ) : (
           <>
           {swipeOn && s.answered < 2 && !s.practice && <div className="swipe-hint">↔ Glisse la carte : à droite « Bien », à gauche « Oublié »</div>}
           <div className="rate-dock">
             {([1, 2, 3, 4, 5] as Rating[]).map((r) => (
-              <button key={r} className={`rate2 r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)} title={s.practice ? undefined : `Prochaine fois : ${labels?.[r]}`}>
+              <button key={r} className={`rate2 r${r}` + (suggested === r ? ' suggest' : '')} onClick={() => rate(r)} aria-label={RATING_LABELS[r]} title={s.practice ? RATING_LABELS[r] : `${RATING_LABELS[r]} · prochaine fois : ${labels?.[r]}`}>
                 <span className="orb">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{RATE_ICON[r]}</svg>
                 </span>
-                {RATING_LABELS[r]}
               </button>
             ))}
           </div>

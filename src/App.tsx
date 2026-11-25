@@ -10,6 +10,8 @@ import { Library } from './components/Library'
 import { Progress } from './components/Progress'
 import { Settings } from './components/Settings'
 import { Study } from './components/Study'
+import { CarMode } from './components/CarMode'
+import { LoopPlayer } from './components/LoopPlayer'
 import { AddCard } from './components/AddCard'
 import { autoSnapshot } from './lib/snapshots'
 import { configureVoice } from './lib/tts'
@@ -57,7 +59,7 @@ function Toasts() {
 }
 
 export default function App() {
-  const { ready, init, session, state, items, confettiTick } = useStore()
+  const { ready, init, session, loop, state, items, confettiTick } = useStore()
   const [tab, setTab] = useState<Tab>('home')
   const [addOpen, setAddOpen] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
@@ -137,7 +139,8 @@ export default function App() {
         ))}
       </nav>
 
-      <AnimatePresence>{session && <Study key="study" />}</AnimatePresence>
+      <AnimatePresence>{session && (session.car && !session.finished ? <CarMode key="car" /> : <Study key="study" />)}</AnimatePresence>
+      {loop && !session && <LoopPlayer />}
       <AddCard open={addOpen} editId={editId} onClose={() => setAddOpen(false)} />
       <Toasts />
     </div>

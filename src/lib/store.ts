@@ -37,7 +37,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.20.0'
+export const APP_VERSION = '1.21.0'
 /** v1.19 : l'échauffement en début de séance est retiré (séances plus courtes : mots + phrases à trous). */
 const WARMUP = false as boolean
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
@@ -57,6 +57,7 @@ const LS_BACKUP17 = 'kioku:backup:avant-v1.17'
 const LS_BACKUP18 = 'kioku:backup:avant-v1.18'
 const LS_BACKUP19 = 'kioku:backup:avant-v1.19'
 const LS_BACKUP20 = 'kioku:backup:avant-v1.20'
+const LS_BACKUP21 = 'kioku:backup:avant-v1.21'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -135,9 +136,10 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP19)) safeSet(LS_BACKUP19, raw)
   // v1.20 : copie avant « la manche jusqu'à Bien »
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP20)) safeSet(LS_BACKUP20, raw)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP21)) safeSet(LS_BACKUP21, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP20) ?? safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP21) ?? safeGet(LS_BACKUP20) ?? safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -207,6 +209,8 @@ export interface Session {
   warm: string[]
   /** réponses écrites : on tape la traduction française avant de retourner la carte */
   typeTr: boolean
+  /** v1.21 : mode voiture (l'app parle, réponses à la voix ou deux grosses touches) */
+  car?: boolean
   /** Manches : cartes des manches suivantes (la manche en cours est dans `queue`). Ajouté en v1.5. */
   later: string[]
   /** numéro de la manche en cours (à partir de 1) et nombre total de manches */
@@ -239,6 +243,9 @@ interface Store {
   byId: Map<string, Item>
   device: string
   session: Session | null
+  /** v1.21 : l'écoute en boucle est ouverte */
+  loop: boolean
+  setLoop: (on: boolean) => void
   toasts: Toast[]
   confettiTick: number
   sync: { status: 'off' | 'idle' | 'syncing' | 'ok' | 'error'; email?: string; last?: number; message?: string }
@@ -251,7 +258,7 @@ interface Store {
   addCustom: (c: { jp: string; kana: string; fr: string; note?: string }) => string
   editCustom: (id: string, c: { jp: string; kana: string; fr: string; note?: string }) => void
   deleteCustom: (id: string) => void
-  startSession: (f?: Filter, extra?: number, opts?: { warm?: number; typeTr?: boolean }) => void
+  startSession: (f?: Filter, extra?: number, opts?: { warm?: number; typeTr?: boolean; car?: boolean }) => void
   /** Pause entre deux manches : passe à la manche suivante. */
   continueRound: () => void
   /** Pause entre deux manches : arrête la séance (les cartes restantes attendent la prochaine séance). */
@@ -482,6 +489,8 @@ export const useStore = create<Store>((set, get) => {
     byId: initial.byId,
     device: 'dev',
     session: null,
+    loop: false,
+    setLoop: (on) => set({ loop: on }),
     toasts: [],
     confettiTick: 0,
     sync: { status: 'off' },
@@ -591,6 +600,7 @@ export const useStore = create<Store>((set, get) => {
         practice,
         warm,
         typeTr: !!opts?.typeTr,
+        car: !!opts?.car,
         missed: [],
         seen: [],
         combo: 0,
