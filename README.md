@@ -4,6 +4,15 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.22 — Blocs de phrases et vraie voix française
+
+- **Blocs de phrases** dans l'écoute en boucle : **149 morceaux tout faits** comme « やっぱりそうか » (c'est bien ce que je pensais), « 寝てるから大丈夫です » (il dort, donc ça va) ou « ちょっと聞きたいんですけど » (j'aurais une petite question). Ils viennent des vidéos de Shun et Ken-san et des phrases de l'app.
+- **Chaque bloc est expliqué** sous la traduction : pourquoi から ou ので, ce que change けど en fin de phrase, la différence entre まで et までに, entre おいしそう (ça a l'air bon) et 降るそうです (il paraît que), entre よ et ね…
+- **Format d'écoute** dans le **＋** : **Tout** (mots ratés, mots nouveaux, phrases et blocs mélangés), **Mots**, **Phrases** ou **Blocs**. L'ordre des réglages : format, durée, temps pour réfléchir.
+- **« Précédent » relit vraiment** le mot d'avant (sur iPhone, le son ne repartait pas toujours). En pause, précédent et suivant font entendre le mot choisi.
+- **Voix française naturelle** : toutes les traductions (mots, phrases, blocs) ont été enregistrées avec une voix gratuite et agréable (Piper « siwis »), pour l'écoute et le mode voiture. Les sons se téléchargent au fil de l'écoute et restent sur le téléphone. La voix de l'appareil ne sert plus que pour tes cartes perso.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), mêmes cartes, rien de nouveau dans la sauvegarde (le format d'écoute reste sur l'appareil). Copie `kioku:backup:avant-v1.22` à la première ouverture.
+
 ## Nouveautés de la version 1.21 — Néon, voiture et écoute
 
 - **Nouveau look des séances** : fond de nuit avec une lueur **bleu néon**, le même pour la séance normale, le mode voiture et l'écoute. Au verso, le mot est dans un **cadre lumineux** avec sa lecture, puis le sens ; le type et le niveau (ex. « Verbe · N4 ») sont en haut.

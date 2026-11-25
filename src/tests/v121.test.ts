@@ -63,7 +63,7 @@ describe('v1.21 — écoute en boucle', () => {
       [`${ws[2].id}:r`]: rev({ f: 9 }),
     }
     const list = buildLoop(cards, baseItems, today, 30)
-    expect(list.slice(0, 3).map((e) => e.tag)).toEqual(['miss', 'new', 'phrase'])
+    expect(list.slice(0, 4).map((e) => e.tag)).toEqual(['miss', 'new', 'phrase', 'block']) // v1.22 : + blocs
     expect(list.filter((e) => e.tag === 'miss').map((e) => e.it.id)).toEqual([ws[1].id, ws[2].id, ws[0].id])
     expect(list[0].label).toBe('mot difficile · raté 14 fois')
     expect(list).toHaveLength(30)
@@ -92,8 +92,8 @@ describe('v1.21 — écoute en boucle', () => {
     })
     it('valeurs par défaut, puis gardées ; une valeur inconnue est ignorée', () => {
       expect(loadLoopPrefs()).toEqual(DEFAULT_LOOP)
-      saveLoopPrefs({ dur: 15, gap: 4 })
-      expect(loadLoopPrefs()).toEqual({ dur: 15, gap: 4 })
+      saveLoopPrefs({ dur: 15, gap: 4, fmt: 'mix' }) // v1.22 : + format d'écoute
+      expect(loadLoopPrefs()).toEqual({ dur: 15, gap: 4, fmt: 'mix' })
       localStorage.setItem('kioku:ecoute', JSON.stringify({ dur: 7, gap: 99 }))
       expect(loadLoopPrefs()).toEqual(DEFAULT_LOOP)
     })

@@ -66,10 +66,26 @@ export function speak(text: string, rate?: number): Promise<void> {
 
 export function stopSpeaking() {
   if (hasSynth()) speechSynthesis.cancel()
+  if (player && !player.paused) player.pause()
 }
 
-/** v1.21 : lit un texte en français (traductions du mode voiture et de l'écoute en boucle). */
-export function speakFr(text: string, rate = 1): Promise<void> {
+/** v1.22 : clé du fichier son d'une traduction (identique à scripts/voix/fr.py) : FNV-1a 32 bits + longueur. */
+export function frKey(text: string): string {
+  const t = text.trim()
+  let h = 0x811c9dc5
+  for (let i = 0; i < t.length; i++) {
+    h ^= t.charCodeAt(i)
+    h = Math.imul(h, 0x01000193) >>> 0
+  }
+  return h.toString(16).padStart(8, '0') + (t.length & 0xff).toString(16).padStart(2, '0')
+}
+
+// Un seul lecteur audio, « débloqué » par un tap (sur iPhone, un son ne peut partir seul qu'ensuite).
+let player: HTMLAudioElement | null = null
+const audio = () => (player ??= typeof Audio !== 'undefined' ? new Audio() : null)
+const SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA='
+
+function synthFr(text: string, rate: number): Promise<void> {
   if (!hasSynth() || !text) return Promise.resolve()
   speechSynthesis.cancel()
   return new Promise((resolve) => {
@@ -86,6 +102,33 @@ export function speakFr(text: string, rate = 1): Promise<void> {
   })
 }
 
+/**
+ * Lit un texte en français. v1.22 : voix naturelle enregistrée à l'avance (Piper « siwis », gratuite) pour les mots,
+ * phrases et blocs de l'app ; la voix de l'appareil sert de secours (cartes perso, son introuvable).
+ */
+export function speakFr(text: string, rate = 1): Promise<void> {
+  const el = audio()
+  if (!el || !text) return synthFr(text, rate)
+  if (hasSynth()) speechSynthesis.cancel()
+  return new Promise((resolve) => {
+    let settled = false
+    const finish = (fallback: boolean) => {
+      if (settled) return
+      settled = true
+      clearTimeout(guard)
+      el.onended = el.onerror = null
+      if (fallback) void synthFr(text, rate).then(resolve)
+      else resolve()
+    }
+    const guard = setTimeout(() => finish(false), 12_000)
+    el.onended = () => finish(false)
+    el.onerror = () => finish(true)
+    el.src = `${import.meta.env.BASE_URL}fr/${frKey(text)}.m4a`
+    el.playbackRate = rate
+    el.play().catch(() => finish(true))
+  })
+}
+
 /** v1.21 : garde l'écran allumé (mode voiture, écoute en boucle). Sans effet si le téléphone ne le permet pas. */
 export async function keepAwake(): Promise<() => void> {
   try {
@@ -99,6 +142,11 @@ export async function keepAwake(): Promise<() => void> {
 
 /** v1.21 : sur iPhone, la voix doit d'abord partir d'un tap. On lance une phrase muette au moment du tap. */
 export function unlockSpeech() {
+  const el = audio()
+  if (el && el.paused) {
+    el.src = SILENCE
+    el.play().catch(() => {})
+  }
   if (!hasSynth()) return
   try {
     const u = new SpeechSynthesisUtterance(' ')

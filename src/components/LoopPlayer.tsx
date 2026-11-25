@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useStore } from '../lib/store'
 import { dayNumber } from '../lib/scheduler'
-import { LOOP_DURATIONS, LOOP_GAPS, buildLoop, loadLoopPrefs, saveLoopPrefs } from '../lib/loop'
+import { LOOP_DURATIONS, LOOP_FORMATS, LOOP_GAPS, buildLoop, loadLoopPrefs, saveLoopPrefs } from '../lib/loop'
 import { keepAwake, speak, speakFr, stopSpeaking, unlockSpeech } from '../lib/tts'
 import { Icon } from './ui'
 
@@ -16,8 +16,8 @@ const fit = (jp: string) => (jp.length <= 3 ? 56 : jp.length <= 6 ? 40 : jp.leng
  */
 export function LoopPlayer() {
   const { state, items, setLoop } = useStore()
-  const list = useMemo(() => buildLoop(state.cards, items, dayNumber(Date.now())), []) // eslint-disable-line
   const [prefs, setPrefs] = useState(loadLoopPrefs)
+  const list = useMemo(() => buildLoop(state.cards, items, dayNumber(Date.now()), 90, prefs.fmt), [prefs.fmt]) // eslint-disable-line
   const [draft, setDraft] = useState(prefs)
   const [setup, setSetup] = useState(false)
   const [playing, setPlaying] = useState(false)
@@ -37,12 +37,24 @@ export function LoopPlayer() {
   }, [])
 
   // une carte : japonais → décompte → traduction → la suivante
+  // (`replay` relance la même carte quand on touche « précédent » sur la première)
+  const [replay, setReplay] = useState(0)
+  const nav = useRef(false) // vrai juste après un appui sur précédent / suivant
   useEffect(() => {
     setShowFr(false)
     setCd(null)
-    if (!playing || !cur) return
+    if (!cur) return
     let alive = true
+    const touched = nav.current
+    nav.current = false
     const run = async () => {
+      // v1.22 : petite pause après l'arrêt du son précédent (sur iPhone, relancer la voix tout de suite peut échouer en silence)
+      await wait(180)
+      if (!alive) return
+      if (!playing) {
+        if (touched) void speak(cur.it.kana || cur.it.jp) // en pause : on fait juste entendre le mot choisi
+        return
+      }
       await speak(cur.it.kana || cur.it.jp)
       for (let n = prefs.gap; n > 0; n--) {
         if (!alive) return
@@ -61,7 +73,7 @@ export function LoopPlayer() {
       alive = false
       stopSpeaking()
     }
-  }, [playing, idx, prefs.gap]) // eslint-disable-line
+  }, [playing, idx, prefs.gap, replay, list]) // eslint-disable-line
 
   // le temps qui reste
   useEffect(() => {
@@ -78,10 +90,18 @@ export function LoopPlayer() {
     if (!playing && left === 0) setLeft(prefs.dur * 60)
     setPlaying((p) => !p)
   }
-  const go = (d: number) => list.length && setIdx((i) => (i + d + list.length) % list.length)
+  // v1.22 : « précédent » revient au mot d'avant et le relit (sur la première carte : la relit)
+  const go = (d: number) => {
+    if (!list.length) return
+    unlockSpeech()
+    nav.current = true
+    if (!(d < 0 && idx === 0)) setIdx((i) => (i + d + list.length) % list.length)
+    setReplay((n) => n + 1)
+  }
   const start = () => {
     unlockSpeech()
     saveLoopPrefs(draft)
+    if (draft.fmt !== prefs.fmt) setIdx(0)
     setPrefs(draft)
     setLeft(draft.dur * 60)
     setSetup(false)
@@ -99,6 +119,10 @@ export function LoopPlayer() {
       </div>
       {setup ? (
         <div className="loop-setup">
+          <div className="opt">
+            <span>Format<small>de l'écoute</small></span>
+            <div className="seg">{LOOP_FORMATS.map((f) => <button key={f.id} aria-pressed={draft.fmt === f.id} onClick={() => setDraft({ ...draft, fmt: f.id })}>{f.label}</button>)}</div>
+          </div>
           <div className="opt">
             <span>Durée<small>de l'écoute</small></span>
             <div className="seg">{LOOP_DURATIONS.map((d) => <button key={d} aria-pressed={draft.dur === d} onClick={() => setDraft({ ...draft, dur: d })}>{d} min</button>)}</div>
@@ -119,7 +143,10 @@ export function LoopPlayer() {
                 {cur.it.kana && cur.it.kana !== cur.it.jp && <span className="jp k">{cur.it.kana}</span>}
               </div>
               <div className="cd tnum" aria-live="polite">{cd ?? ''}</div>
-              <div className={'mean' + (cur.it.fr.length > 26 ? ' long' : '')} style={{ visibility: showFr ? 'visible' : 'hidden' }}>{cur.it.fr}</div>
+              <div className="loop-answer" style={{ visibility: showFr ? 'visible' : 'hidden' }}>
+                <div className={'mean' + (cur.it.fr.length > 26 ? ' long' : '')}>{cur.it.fr}</div>
+                {cur.it.note && <p className="loop-note">{cur.it.note}</p>}
+              </div>
             </>
           ) : (
             <div className="mean long">Rien à écouter pour l'instant.</div>
