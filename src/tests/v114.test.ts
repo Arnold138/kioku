@@ -39,7 +39,7 @@ describe('v1.14 — conjugaison', () => {
       ['帰る', 'te', '帰って'], ['来る', 'nai', '来ない'], ['来る', 'masu', '来ます'], ['来る', 'ba', '来れば'], ['する', 'kanou', 'できる'],
       ['案内する', 'temorau', '案内してもらう'], ['案内する', 'tekureru', '案内してくれる'], ['案内する', 'teageru', '案内してあげる'],
       ['起きる', 'teiru', '起きている'], ['生まれる', 'te', '生まれて'], ['思う', 'ta', '思った'], ['いらっしゃる', 'masu', 'いらっしゃいます'],
-      ['書く', 'shieki', '書かせる'], ['書く', 'ukemi', '書かれる'], ['書く', 'meirei', '書け'], ['落る', 'masu', '落ちます']
+      ['書く', 'shieki', '書かせる'], ['書く', 'ukemi', '書かれる'], ['書く', 'meirei', '書け'], ['落ちる', 'masu', '落ちます'] // v1.21 : 落る corrigé en 落ちる dans le vocabulaire
     ]
     for (const [jp, id, out] of cases) expect([jp, id, form(word(jp), id)?.jp]).toEqual([jp, id, out])
     expect(form(word('来る'), 'nai')!.kana).toBe('こない')

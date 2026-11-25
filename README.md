@@ -4,6 +4,18 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.21 — Néon, voiture et écoute
+
+- **Nouveau look des séances** : fond de nuit avec une lueur **bleu néon**, le même pour la séance normale, le mode voiture et l'écoute. Au verso, le mot est dans un **cadre lumineux** avec sa lecture, puis le sens ; le type et le niveau (ex. « Verbe · N4 ») sont en haut.
+- **Cinq anneaux néon** pour noter, en bas, sans texte : ✕ Oublié, 〜 Difficile, ? Hésitant, ✓ Bien, ✓✓ Facile.
+- **Plus de triche avec le rōmaji** : un mot ou une phrase réussi **2 fois de suite** (Bien ou Facile) s'affiche **seulement en japonais**, sans bouton pour revoir le rōmaji. Une hésitation ou une erreur, et le rōmaji revient.
+- **« Dis-la de mémoire »** : **1 phrase sur 3** (déjà vue) arrive ainsi au lieu des trous. Tu lis le français, tu dis la phrase à voix haute, tu affiches : la phrase apparaît en blocs lumineux (touche un bloc pour l'entendre). Tu notes toi-même.
+- **Choix du mode** en touchant « Accepter la mission » : **Normal**, **Mode voiture** ou **Écoute en boucle**. Le dernier choix est gardé.
+- **Mode voiture** : l'app dit le mot, te laisse répondre à voix haute, dit le sens en français, puis écoute **« bien », « facile », « encore » ou « difficile »**. Deux grosses touches ✕ et ✓ si la voix ne passe pas. L'écran reste allumé.
+- **Écoute en boucle** : comme un lecteur de musique (précédent, lecture/pause, suivant). Le japonais, un décompte pour réfléchir, puis la traduction, et ça passe seul au suivant. Elle mélange **tes mots les plus ratés**, **des mots pas encore vus** et **des phrases** ; les mots bien connus n'y sont pas. Touche **＋** pour la durée (5 à 20 min) et le temps pour réfléchir (4 à 15 s). Rien n'est noté. Aussi accessible quand il n'y a plus de cartes à réviser.
+- **Vocabulaire vérifié** : 13 corrections, dont 優しい (« gentil », pas « facile » : c'est 易しい), そこ (pas « fond »), 文章 (« texte »), けがする (« se blesser »), ずっと (au lieu de すっと), et les orthographes 落ちる, 楽しむ, 堅い, 下がる, 伯父さん, おかねもち.
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), mêmes cartes ; un seul champ facultatif ajouté (la série de réussites). Copie `kioku:backup:avant-v1.21` à la première ouverture.
+
 ## Nouveautés de la version 1.20 — La manche jusqu'à « Bien »
 
 - **Dans une manche, une carte revient jusqu'à ce que tu dises « Bien »** : Oublié, Difficile ou Hésitant → elle repasse en fin de manche, encore et encore. La manche ne se termine que quand toutes ses cartes sont « Bien » (ou « Facile »). Seule ta première réponse fixe la date de la prochaine révision ; un nouveau raté la rapproche.
@@ -229,7 +241,7 @@ Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**.
 - **1 995 mots** classés par fréquence : N5 complet (676), N4 complet (637) et les 682 mots N3 les plus fréquents.
 - **158 phrases** apprises par blocs (salutations, quotidien, voyage, travail, oral/YouTube…) + **272 phrases de vidéos** (decks optionnels).
 - Chaque carte affiche **kanji + hiragana + rōmaji** ; prononciation audio (voix japonaise du téléphone).
-- **5 boutons de réponse** : Oublié · Difficile · Hésitant · Bien · Facile, avec l'intervalle affiché sur chaque bouton.
+- **5 boutons de réponse** : Oublié · Difficile · Hésitant · Bien · Facile ; depuis la 1.21, des anneaux néon sans texte (sur PC, l'intervalle s'affiche au survol).
 - **Deux sens** par mot : reconnaissance (JP → FR) puis production (FR → JP, débloquée quand tu reconnais le mot).
 - Bouton « **Je connais déjà** » sur les nouvelles cartes, et **Ajout rapide** pour noter un mot vu en vidéo.
 - Objectif quotidien, série de jours, XP, niveaux, 34 trophées, niveau estimé (N5 → N3 / A1 → B1), heatmap.

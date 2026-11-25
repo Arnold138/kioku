@@ -33,3 +33,7 @@ export function aidCounts(cards: Record<string, CardState>, items: Item[]) {
   }
   return { noRomaji: noRomaji + noAid, noAid }
 }
+
+/** v1.21 : réussi 2 fois de suite (Bien ou Facile) → plus de rōmaji, seulement le japonais (et pas de bouton pour le revoir). */
+export const NO_ROMAJI_STREAK = 2
+export const romajiHidden = (card: CardState | undefined): boolean => (card?.ok ?? 0) >= NO_ROMAJI_STREAK

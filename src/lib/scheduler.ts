@@ -29,6 +29,7 @@ export interface CardState {
   fs?: number // FSRS : stabilité en jours. Ajouté en v1.10 — optionnel
   fd?: number // FSRS : difficulté (1 → 10). Ajouté en v1.10 — optionnel
   fr?: number // FSRS : valeur de `r` quand fs/fd ont été calculés (si un ancien appareil a répondu depuis, on les recalcule). v1.10
+  ok?: number // v1.21 : « Bien » ou « Facile » d'affilée (2 → le rōmaji n'est plus affiché). Optionnel
 }
 
 /** Nombre de fois où la carte a été ratée (les anciennes sauvegardes n'ont que les oublis de révision). */
@@ -114,7 +115,9 @@ export interface Outcome {
 }
 
 /** Suivi des ratés (additif, n'influence pas le planning) : total, série de réussites, date du dernier raté. */
-export function track(prev: CardState, next: CardState, rating: Rating, now: number): CardState {
+export function track(prev: CardState, next0: CardState, rating: Rating, now: number): CardState {
+  // v1.21 : série de « Bien » / « Facile » (Hésitant, Difficile et Oublié la remettent à zéro)
+  const next = { ...next0, ok: rating >= 4 ? (prev.ok ?? 0) + 1 : 0 }
   // « Oublié » et « Difficile » comptent tous les deux comme un raté (points faibles)
   if (rating <= 2) return { ...next, f: misses(prev) + 1, w: 0, mt: now }
   if (rating >= 3 && (prev.w !== undefined || prev.f !== undefined || prev.l >= 3)) return { ...next, w: (prev.w ?? 0) + 1 }

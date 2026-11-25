@@ -107,11 +107,14 @@ export interface Listening {
 }
 
 /** Écoute une réponse en japonais. La promesse échoue avec un `RecognizeError`. */
-export function recognizeJa(): Listening {
+export const recognizeJa = (): Listening => recognize('ja-JP')
+
+/** v1.21 : écoute dans une langue donnée (fr-FR pour « bien » / « encore » en mode voiture). */
+export function recognize(lang: string): Listening {
   const Ctor = recCtor()
   if (!Ctor) return { result: Promise.reject('unsupported' as RecognizeError), stop: () => {}, abort: () => {} }
   const r = new Ctor()
-  r.lang = 'ja-JP'
+  r.lang = lang
   r.interimResults = false
   r.continuous = false
   r.maxAlternatives = 5

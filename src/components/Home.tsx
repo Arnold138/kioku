@@ -15,6 +15,7 @@ import { activeFestival, earnedDecorations } from '../lib/festivals'
 import { FestivalCard } from './Festival'
 import { VillageSheet } from './Village'
 import { RoomScene } from './RoomScene'
+import { ModeSheet, type StudyMode } from './ModeSheet'
 import { ROOM_TOTAL, nextRoomBook, roomBase, roomBooks, roomPoints } from '../lib/room'
 
 const QUICK = 10 // séance « 2 minutes » : 10 cartes
@@ -80,7 +81,8 @@ const Tama = () => (
 )
 
 export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
-  const { state, items, startSession } = useStore()
+  const { state, items, startSession, setLoop } = useStore()
+  const [modeOpen, setModeOpen] = useState(false)
   const [examsOpen, setExamsOpen] = useState(false)
   const [villageOpen, setVillageOpen] = useState(false)
   const [questsOpen, setQuestsOpen] = useState(false)
@@ -247,7 +249,7 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
           )}
           {due.total > 0 ? (
             <>
-              <motion.button whileTap={{ scale: 0.97 }} className="mission-go" onClick={() => startSession(ALL, 0, { warm })}>
+              <motion.button whileTap={{ scale: 0.97 }} className="mission-go" onClick={() => setModeOpen(true)}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" /></svg>
                 Accepter la mission
               </motion.button>
@@ -263,9 +265,22 @@ export function Home({ onOpenProgress }: { onOpenProgress?: () => void }) {
             <div className="mission-more">
               {due.deferred > 0 && <motion.button whileTap={{ scale: 0.97 }} className="solid" onClick={() => startSession({ ...ALL, moreReviews: 10 }, 0)}>Encore 10 révisions</motion.button>}
               <motion.button whileTap={{ scale: 0.97 }} className={due.deferred > 0 ? '' : 'solid'} onClick={() => startSession(ALL, 10)}>10 nouvelles cartes</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => setLoop(true)}>🎧 Écoute en boucle</motion.button>
             </div>
           )}
         </motion.div>
+
+        {modeOpen && (
+          <ModeSheet
+            count={due.total}
+            onClose={() => setModeOpen(false)}
+            onPick={(m: StudyMode) => {
+              setModeOpen(false)
+              if (m === 'loop') setLoop(true)
+              else startSession(ALL, 0, { warm, car: m === 'car' })
+            }}
+          />
+        )}
 
         {/* 4 · Aujourd'hui : trois anneaux */}
         <motion.div variants={item} className="glass-card">
