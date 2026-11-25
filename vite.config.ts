@@ -26,7 +26,12 @@ export default defineConfig({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,svg,png,webp,json,woff2}'], maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 }
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,json,woff2}'],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+        // v1.22 : voix française enregistrée, gardée sur le téléphone au fil de l'écoute (pas tout d'un coup)
+        runtimeCaching: [{ urlPattern: /\/fr\/[0-9a-f]+\.m4a$/, handler: 'CacheFirst', options: { cacheName: 'kioku-voix-fr', expiration: { maxEntries: 4000 } } }]
+      }
     })
   ],
   test: { environment: 'node', include: ['src/tests/**/*.test.ts'] }
