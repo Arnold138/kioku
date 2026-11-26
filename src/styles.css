@@ -1083,3 +1083,10 @@ a { color: var(--accent); }
 .loop-answer { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .loop-note { margin: 0; max-width: 330px; font-size: 13.5px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
 .loop-setup .seg button { white-space: nowrap; }
+/* v1.23 : fin d'écoute « C'était compliqué ? » et rōmaji au retournement */
+.loop-ask { gap: 14px; }
+.ask-btns { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.pill-btn.ghost { background: transparent; border-color: #ffffff24; color: var(--muted); box-shadow: none; }
+.pill-btn:disabled { opacity: 0.4; }
+.again-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #9cc6ff; padding: 4px 10px; border-radius: 99px; background: color-mix(in srgb, var(--t) 14%, transparent); }
+.nbox .r { font-size: 14px; }

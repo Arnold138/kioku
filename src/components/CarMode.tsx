@@ -88,6 +88,7 @@ export function CarMode() {
     <div className={'nbox' + (item.kind === 'sentence' ? ' sent' : item.jp.length > 6 ? ' xs' : item.jp.length > 3 ? ' sm' : '')}>
       <span className="jp w">{item.jp}</span>
       {item.kana && item.kana !== item.jp && <span className="jp k">{item.kana}</span>}
+      {shown && <span className="r">{item.romaji}</span>}
     </div>
   )
   const live = phase === 'think' || phase === 'cmd'
