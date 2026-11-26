@@ -4,6 +4,13 @@ Flashcards de japonais avec **répétition espacée** (comme Anki), une interfac
 
 Application web installable (PWA), hébergée gratuitement sur **GitHub Pages**. Elle fonctionne aussi **hors ligne**.
 
+## Nouveautés de la version 1.23 — Rōmaji au retournement et réécoute
+
+- **Rōmaji quand la carte se retourne** : dans l'écoute en boucle et le mode voiture, dès que la traduction apparaît, le **rōmaji** s'affiche sous les kana. Avant, rien : on écoute d'abord.
+- **« C'était compliqué ? »** à la fin d'une écoute (5, 10, 15, 20 min) : **Oui** → on réécoute **une fois chacun** les mots, phrases et blocs qui viennent de passer, puis la question revient. **Non** → on repart pour un tour normal, à la suite, avec la même durée. L'écoute ne note toujours rien : ta progression ne bouge pas.
+- **Le temps d'écoute compte dans « Progrès »** (et pour le défi « Pratiquer 10 minutes ») : chaque minute de lecture, réécoute comprise, s'ajoute à ton temps de pratique. Le mode voiture était déjà compté (comme une séance normale).
+- **Sécurité** : même format de sauvegarde (`kioku:v1`), mêmes cartes ; le temps d'écoute va dans le compteur de secondes qui existait déjà. Copie `kioku:backup:avant-v1.23` à la première ouverture.
+
 ## Nouveautés de la version 1.22 — Blocs de phrases et vraie voix française
 
 - **Blocs de phrases** dans l'écoute en boucle : **149 morceaux tout faits** comme « やっぱりそうか » (c'est bien ce que je pensais), « 寝てるから大丈夫です » (il dort, donc ça va) ou « ちょっと聞きたいんですけど » (j'aurais une petite question). Ils viennent des vidéos de Shun et Ken-san et des phrases de l'app.

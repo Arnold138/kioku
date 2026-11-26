@@ -37,7 +37,7 @@ const LS_VER = 'kioku:appver'
 const LS_BACKUP = 'kioku:backup:avant-v1.1'
 const LS_BACKUP2 = 'kioku:backup:avant-v1.2'
 const LS_BACKUP3 = 'kioku:backup:avant-v1.3'
-export const APP_VERSION = '1.22.0'
+export const APP_VERSION = '1.23.0'
 /** v1.19 : l'échauffement en début de séance est retiré (séances plus courtes : mots + phrases à trous). */
 const WARMUP = false as boolean
 const LS_BACKUP4 = 'kioku:backup:avant-v1.4'
@@ -59,6 +59,7 @@ const LS_BACKUP19 = 'kioku:backup:avant-v1.19'
 const LS_BACKUP20 = 'kioku:backup:avant-v1.20'
 const LS_BACKUP21 = 'kioku:backup:avant-v1.21'
 const LS_BACKUP22 = 'kioku:backup:avant-v1.22'
+const LS_BACKUP23 = 'kioku:backup:avant-v1.23'
 
 export const XP_BY_RATING: Record<Rating, number> = { 1: 2, 2: 5, 3: 8, 4: 10, 5: 12 }
 export const XP_NEW = 5
@@ -139,9 +140,10 @@ function snapshotBeforeUpdate() {
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP20)) safeSet(LS_BACKUP20, raw)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP21)) safeSet(LS_BACKUP21, raw)
   if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP22)) safeSet(LS_BACKUP22, raw)
+  if (raw && safeGet(LS_VER) && !safeGet(LS_BACKUP23)) safeSet(LS_BACKUP23, raw)
   safeSet(LS_VER, APP_VERSION)
 }
-export const getBackup = (): string | null => safeGet(LS_BACKUP22) ?? safeGet(LS_BACKUP21) ?? safeGet(LS_BACKUP20) ?? safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
+export const getBackup = (): string | null => safeGet(LS_BACKUP23) ?? safeGet(LS_BACKUP22) ?? safeGet(LS_BACKUP21) ?? safeGet(LS_BACKUP20) ?? safeGet(LS_BACKUP19) ?? safeGet(LS_BACKUP18) ?? safeGet(LS_BACKUP17) ?? safeGet(LS_BACKUP16) ?? safeGet(LS_BACKUP15) ?? safeGet(LS_BACKUP14) ?? safeGet(LS_BACKUP13) ?? safeGet(LS_BACKUP12) ?? safeGet(LS_BACKUP11) ?? safeGet(LS_BACKUP10) ?? safeGet(LS_BACKUP91) ?? safeGet(LS_BACKUP9) ?? safeGet(LS_BACKUP7) ?? safeGet(LS_BACKUP6) ?? safeGet(LS_BACKUP5) ?? safeGet(LS_BACKUP4) ?? safeGet(LS_BACKUP3) ?? safeGet(LS_BACKUP2) ?? safeGet(LS_BACKUP)
 
 export function loadState(): AppState {
   const raw = safeGet(LS_KEY)
@@ -248,6 +250,8 @@ interface Store {
   /** v1.21 : l'écoute en boucle est ouverte */
   loop: boolean
   setLoop: (on: boolean) => void
+  /** v1.23 : le temps passé dans l'écoute en boucle compte dans le temps de pratique (sans XP). */
+  addListenTime: (sec: number) => void
   toasts: Toast[]
   confettiTick: number
   sync: { status: 'off' | 'idle' | 'syncing' | 'ok' | 'error'; email?: string; last?: number; message?: string }
@@ -929,6 +933,14 @@ export const useStore = create<Store>((set, get) => {
       if (reward.ok / reward.total >= 0.8) set((x) => ({ confettiTick: x.confettiTick + 1 }))
       afterAction()
       return reward
+    },
+
+    addListenTime: (sec0) => {
+      const sec = Math.max(0, Math.min(600, Math.round(sec0)))
+      if (!sec) return
+      const { state, device } = get()
+      commit({ daily: addToDay(state, device, today(), { sec }) })
+      afterAction()
     },
 
     recordTrace: (r) => {
